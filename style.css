@@ -1,0 +1,169 @@
+/* General Layout */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff; /* Clean White Background */
+    overflow: hidden;
+    font-family: 'Bodoni Moda', serif;
+}
+
+.wrapper {
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center;
+}
+
+/* Top Text Styling */
+.top-text {
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #333; /* Dark grey for contrast */
+    margin-bottom: -10px;
+    font-weight: 300;
+}
+
+/* Main Title Styling */
+.flashy-title {
+    color: #FF69B4; /* Hot Pink */
+    font-size: 6rem;
+    font-weight: 300; /* Slim weight */
+    margin: 0;
+    text-transform: uppercase;
+    text-align: center; /* Ensure the text is centered */
+    white-space: nowrap; /* Prevent the text from wrapping */
+    max-width: 100%; /* Ensure it doesn't overflow */
+    overflow: hidden; /* Hide any overflow */
+    
+    /* Animation calls */
+    animation: 
+        sizePulse 3s infinite ease-in-out, 
+        colorFlash 1.5s infinite alternate;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .flashy-title {
+        font-size: 4rem; /* Reduce font size for smaller screens */
+        letter-spacing: 2px; /* Adjust spacing to fit */
+    }
+}
+
+@media (max-width: 480px) {
+    .flashy-title {
+        font-size: 3rem; /* Further reduce font size for very small screens */
+        letter-spacing: 1px; /* Adjust spacing to fit */
+    }
+}
+
+/* Animation 1: Elegant Size Change */
+@keyframes sizePulse {
+    0%, 100% { 
+        transform: scale(1); 
+        letter-spacing: 2px;
+    }
+    50% { 
+        transform: scale(1.1); 
+        letter-spacing: 10px; /* Expands as it grows */
+    }
+}
+
+/* Animation 2: Hot Pink Color & Glow Flash */
+@keyframes colorFlash {
+    0% {
+        color: #FF69B4;
+        text-shadow: none;
+    }
+    50% {
+        color: #FF1493; /* Deeper Hot Pink */
+        text-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
+    }
+    100% {
+        color: #FF007F;
+        opacity: 0.9;
+    }
+}
+
+.ismu {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    max-width: 300px;
+}
+
+/* Flashing Button */
+.prank-button {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #87CEEB; /* Pastel blue */
+    color: white;
+    animation: buttonFlash 0.6s infinite alternate;
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes buttonFlash {
+    0% {
+        background-color: #87CEEB; /* Pastel blue */
+    }
+    100% {
+        background-color: #ffffff; /* White */
+    }
+}
+
+/* Popup Styles */
+.popup {
+    position: fixed;
+    background-color: #FFB6C1; /* Light pink */
+    border: 2px solid #FF69B4;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    max-width: 250px;
+    font-family: 'Arial', sans-serif;
+    font-size: 1rem;
+    color: #333;
+    animation: popupAppear 0.3s ease-in;
+}
+
+@keyframes popupAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.popup-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+}
+
+.popup-close:hover {
+    color: #FF69B4;
+}
