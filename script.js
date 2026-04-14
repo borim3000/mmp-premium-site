@@ -66,3 +66,40 @@ function createPopup() {
         }
     });
 }
+
+const secretMessage = "Du hesch gwunne! 🎉 Ismael isch e dummi sau!";
+const secretChance = 0.01; // 1% chance
+
+document.querySelector('.prank-button').addEventListener('click', startPrank);
+
+function startPrank() {
+    // Check for secret message (1% chance)
+    if (Math.random() < secretChance) {
+        showSecretMessage();
+        return;
+    }
+    
+    popupCount = 0;
+    round = 1;
+    createPopups(5);
+}
+
+function showSecretMessage() {
+    const container = document.getElementById('popupContainer');
+    const secretPopup = document.createElement('div');
+    secretPopup.className = 'popup secret-popup';
+    
+    secretPopup.style.left = (window.innerWidth / 2 - 150) + 'px';
+    secretPopup.style.top = (window.innerHeight / 2 - 100) + 'px';
+    
+    secretPopup.innerHTML = `
+        <button class="popup-close">&times;</button>
+        <a href="win.html" class="secret-button">Du hesch gwunne! 🎉</a>
+    `;
+    
+    container.appendChild(secretPopup);
+    
+    secretPopup.querySelector('.popup-close').addEventListener('click', () => {
+        secretPopup.remove();
+    });
+}
