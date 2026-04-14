@@ -69,7 +69,7 @@ function createPopup() {
         round = 2;
         popupCount = 0;
         createPopups(3);
-      } 
+      }
     }
   });
 }
@@ -106,8 +106,8 @@ const sidePic = document.getElementById("sidePic");
 const sidePicImg = sidePic.querySelector("img");
 
 // Static image shown at rest — swap to gif on hover
-const staticSrc = "/img/buttadawg-still.png"; // static preview frame
-const animSrc = "/img/buttadawg.gif";
+const staticSrc = "img/buttadawg-still.png"; // static preview frame
+const animSrc = "img/buttadawg.gif";
 
 sidePicImg.src = staticSrc;
 
@@ -120,5 +120,5 @@ sidePic.addEventListener("mouseleave", () => {
 });
 
 sidePic.addEventListener("click", () => {
-  new Audio("/sound/buttadawg.mp3").play();
+  new Audio("sound/buttadawg.mp3").play();
 });
