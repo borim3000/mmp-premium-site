@@ -98,7 +98,7 @@ html {
 .side-pic {
   position: fixed;
   right: 200px;
-  top: 50%;
+  top: 65%;
   transform: translateY(-50%);
   cursor: pointer;
   z-index: 50;
