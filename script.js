@@ -82,9 +82,10 @@ function showSecretMessage() {
   const secretPopup = document.createElement("div");
   secretPopup.className = "popup secret-popup";
 
-  secretPopup.style.left = window.innerWidth / 2 - 250 + "px";
-  secretPopup.style.top = window.innerHeight / 2 - 200 + "px";
-  secretPopup.style.zIndex = '9999'; // Highest z-index
+  secretPopup.style.left = "50%";
+  secretPopup.style.top = "50%";
+  secretPopup.style.transform = "translate(-50%, -50%)";
+  secretPopup.style.zIndex = '9999';
 
   secretPopup.innerHTML = `
       <button class="popup-close">&times;</button>
