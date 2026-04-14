@@ -8,6 +8,13 @@ const pranks = [
   "scheeeeeisss wixxer",
   "lmaoooooo eat shit",
   "pissooo (thurgau akzent)",
+  "lalalalala",
+  "gwünnchance isch 1% gell",
+  "das meme mit dem dude wo diamanten isch und er seit 'i am rich' isch so geil",
+  "nur no 100 mal klicke denn günnsch",
+  "1% 1% 1% 1% 1% 1%",
+  "ooooooooohhh",
+  "die nachricht isch nur filler. wart uf di negscht",
 ];
 
 let popupCount = 0;
@@ -62,9 +69,7 @@ function createPopup() {
         round = 2;
         popupCount = 0;
         createPopups(3);
-      } else {
-        alert("Minigame vorbei! Du hesch es gemacht! 🎉");
-      }
+      } 
     }
   });
 }
@@ -77,12 +82,14 @@ function showSecretMessage() {
   const secretPopup = document.createElement("div");
   secretPopup.className = "popup secret-popup";
 
-  secretPopup.style.left = window.innerWidth / 2 - 150 + "px";
-  secretPopup.style.top = window.innerHeight / 2 - 100 + "px";
+  secretPopup.style.left = window.innerWidth / 2 - 250 + "px";
+  secretPopup.style.top = window.innerHeight / 2 - 200 + "px";
+  secretPopup.style.zIndex = '9999'; // Highest z-index
 
   secretPopup.innerHTML = `
       <button class="popup-close">&times;</button>
-      <a href="win.html" class="secret-button">Du hesch gwunne! 🎉</a>
+      <p style="font-size: 1.5rem; font-weight: bold; color: #FF69B4; margin-bottom: 20px;">Du hesch gwunne!</p>
+      <a href="win.html" class="secret-button">Zum Gewinn</a>
     `;
 
   container.appendChild(secretPopup);

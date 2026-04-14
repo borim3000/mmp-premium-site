@@ -194,6 +194,9 @@ html {
   color: #ffffff;
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
   animation: secretPulse 0.5s ease-in;
+    width: 400px;
+    padding: 40px;
+    text-align: center;
 }
 
 @keyframes secretPulse {
@@ -205,4 +208,20 @@ html {
     opacity: 1;
     transform: scale(1) rotate(0deg);
   }
+}
+
+.secret-button {
+    display: inline-block;
+    padding: 15px 40px;
+    background-color: #FF69B4;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.3rem;
+    transition: background-color 0.3s;
+}
+
+.secret-button:hover {
+    background-color: #FF1493;
 }
