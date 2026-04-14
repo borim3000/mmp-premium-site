@@ -69,7 +69,7 @@ function createPopup() {
         round = 2;
         popupCount = 0;
         createPopups(3);
-      } 
+      }
     }
   });
 }
@@ -84,7 +84,7 @@ function showSecretMessage() {
 
   secretPopup.style.left = window.innerWidth / 2 - 250 + "px";
   secretPopup.style.top = window.innerHeight / 2 - 200 + "px";
-  secretPopup.style.zIndex = '9999'; // Highest z-index
+  secretPopup.style.zIndex = "9999"; // Highest z-index
 
   secretPopup.innerHTML = `
       <button class="popup-close">&times;</button>
@@ -105,8 +105,8 @@ const sidePic = document.getElementById("sidePic");
 const sidePicImg = sidePic.querySelector("img");
 
 // Static image shown at rest — swap to gif on hover
-const staticSrc = "/img/buttadawg-still.png"; // static preview frame
-const animSrc = "/img/buttadawg.gif";
+const staticSrc = "img/buttadawg-still.png"; // static preview frame
+const animSrc = "img/buttadawg.gif";
 
 sidePicImg.src = staticSrc;
 
@@ -119,5 +119,5 @@ sidePic.addEventListener("mouseleave", () => {
 });
 
 sidePic.addEventListener("click", () => {
-  new Audio("/sound/buttadawg.mp3").play();
+  new Audio("sound/buttadawg.mp3").play();
 });
