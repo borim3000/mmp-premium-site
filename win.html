@@ -56,12 +56,11 @@
         animation: titleFlash 0.8s infinite alternate;
       }
 
-      .image-placeholder {
+      .image-win {
         width: 260px;
         height: 260px;
         margin: 20px auto;
         border-radius: 16px;
-        border: 4px dashed #ffd700;
         background: rgba(0, 0, 0, 0.2);
         display: flex;
         justify-content: center;
@@ -71,7 +70,7 @@
         animation: pulseGlow 1.5s infinite alternate;
       }
 
-      .image-placeholder img {
+      .image-win img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -153,15 +152,18 @@
   </head>
   <body>
     <div class="win-container">
-      <h1 class="win-title">🎉 JACKPOT! 🎉</h1>
+      <h1 class="win-title">🎉JACKPOT!🎉</h1>
 
       <!-- Bild-Platzhalter: Ersetze src mit deinem Bild/GIF -->
-      <div class="image-placeholder">
-        <img src="img/win-placeholder.gif" alt="Gewinner Bild Platzhalter" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>[ BILD PLATZHALTER ]</span>';" />
+      <div class="image-win">
+        <img src="img/mmpdance.gif" alt="wow amazing du hast gewonnen gif und so"  />
       </div>
 
       <p class="win-text">
-        Unglaublich! Du hast die 1% Chance geknackt und bist offiziell ein absoluter Macher. Hol dir deinen Preis ab!
+        DU HAST GEWONNEN!!!!! AMAZING!!!!! 🔥 <br>
+        <strong>Schreib uns sofort auf Instagram eine Nachricht! <br> 
+        (Du hast 5 Minuten Zeit)</strong> <br>
+        Dann erhältst du deinen Gewinn!! Danke für's Spielen!
       </p>
 
       <button class="party-btn" id="partyBtn">🔊 NOCHMAL FEIERN!</button>
@@ -200,7 +202,7 @@
 
       // 2. Party-Sound abspielen (Eigene MP3 + Synthesizer-Fallback)
       function playPartySound() {
-        const audio = new Audio("sound/party.mp3");
+        const audio = new Audio("sound/confetti.mp3");
         audio.play().catch(() => {
           // Falls sound/party.mp3 noch nicht existiert oder Autoplay greift:
           // Kurze Party-Fanfare über die Web Audio API erzeugen
