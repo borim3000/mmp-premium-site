@@ -1,3 +1,5 @@
+/* LEGACY SITE STUFF*/
+
 const pranks = [
   "oooooh bisch broke wieso drucksch du das? 😂",
   "hahaha du bisch so en njeri!",
@@ -122,3 +124,5 @@ sidePic.addEventListener("mouseleave", () => {
 sidePic.addEventListener("click", () => {
   new Audio("sound/buttadawg.mp3").play();
 });
+
+/* LEGACY END*/ 
