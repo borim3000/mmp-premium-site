@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <rect width="800" height="600" fill="#FFE3EF"/>
+  <text x="400" y="290" text-anchor="middle" font-family="Georgia, serif" font-size="44" fill="#212121">Geheimfoto</text>
+  <text x="400" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#5C5C5C">Hier euer Foto oder GIF einsetzen</text>
+</svg>

@@ -292,7 +292,9 @@
       let popupCount = 0;
       let round = 1;
 
-      document.querySelector(".prank-button").addEventListener("click", startPrank);
+      document
+        .querySelector(".prank-button")
+        .addEventListener("click", startPrank);
 
       function startPrank() {
         if (Math.random() < secretChance) {
@@ -364,9 +366,11 @@
 
         container.appendChild(secretPopup);
 
-        secretPopup.querySelector(".popup-close").addEventListener("click", () => {
-          secretPopup.remove();
-        });
+        secretPopup
+          .querySelector(".popup-close")
+          .addEventListener("click", () => {
+            secretPopup.remove();
+          });
       }
 
       /* ── Side pic: hover = gif plays, click = sound ── */

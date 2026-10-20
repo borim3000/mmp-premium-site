@@ -1,211 +1,418 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de-CH">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MMP Premium – Content Portfolio</title>
-    <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans-Serif) -->
+    <meta
+      name="description"
+      content="Der Content von MMP Premium: L.I.F.T, Berlin, Rotterdam und Digezz."
+    />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Monoton&family=Playfair+Display:ital@0;1&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- ==================== HEADER ==================== -->
-    <header class="navbar">
-      <div class="nav-brand">
-        <img src="assets/mascot.png" alt="Maskottchen" class="nav-mascot" />
-        <span class="brand-title">MMP PREMIUM</span>
+    <a class="skip-link" href="#lift">Zum Content springen</a>
+
+    <!-- ============ KOPFZEILE ============ -->
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="MMP Premium, nach oben">
+        <img src="img/vogel.png" alt="" width="36" height="44" />
+        <span>MMP PREMIUM</span>
+      </a>
+      <div class="site-header__actions">
+        <span class="achievements" title="Gefundene Achievements">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 2.5l2.9 6.2 6.8.7-5.1 4.6 1.4 6.7L12 17.3l-6 3.4 1.4-6.7-5.1-4.6 6.8-.7z"
+            />
+          </svg>
+          <span data-achievement-count>0/4</span>
+        </span>
+        <a class="btn btn--primary" href="#labubuech">Labubuech</a>
       </div>
-
-      <nav class="nav-links">
-        <a href="#lift" class="active">L.I.F.T</a>
-        <a href="#berlin">Berlin</a>
-        <a href="#rotterdam">Rotterdam</a>
-        <a href="#digezz">Digezz</a>
-        <a href="#gaestebuch">Gästebuch</a>
-      </nav>
-
-      <div class="nav-actions">
-        <!-- Dark/Light Theme Toggle -->
-        <label class="theme-switch" title="Theme umschalten">
-          <input type="checkbox" id="themeToggle" />
-          <span class="slider">★</span>
-        </label>
-        <a href="#login" class="btn-primary">Anmelden</a>
+      <div class="scroll-progress" aria-hidden="true">
+        <span data-scroll-progress></span>
       </div>
     </header>
 
-    <main>
-      <!-- ==================== HERO SECTION ==================== -->
-      <section class="hero-section">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-          <h1 class="hero-title">MMP PREMIUM</h1>
-          <p class="hero-subtitle">CONTENT PORTFOLIO</p>
-          <p class="hero-credits">Mertcan Ates und Robin Ullmer</p>
-
-          <!-- Goldenes Maskottchen -->
-          <img
-            src="assets/mascot-gold.png"
-            alt="Goldenes Küken Maskottchen"
-            class="hero-mascot"
-          />
-
-          <div class="scroll-indicator">
-            <span>Scrollen</span>
-            <div class="scroll-line"></div>
-          </div>
+    <main id="top">
+      <!-- ============ HERO ============ -->
+      <!-- Das Bergbild enthält den Schriftzug schon. Sobald ihr eine Version ohne Schriftzug habt:
+         img/berge.jpg ersetzen und beim <h1> die Klasse "visually-hidden" entfernen. -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__media" data-hero-media>
+          <img src="img/berge.jpg" alt="" />
         </div>
+        <h1 class="hero__title visually-hidden" id="hero-title">MMP Premium</h1>
+        <p class="hero__subtitle">Content Portfolio</p>
+        <img
+          class="bird bird--hero"
+          data-bird
+          data-egg="img/geheimfoto-platzhalter.svg"
+          src="img/vogel.png"
+          alt=""
+          width="160"
+          height="195"
+        />
+        <p class="hero__hint" aria-hidden="true">Scrollen</p>
       </section>
 
-      <!-- ==================== INTRO & KAPITEL-TRACKER ==================== -->
-      <section class="intro-section container">
-        <div class="intro-header">
-          <h2 class="section-title">Wie ist MMP Premium entstanden?</h2>
-          <p class="section-desc">
-            Hier ist alles, was MMP Premium produziert hat, in der Reihenfolge,
-            in der es entstanden ist. Scroll dich durch vier Kapitel und halt
-            die Augen offen: Irgendwo sind 11 Achievements versteckt.
-          </p>
-        </div>
+      <!-- ============ 01 L.I.F.T ============ -->
+      <!-- Gepinnt: Scrollen spult das Video vor und zurück (siehe script.js, "Video-Scrub"). -->
+      <section
+        class="chapter chapter--scrub"
+        id="lift"
+        data-scrub
+        aria-labelledby="lift-title"
+      >
+        <div class="chapter__pin">
+          <header class="chapter__head">
+            <span class="chapter__num" aria-hidden="true">01</span>
+            <h2 id="lift-title">L.I.F.T</h2>
+            <p class="acronym">
+              <span>L</span>eichte<br />
+              <span>I</span>nnovative<br />
+              <span>F</span>ortbewegungs-<br />
+              <span>T</span>echnologie
+            </p>
+          </header>
 
-        <!-- Kapitel Leiste / Tabs -->
-        <div class="chapter-tracker">
-          <div class="tracker-item active" data-target="lift">
-            <div class="tracker-bar"></div>
-            <span class="ch-num">01</span>
-            <h4>L.I.F.T</h4>
-            <span class="ch-sub">Das erste Video</span>
-          </div>
-
-          <div class="tracker-item" data-target="berlin">
-            <div class="tracker-bar"></div>
-            <span class="ch-num">02</span>
-            <h4>Berlin</h4>
-            <span class="ch-sub">Recap</span>
-          </div>
-
-          <div class="tracker-item" data-target="rotterdam">
-            <div class="tracker-bar"></div>
-            <span class="ch-num">03</span>
-            <h4>Rotterdam</h4>
-            <span class="ch-sub">Recap</span>
-          </div>
-
-          <div class="tracker-item" data-target="digezz">
-            <div class="tracker-bar"></div>
-            <span class="ch-num">04</span>
-            <h4>Digezz</h4>
-            <span class="ch-sub">Projekte</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== KAPITEL 01: SCROLLYTELLING ==================== -->
-      <section id="lift" class="chapter-section scrolly-container container">
-        <!-- Linke Spalte: Fester Text & Akronym -->
-        <div class="scrolly-left">
-          <span class="chapter-badge">01</span>
-          <h2 class="project-title">L.I.F.T</h2>
-          <ul class="acronym-list">
-            <li><strong>L</strong>eichte</li>
-            <li><strong>I</strong>nnovative</li>
-            <li><strong>F</strong>ortbewegungs-</li>
-            <li><strong>T</strong>echnologie</li>
-          </ul>
-          <p class="project-description">
-            Ein Witz im Lift, zufällig gefilmt. Daraus wurde unser erster
-            Hopecore-Edit und der Anfang von MMP Premium.
-          </p>
-        </div>
-
-        <!-- Mittlere Spalte: Sticky 9:16 Video Player -->
-        <div class="scrolly-center">
-          <div class="sticky-video-wrapper">
-            <div class="phone-mockup">
-              <video id="liftVideo" muted playsinline preload="auto">
-                <!-- Pfad zu eurem 9:16 Video -->
-                <source src="assets/lift-edit.mp4" type="video/mp4" />
-              </video>
-              <div class="play-overlay">
-                <button class="btn-play">▶</button>
-              </div>
-              <div class="video-tag">Hopecore Edit, Reel 9:16</div>
+          <figure class="scrub">
+            <div class="media media--reel" data-label="Reel 9:16">
+              <!-- Euer Video hier einfügen, z. B.:
+                 <video src="img/lift.mp4" muted playsinline preload="auto"></video>
+                 Tipp: Für flüssiges Scrubben das Video mit vielen Keyframes exportieren. -->
             </div>
-            <p class="video-scroll-caption">Scrollen spult das Video</p>
-          </div>
-        </div>
-
-        <!-- Rechte Spalte: Scroll-Schritte / Notizen -->
-        <div class="scrolly-right">
-          <div class="step-card active" data-step="1">
+            <div class="progress"><span data-scrub-progress></span></div>
+            <figcaption>Hopecore-Edit, Instagram-Reel</figcaption>
             <img
-              src="assets/mascot-gold.png"
-              alt="Mascot"
-              class="step-mascot"
+              class="bird bird--peek"
+              data-bird
+              data-egg="img/geheimfoto-platzhalter.svg"
+              src="img/vogel.png"
+              alt=""
+              width="140"
+              height="170"
             />
-            <div class="step-content">
-              <h3>Der Witz</h3>
-              <p>
-                Im Lift erklärt einer von uns, das sei eine leichte, innovative
-                Fortbewegungs-Technologie.
-              </p>
-            </div>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ============ 02 BERLIN ============ -->
+      <!-- Gepinnt: Die Galerie fährt beim Scrollen seitwärts. Auf dem Handy wischt man. -->
+      <section
+        class="chapter chapter--gallery"
+        id="berlin"
+        aria-labelledby="berlin-title"
+      >
+        <div class="chapter__pin" data-gallery>
+          <header class="chapter__head chapter__head--row">
+            <span class="chapter__num" aria-hidden="true">02</span>
+            <h2 id="berlin-title">Berlin</h2>
+            <p class="chapter__sub">Recaps</p>
+          </header>
+
+          <img
+            class="bird bird--fly"
+            data-bird
+            data-egg="img/geheimfoto-platzhalter.svg"
+            src="img/vogel.png"
+            alt=""
+            width="120"
+            height="146"
+          />
+
+          <div
+            class="gallery"
+            tabindex="0"
+            aria-label="Berlin Recaps, horizontal scrollbar"
+          >
+            <ol class="gallery__track">
+              <!-- Ein Beitrag. Format: media--reel (9:16), media--photo (4:5), media--square (1:1), media--wide (16:9) -->
+              <li class="post">
+                <div class="media media--reel" data-label="Reel 9:16"></div>
+                <h3>Recap Berlin, Teil 1</h3>
+                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+              </li>
+              <li class="post">
+                <div class="media media--photo" data-label="Foto"></div>
+                <h3>Recap Berlin, Teil 2</h3>
+                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+              </li>
+              <li class="post">
+                <div class="media media--square" data-label="Carousel"></div>
+                <h3>Recap Berlin, Teil 3</h3>
+                <p class="post__meta">
+                  <time datetime="">Datum folgt</time>, mit
+                  <button
+                    class="joke"
+                    type="button"
+                    data-joke="Platzhalter: euer Inside Joke"
+                  >
+                    Inside Joke
+                  </button>
+                </p>
+              </li>
+              <li class="post">
+                <div class="media media--wide" data-label="Video 16:9"></div>
+                <h3>Recap Berlin, Teil 4</h3>
+                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+              </li>
+              <li class="post">
+                <div class="media media--reel" data-label="Reel 9:16"></div>
+                <h3>Recap Berlin, Teil 5</h3>
+                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+              </li>
+            </ol>
           </div>
 
-          <div class="step-card" data-step="2">
-            <div class="step-content">
-              <h3>Der Schnitt</h3>
-              <p>Wir schneiden die Aufnahme zu einem Hopecore-Edit.</p>
-            </div>
+          <div class="gallery__progress">
+            <div class="progress"><span data-gallery-progress></span></div>
+            <output data-gallery-count>1 / 5</output>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 03 ROTTERDAM ============ -->
+      <section
+        class="chapter chapter--gallery chapter--white"
+        id="rotterdam"
+        aria-labelledby="rotterdam-title"
+      >
+        <div class="chapter__pin" data-gallery>
+          <header class="chapter__head chapter__head--row">
+            <span class="chapter__num" aria-hidden="true">03</span>
+            <h2 id="rotterdam-title">Rotterdam</h2>
+            <p class="chapter__sub">Recaps</p>
+          </header>
+
+          <div
+            class="gallery"
+            tabindex="0"
+            aria-label="Rotterdam Recaps, horizontal scrollbar"
+          >
+            <ol class="gallery__track">
+              <li class="post">
+                <div class="media media--photo" data-label="Foto"></div>
+                <h3>Recap Rotterdam, Teil 1</h3>
+                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+              </li>
+              <li class="post">
+                <div class="media media--reel" data-label="Reel 9:16"></div>
+                <h3>Recap Rotterdam, Teil 2</h3>
+                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+              </li>
+              <li class="post post--bird">
+                <div class="media media--wide" data-label="Video 16:9"></div>
+                <img
+                  class="bird bird--sit"
+                  data-bird
+                  data-egg="img/geheimfoto-platzhalter.svg"
+                  src="img/vogel.png"
+                  alt=""
+                  width="110"
+                  height="134"
+                />
+                <h3>Recap Rotterdam, Teil 3</h3>
+                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+              </li>
+              <li class="post">
+                <div class="media media--square" data-label="Carousel"></div>
+                <h3>Recap Rotterdam, Teil 4</h3>
+                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+              </li>
+            </ol>
           </div>
 
-          <div class="step-card" data-step="3">
-            <div class="step-content">
-              <h3>Der Anfang</h3>
-              <p>Das Video wird zum Startschuss für MMP Premium.</p>
+          <div class="gallery__progress">
+            <div class="progress"><span data-gallery-progress></span></div>
+            <output data-gallery-count>1 / 4</output>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 04 DIGEZZ ============ -->
+      <!-- Gepinnt: Pro Projekt eine Bildschirmhöhe. Scrollen spult das Video, danach wechselt das Projekt. -->
+      <section
+        class="chapter chapter--projects"
+        id="digezz"
+        data-projects
+        aria-labelledby="digezz-title"
+      >
+        <div class="chapter__pin">
+          <header class="chapter__head chapter__head--row">
+            <span class="chapter__num" aria-hidden="true">04</span>
+            <h2 id="digezz-title">Digezz</h2>
+            <p class="chapter__sub">Projekte</p>
+          </header>
+
+          <div class="projects">
+            <ol class="projects__list">
+              <li class="project is-active" data-project>
+                <h3>Projekt 1</h3>
+                <p class="project__meta">Jahr, eure Rolle</p>
+                <p class="project__text">
+                  Zwei Sätze zum Projekt: worum es geht und was ihr gemacht
+                  habt.
+                </p>
+                <a class="project__link" href="#">Auf Digezz ansehen</a>
+              </li>
+              <li class="project" data-project>
+                <h3>Projekt 2</h3>
+                <p class="project__meta">Jahr, eure Rolle</p>
+                <p class="project__text">
+                  Zwei Sätze zum Projekt: worum es geht und was ihr gemacht
+                  habt.
+                </p>
+                <a class="project__link" href="#">Auf Digezz ansehen</a>
+              </li>
+              <li class="project" data-project>
+                <h3>Projekt 3</h3>
+                <p class="project__meta">Jahr, eure Rolle</p>
+                <p class="project__text">
+                  Zwei Sätze zum Projekt: worum es geht und was ihr gemacht
+                  habt.
+                </p>
+                <a class="project__link" href="#">Auf Digezz ansehen</a>
+              </li>
+            </ol>
+
+            <div class="projects__stage">
+              <img
+                class="bird bird--sit-video"
+                data-bird
+                data-egg="img/geheimfoto-platzhalter.svg"
+                src="img/vogel.png"
+                alt=""
+                width="110"
+                height="134"
+              />
+              <!-- Ein Medium pro Projekt, gleiche Reihenfolge wie die Liste -->
+              <div
+                class="media media--wide is-active"
+                data-project-media
+                data-label="Projekt 1, Video 16:9"
+              ></div>
+              <div
+                class="media media--wide"
+                data-project-media
+                data-label="Projekt 2, Video 16:9"
+              ></div>
+              <div
+                class="media media--wide"
+                data-project-media
+                data-label="Projekt 3, Video 16:9"
+              ></div>
+              <div class="progress"><span data-scrub-progress></span></div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ==================== KAPITEL 02: BERLIN ==================== -->
-      <section id="berlin" class="chapter-section container">
-        <div class="chapter-header-row">
-          <div>
-            <span class="chapter-badge">02</span>
-            <h2 class="project-title inline">Berlin</h2>
-            <span class="project-category">Recaps</span>
-          </div>
-          <img
-            src="assets/mascot-gold.png"
-            alt="Berlin Mascot"
-            class="trail-mascot"
-          />
+      <!-- ============ LABUBUECH ============ -->
+      <!-- Grundgerüst. Timer, Cooldown und Einträge kommen später über PHP und die Datenbank. -->
+      <section
+        class="labubuech"
+        id="labubuech"
+        aria-labelledby="labubuech-title"
+      >
+        <div class="labubuech__intro">
+          <h2 id="labubuech-title">Labubuech</h2>
+          <p>
+            Unser Gästebuch. Du hast pro Tag zwei Minuten, um etwas
+            hineinzuschreiben. Danach ist das Buch für dich bis morgen zu.
+          </p>
         </div>
 
-        <!-- Media Slider / Galerie -->
-        <div class="media-carousel">
-          <div class="media-card video-card">
-            <div class="placeholder-icon">▶</div>
-          </div>
-          <div class="media-card image-card">
-            <div class="placeholder-icon">🖼</div>
-          </div>
-          <div class="media-card text-card">
-            <div class="placeholder-icon">💬</div>
-          </div>
-          <div class="media-card video-card">
-            <div class="placeholder-icon">▶</div>
-          </div>
+        <div class="labubuech__grid">
+          <form class="writer" data-writer>
+            <img
+              class="bird bird--guard"
+              data-bird
+              data-egg="img/geheimfoto-platzhalter.svg"
+              src="img/vogel.png"
+              alt=""
+              width="110"
+              height="134"
+            />
+            <p class="writer__timer">
+              <span data-writer-time>02:00</span> <small>noch übrig</small>
+            </p>
+            <div class="progress progress--soft">
+              <span data-writer-progress style="width: 100%"></span>
+            </div>
+            <label class="field">
+              <span>Deine Nachricht</span>
+              <textarea
+                name="message"
+                rows="4"
+                maxlength="500"
+                placeholder="Was willst du loswerden?"
+              ></textarea>
+            </label>
+            <button class="btn btn--primary" type="submit">
+              Eintrag speichern
+            </button>
+          </form>
+
+          <ol class="entries" data-entries>
+            <li class="entry">
+              <p class="entry__meta">
+                <strong>robin</strong> <time>heute, 10:42</time>
+              </p>
+              <p>
+                Platzhalter-Eintrag. Hier erscheinen später die echten Einträge.
+              </p>
+            </li>
+          </ol>
         </div>
       </section>
     </main>
 
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+      <p class="site-footer__brand">MMP PREMIUM</p>
+      <ul class="site-footer__links">
+        <li>
+          <a
+            href="https://www.instagram.com/mmp_premium"
+            target="_blank"
+            rel="noopener"
+            >Instagram @mmp_premium</a
+          >
+        </li>
+        <li><a href="#labubuech">Labubuech</a></li>
+      </ul>
+      <button class="faah" type="button" data-faah>
+        <span class="faah__knob" aria-hidden="true"></span>
+        Nicht drücken
+      </button>
+      <p class="site-footer__credits">
+        Naim de Amri und Robin Uliten. Interaktive Medien 5, FH Graubünden,
+        HS26.
+      </p>
+    </footer>
+
+    <!-- Geheimfoto (Easter Egg: 5x auf den Vogel klicken) -->
+    <dialog class="egg-dialog" data-egg-dialog aria-label="Geheimfoto">
+      <img src="" alt="Geheimfoto von MMP Premium" />
+      <form method="dialog">
+        <button class="btn btn--secondary">Schliessen</button>
+      </form>
+    </dialog>
+
+    <!-- Meldungen, z. B. "Achievement gefunden" -->
+    <div class="toasts" data-toasts aria-live="polite"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
