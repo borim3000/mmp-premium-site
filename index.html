@@ -1,11 +1,211 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MMP PREMIUM</title>
-</head>
-<body>
-  
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MMP Premium – Content Portfolio</title>
+    <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans-Serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ==================== HEADER ==================== -->
+    <header class="navbar">
+      <div class="nav-brand">
+        <img src="assets/mascot.png" alt="Maskottchen" class="nav-mascot" />
+        <span class="brand-title">MMP PREMIUM</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#lift" class="active">L.I.F.T</a>
+        <a href="#berlin">Berlin</a>
+        <a href="#rotterdam">Rotterdam</a>
+        <a href="#digezz">Digezz</a>
+        <a href="#gaestebuch">Gästebuch</a>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Dark/Light Theme Toggle -->
+        <label class="theme-switch" title="Theme umschalten">
+          <input type="checkbox" id="themeToggle" />
+          <span class="slider">★</span>
+        </label>
+        <a href="#login" class="btn-primary">Anmelden</a>
+      </div>
+    </header>
+
+    <main>
+      <!-- ==================== HERO SECTION ==================== -->
+      <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <h1 class="hero-title">MMP PREMIUM</h1>
+          <p class="hero-subtitle">CONTENT PORTFOLIO</p>
+          <p class="hero-credits">Mertcan Ates und Robin Ullmer</p>
+
+          <!-- Goldenes Maskottchen -->
+          <img
+            src="assets/mascot-gold.png"
+            alt="Goldenes Küken Maskottchen"
+            class="hero-mascot"
+          />
+
+          <div class="scroll-indicator">
+            <span>Scrollen</span>
+            <div class="scroll-line"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== INTRO & KAPITEL-TRACKER ==================== -->
+      <section class="intro-section container">
+        <div class="intro-header">
+          <h2 class="section-title">Wie ist MMP Premium entstanden?</h2>
+          <p class="section-desc">
+            Hier ist alles, was MMP Premium produziert hat, in der Reihenfolge,
+            in der es entstanden ist. Scroll dich durch vier Kapitel und halt
+            die Augen offen: Irgendwo sind 11 Achievements versteckt.
+          </p>
+        </div>
+
+        <!-- Kapitel Leiste / Tabs -->
+        <div class="chapter-tracker">
+          <div class="tracker-item active" data-target="lift">
+            <div class="tracker-bar"></div>
+            <span class="ch-num">01</span>
+            <h4>L.I.F.T</h4>
+            <span class="ch-sub">Das erste Video</span>
+          </div>
+
+          <div class="tracker-item" data-target="berlin">
+            <div class="tracker-bar"></div>
+            <span class="ch-num">02</span>
+            <h4>Berlin</h4>
+            <span class="ch-sub">Recap</span>
+          </div>
+
+          <div class="tracker-item" data-target="rotterdam">
+            <div class="tracker-bar"></div>
+            <span class="ch-num">03</span>
+            <h4>Rotterdam</h4>
+            <span class="ch-sub">Recap</span>
+          </div>
+
+          <div class="tracker-item" data-target="digezz">
+            <div class="tracker-bar"></div>
+            <span class="ch-num">04</span>
+            <h4>Digezz</h4>
+            <span class="ch-sub">Projekte</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== KAPITEL 01: SCROLLYTELLING ==================== -->
+      <section id="lift" class="chapter-section scrolly-container container">
+        <!-- Linke Spalte: Fester Text & Akronym -->
+        <div class="scrolly-left">
+          <span class="chapter-badge">01</span>
+          <h2 class="project-title">L.I.F.T</h2>
+          <ul class="acronym-list">
+            <li><strong>L</strong>eichte</li>
+            <li><strong>I</strong>nnovative</li>
+            <li><strong>F</strong>ortbewegungs-</li>
+            <li><strong>T</strong>echnologie</li>
+          </ul>
+          <p class="project-description">
+            Ein Witz im Lift, zufällig gefilmt. Daraus wurde unser erster
+            Hopecore-Edit und der Anfang von MMP Premium.
+          </p>
+        </div>
+
+        <!-- Mittlere Spalte: Sticky 9:16 Video Player -->
+        <div class="scrolly-center">
+          <div class="sticky-video-wrapper">
+            <div class="phone-mockup">
+              <video id="liftVideo" muted playsinline preload="auto">
+                <!-- Pfad zu eurem 9:16 Video -->
+                <source src="assets/lift-edit.mp4" type="video/mp4" />
+              </video>
+              <div class="play-overlay">
+                <button class="btn-play">▶</button>
+              </div>
+              <div class="video-tag">Hopecore Edit, Reel 9:16</div>
+            </div>
+            <p class="video-scroll-caption">Scrollen spult das Video</p>
+          </div>
+        </div>
+
+        <!-- Rechte Spalte: Scroll-Schritte / Notizen -->
+        <div class="scrolly-right">
+          <div class="step-card active" data-step="1">
+            <img
+              src="assets/mascot-gold.png"
+              alt="Mascot"
+              class="step-mascot"
+            />
+            <div class="step-content">
+              <h3>Der Witz</h3>
+              <p>
+                Im Lift erklärt einer von uns, das sei eine leichte, innovative
+                Fortbewegungs-Technologie.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-content">
+              <h3>Der Schnitt</h3>
+              <p>Wir schneiden die Aufnahme zu einem Hopecore-Edit.</p>
+            </div>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-content">
+              <h3>Der Anfang</h3>
+              <p>Das Video wird zum Startschuss für MMP Premium.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== KAPITEL 02: BERLIN ==================== -->
+      <section id="berlin" class="chapter-section container">
+        <div class="chapter-header-row">
+          <div>
+            <span class="chapter-badge">02</span>
+            <h2 class="project-title inline">Berlin</h2>
+            <span class="project-category">Recaps</span>
+          </div>
+          <img
+            src="assets/mascot-gold.png"
+            alt="Berlin Mascot"
+            class="trail-mascot"
+          />
+        </div>
+
+        <!-- Media Slider / Galerie -->
+        <div class="media-carousel">
+          <div class="media-card video-card">
+            <div class="placeholder-icon">▶</div>
+          </div>
+          <div class="media-card image-card">
+            <div class="placeholder-icon">🖼</div>
+          </div>
+          <div class="media-card text-card">
+            <div class="placeholder-icon">💬</div>
+          </div>
+          <div class="media-card video-card">
+            <div class="placeholder-icon">▶</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
 </html>
