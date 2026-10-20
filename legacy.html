@@ -10,7 +10,238 @@
       href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* General Layout */
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ffffff;
+        overflow: hidden;
+        font-family: "Bodoni Moda", serif;
+      }
+
+      .wrapper {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Top Text Styling */
+      .top-text {
+        font-size: 1.2rem;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: #333;
+        margin-bottom: -10px;
+        font-weight: 300;
+      }
+
+      /* Main Title Styling */
+      .flashy-title {
+        color: #ff69b4;
+        font-size: 6rem;
+        font-weight: 300;
+        margin: 0;
+        text-transform: uppercase;
+        text-align: center;
+        white-space: nowrap;
+        max-width: 100%;
+        overflow: hidden;
+        animation: sizePulse 3s infinite ease-in-out,
+          colorFlash 1.5s infinite alternate;
+      }
+
+      @media (max-width: 768px) {
+        .flashy-title {
+          font-size: 4rem;
+          letter-spacing: 2px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .flashy-title {
+          font-size: 3rem;
+          letter-spacing: 1px;
+        }
+      }
+
+      @keyframes sizePulse {
+        0%,
+        100% {
+          transform: scale(1);
+          letter-spacing: 2px;
+        }
+        50% {
+          transform: scale(1.1);
+          letter-spacing: 10px;
+        }
+      }
+
+      @keyframes colorFlash {
+        0% {
+          color: #ff69b4;
+          text-shadow: none;
+        }
+        50% {
+          color: #ff1493;
+          text-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
+        }
+        100% {
+          color: #ff007f;
+          opacity: 0.9;
+        }
+      }
+
+      .ismu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        max-width: 300px;
+      }
+
+      /* Side clickable picture */
+      .side-pic {
+        position: fixed;
+        right: 200px;
+        top: 65%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        z-index: 50;
+        transition: transform 0.2s ease;
+      }
+
+      .side-pic:hover {
+        transform: translateY(-50%) scale(1.08);
+      }
+
+      .side-pic img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 12px;
+        display: block;
+      }
+
+      /* Flashing Button */
+      .prank-button {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #87ceeb;
+        color: white;
+        animation: buttonFlash 0.6s infinite alternate;
+        z-index: 100;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      @keyframes buttonFlash {
+        0% {
+          background-color: #87ceeb;
+        }
+        100% {
+          background-color: #ffffff;
+        }
+      }
+
+      /* Popup Styles */
+      .popup {
+        position: fixed;
+        background-color: #ffb6c1;
+        border: 2px solid #ff69b4;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        max-width: 250px;
+        font-family: "Arial", sans-serif;
+        font-size: 1rem;
+        color: #333;
+        animation: popupAppear 0.3s ease-in;
+      }
+
+      @keyframes popupAppear {
+        0% {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .popup-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #333;
+      }
+
+      .popup-close:hover {
+        color: #ffffff;
+      }
+
+      .secret-popup {
+        position: fixed;
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+        border: 3px solid #ffffff;
+        color: #ffffff;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        animation: secretPulse 0.5s ease-in forwards;
+        width: 400px;
+        padding: 40px;
+        text-align: center;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      @keyframes secretPulse {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.5) rotate(-5deg);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        }
+      }
+
+      .secret-button {
+        display: inline-block;
+        padding: 15px 40px;
+        background-color: #ff69b4;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1.3rem;
+        transition: background-color 0.3s;
+      }
+
+      .secret-button:hover {
+        background-color: #ff1493;
+      }
+    </style>
   </head>
   <body>
     <div class="wrapper">
@@ -35,6 +266,129 @@
     <!-- Popup container -->
     <div id="popupContainer"></div>
 
-    <script src="script.js"></script>
+    <script>
+      const pranks = [
+        "oooooh bisch broke wieso drucksch du das? 😂",
+        "hahaha du bisch so en njeri!",
+        "alter riss di zeme, das isch peinlich",
+        "fucking opfer 🤣",
+        "du hesch gar nüt gwunne!",
+        "schade, schade, schade!",
+        "scheeeeeisss wixxer",
+        "lmaoooooo eat shit",
+        "pissooo (thurgau akzent)",
+        "lalalalala",
+        "gwünnchance isch 1% gell",
+        "das meme mit dem dude wo diamanten isch und er seit 'i am rich' isch so geil",
+        "nur no 100 mal klicke denn günnsch",
+        "1% 1% 1% 1% 1% 1%",
+        "ooooooooohhh",
+        "die nachricht isch nur filler. wart uf di negscht",
+      ];
+
+      const secretMessage = "Du hesch gwunne! 🎉 Ismael isch e dummi sau!";
+      const secretChance = 0.01;
+
+      let popupCount = 0;
+      let round = 1;
+
+      document.querySelector(".prank-button").addEventListener("click", startPrank);
+
+      function startPrank() {
+        if (Math.random() < secretChance) {
+          showSecretMessage();
+          return;
+        }
+        popupCount = 0;
+        round = 1;
+        createPopups(5);
+      }
+
+      function createPopups(count) {
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => {
+            createPopup();
+          }, Math.random() * 3000);
+        }
+      }
+
+      function createPopup() {
+        const container = document.getElementById("popupContainer");
+        const popup = document.createElement("div");
+        popup.className = "popup";
+
+        const randomX = Math.random() * (window.innerWidth - 300);
+        const randomY = Math.random() * (window.innerHeight - 150);
+
+        popup.style.left = randomX + "px";
+        popup.style.top = randomY + "px";
+
+        const randomPrank = pranks[Math.floor(Math.random() * pranks.length)];
+
+        popup.innerHTML = `
+          <button class="popup-close">&times;</button>
+          <p>${randomPrank}</p>
+        `;
+
+        container.appendChild(popup);
+
+        popup.querySelector(".popup-close").addEventListener("click", () => {
+          popup.remove();
+          popupCount++;
+
+          if (popupCount === 5 * round) {
+            if (round === 1) {
+              round = 2;
+              popupCount = 0;
+              createPopups(3);
+            }
+          }
+        });
+      }
+
+      function showSecretMessage() {
+        const container = document.getElementById("popupContainer");
+        const secretPopup = document.createElement("div");
+        secretPopup.className = "popup secret-popup";
+
+        secretPopup.style.left = "50%";
+        secretPopup.style.top = "50%";
+        secretPopup.style.transform = "translate(-50%, -50%)";
+        secretPopup.style.zIndex = "9999";
+
+        secretPopup.innerHTML = `
+          <button class="popup-close">&times;</button>
+          <p style="font-size: 1.5rem; font-weight: bold; color: #FF69B4; margin-bottom: 20px;">Du hesch gwunne!</p>
+          <a href="win.html" class="secret-button">Zum Gewinn</a>
+        `;
+
+        container.appendChild(secretPopup);
+
+        secretPopup.querySelector(".popup-close").addEventListener("click", () => {
+          secretPopup.remove();
+        });
+      }
+
+      /* ── Side pic: hover = gif plays, click = sound ── */
+      const sidePic = document.getElementById("sidePic");
+      const sidePicImg = sidePic.querySelector("img");
+
+      const staticSrc = "img/buttadawg-still.png"; // static preview frame
+      const animSrc = "img/buttadawg.gif";
+
+      sidePicImg.src = staticSrc;
+
+      sidePic.addEventListener("mouseenter", () => {
+        sidePicImg.src = animSrc + "?t=" + Date.now();
+      });
+
+      sidePic.addEventListener("mouseleave", () => {
+        sidePicImg.src = staticSrc;
+      });
+
+      sidePic.addEventListener("click", () => {
+        new Audio("sound/buttadawg.mp3").play();
+      });
+    </script>
   </body>
 </html>
