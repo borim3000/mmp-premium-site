@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MMP PREMIUM - GEWONNEN!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* Leichter, knalliger Gradient um #ff007b herum */
+        background: radial-gradient(circle at center, #ff4da6 0%, #ff007b 55%, #b30056 100%);
+        font-family: "Bodoni Moda", serif;
+        color: #ffffff;
+        overflow: hidden;
+        text-align: center;
+      }
+
+      .win-container {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(10px);
+        border: 3px solid #ffffff;
+        border-radius: 20px;
+        padding: 40px 30px;
+        max-width: 550px;
+        width: 90%;
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.5),
+          0 0 80px rgba(255, 215, 0, 0.4);
+        animation: cardFloat 3s ease-in-out infinite alternate;
+        z-index: 10;
+      }
+
+      .win-title {
+        font-size: 3.5rem;
+        margin: 0 0 15px 0;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        color: #fff;
+        text-shadow: 0 0 10px #fff, 0 0 25px #ffd700, 0 0 45px #ff007b;
+        animation: titleFlash 0.8s infinite alternate;
+      }
+
+      .image-placeholder {
+        width: 260px;
+        height: 260px;
+        margin: 20px auto;
+        border-radius: 16px;
+        border: 4px dashed #ffd700;
+        background: rgba(0, 0, 0, 0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+        animation: pulseGlow 1.5s infinite alternate;
+      }
+
+      .image-placeholder img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .win-text {
+        font-family: "Arial", sans-serif;
+        font-size: 1.2rem;
+        line-height: 1.5;
+        margin: 20px 0 30px 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .party-btn {
+        padding: 14px 32px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        background: linear-gradient(135deg, #ffd700, #ffae00);
+        color: #1a1a1a;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .party-btn:hover {
+        transform: scale(1.1) rotate(-2deg);
+        box-shadow: 0 0 35px rgba(255, 255, 255, 1);
+      }
+
+      .party-btn:active {
+        transform: scale(0.95);
+      }
+
+      @keyframes titleFlash {
+        0% {
+          transform: scale(1);
+          color: #ffffff;
+        }
+        100% {
+          transform: scale(1.06);
+          color: #ffd700;
+        }
+      }
+
+      @keyframes cardFloat {
+        0% {
+          transform: translateY(-8px);
+        }
+        100% {
+          transform: translateY(8px);
+        }
+      }
+
+      @keyframes pulseGlow {
+        0% {
+          box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+          transform: rotate(-1deg);
+        }
+        100% {
+          box-shadow: 0 0 35px rgba(255, 255, 255, 0.9);
+          transform: rotate(1deg);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .win-title {
+          font-size: 2.4rem;
+        }
+        .image-placeholder {
+          width: 200px;
+          height: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="win-container">
+      <h1 class="win-title">🎉 JACKPOT! 🎉</h1>
+
+      <!-- Bild-Platzhalter: Ersetze src mit deinem Bild/GIF -->
+      <div class="image-placeholder">
+        <img src="img/win-placeholder.gif" alt="Gewinner Bild Platzhalter" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>[ BILD PLATZHALTER ]</span>';" />
+      </div>
+
+      <p class="win-text">
+        Unglaublich! Du hast die 1% Chance geknackt und bist offiziell ein absoluter Macher. Hol dir deinen Preis ab!
+      </p>
+
+      <button class="party-btn" id="partyBtn">🔊 NOCHMAL FEIERN!</button>
+    </div>
+
+    <!-- Canvas-Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <script>
+      // 1. Konfetti-Funktion
+      function fireConfetti() {
+        const duration = 2500;
+        const end = Date.now() + duration;
+
+        (function frame() {
+          confetti({
+            particleCount: 6,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: ["#ffd700", "#ffffff", "#00ffff", "#ff007b"],
+          });
+          confetti({
+            particleCount: 6,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: ["#ffd700", "#ffffff", "#00ffff", "#ff007b"],
+          });
+
+          if (Date.now() < end) {
+            requestAnimationFrame(frame);
+          }
+        })();
+      }
+
+      // 2. Party-Sound abspielen (Eigene MP3 + Synthesizer-Fallback)
+      function playPartySound() {
+        const audio = new Audio("sound/party.mp3");
+        audio.play().catch(() => {
+          // Falls sound/party.mp3 noch nicht existiert oder Autoplay greift:
+          // Kurze Party-Fanfare über die Web Audio API erzeugen
+          playSynthFanfare();
+        });
+      }
+
+      function playSynthFanfare() {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+
+        notes.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.12);
+
+          gain.gain.setValueAtTime(0.25, ctx.currentTime + i * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.12 + 0.4);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(ctx.currentTime + i * 0.12);
+          osc.stop(ctx.currentTime + i * 0.12 + 0.4);
+        });
+      }
+
+      // Beim Laden der Seite direkt starten
+      window.addEventListener("DOMContentLoaded", () => {
+        fireConfetti();
+        playPartySound();
+      });
+
+      // Button für extra Konfetti & Sound (umgeht auch jede Browser-Autoplay-Sperre)
+      document.getElementById("partyBtn").addEventListener("click", () => {
+        fireConfetti();
+        playPartySound();
+      });
+    </script>
+  </body>
+</html>
