@@ -62,17 +62,17 @@ Solange es noch kein PHP gibt, speichert das Labubuech nur im eigenen Browser. I
 
 ## Easter Eggs (Liste für die Dozierenden)
 
-| Easter Egg     | Wo                     | Auslöser                                                             | Achievement |
-| -------------- | ---------------------- | -------------------------------------------------------------------- | ----------- |
-| Faahhhh-Button | Footer                 | Gelben Knopf «Nicht drücken» drücken                                 | FAAHHHH     |
-| Geheimfoto     | Jeder goldene Vogel    | Innerhalb von 1,5 Sekunden fünfmal anklicken                         | Geheimfoto  |
-| Inside Joke    | Bildunterschriften     | Gepunktet unterstrichenes Wort antippen oder darüberfahren           | Insider     |
-| Ganz unten     | Ende der Seite         | Bis zum Footer scrollen                                              | Ganz unten  |
+| Easter Egg     | Wo                     | Auslöser                                                                 | Achievement |
+| -------------- | ---------------------- | ------------------------------------------------------------------------ | ----------- |
+| Faahhhh-Button | Footer                 | Gelben Knopf «Nicht drücken» drücken                                     | FAAHHHH     |
+| Geheimfoto     | Jeder goldene Vogel    | Innerhalb von 1,5 Sekunden fünfmal anklicken                             | Geheimfoto  |
+| Inside Joke    | Bildunterschriften     | Gepunktet unterstrichenes Wort antippen oder darüberfahren               | Insider     |
+| Ganz unten     | Ende der Seite         | Bis zum Footer scrollen                                                  | Ganz unten  |
 | Legacy         | Footer                 | Dreimal auf den Schriftzug «MMP PREMIUM» klicken, öffnet einen neuen Tab | Legacy      |
-| Jackpot        | legacy.html            | «Gewinnspiel hier drücken», Gewinnchance 1 %                         | Jackpot     |
-| Buttadawg      | legacy.html            | Bild rechts: darüberfahren und anklicken                             | –           |
-| Labubuech      | Hero links und am Ende | Am pinken Lesezeichen ziehen (Klick auf den Deckel lässt es wackeln) | –           |
-| _weitere_      |                        |                                                                      |             |
+| Jackpot        | legacy.html            | «Gewinnspiel hier drücken», Gewinnchance 1 %                             | Jackpot     |
+| Buttadawg      | legacy.html            | Bild rechts: darüberfahren und anklicken                                 | –           |
+| Labubuech      | Hero links und am Ende | Am pinken Lesezeichen ziehen (Klick auf den Deckel lässt es wackeln)     | –           |
+| _weitere_      |                        |                                                                          |             |
 
 ## Learnings
 
