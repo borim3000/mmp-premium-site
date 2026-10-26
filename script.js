@@ -239,7 +239,10 @@ if (hasGsap && !reduceMotion) {
     items.forEach((item, i) => {
       item.querySelector(".project__title").addEventListener("click", () => {
         const step = (trigger.end - trigger.start) / items.length;
-        window.scrollTo({ top: trigger.start + step * i + 2, behavior: "smooth" });
+        window.scrollTo({
+          top: trigger.start + step * i + 2,
+          behavior: "smooth",
+        });
       });
     });
   });

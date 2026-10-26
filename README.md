@@ -8,7 +8,7 @@ Ein Scrollytelling-Portfolio für den Content von [MMP Premium](https://www.inst
 **Modul:** Interaktive Medien 5, FH Graubünden, HS26
 **Live:** _URL eintragen_
 
-![Screenshot der Startseite](_img/berge.jpg_)
+![Screenshot der Startseite](img/berge.jpg)
 
 ## Kurzbeschreibung
 
@@ -16,24 +16,24 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 
 ## Aufbau der Seite
 
-| Abschnitt | Inhalt | Scrollytelling |
-| --- | --- | --- |
-| Hero | Bergbild, Content Portfolio | Parallax, Vogel springt weg |
-| 01 L.I.F.T | _Inhalt_ | Gepinnt, Scrollen spult das Video |
-| 02 Berlin | _Inhalt_ | Gepinnt, Galerie fährt seitwärts |
-| 03 Rotterdam | _Inhalt_ | Gepinnt, Galerie fährt seitwärts |
-| 04 Digezz | _Inhalt_ | Gepinnt, Projekte wechseln beim Scrollen, Videos über YouTube |
-| Labubuech | Gästebuch | _Stand eintragen_ |
+| Abschnitt    | Inhalt                      | Scrollytelling                                                |
+| ------------ | --------------------------- | ------------------------------------------------------------- |
+| Hero         | Bergbild, Content Portfolio | Parallax, Vogel springt weg                                   |
+| 01 L.I.F.T   | _Inhalt_                    | Gepinnt, Scrollen spult das Video                             |
+| 02 Berlin    | _Inhalt_                    | Gepinnt, Galerie fährt seitwärts                              |
+| 03 Rotterdam | _Inhalt_                    | Gepinnt, Galerie fährt seitwärts                              |
+| 04 Digezz    | _Inhalt_                    | Gepinnt, Projekte wechseln beim Scrollen, Videos über YouTube |
+| Labubuech    | Gästebuch                   | _Stand eintragen_                                             |
 
 ## Technologien
 
-| Technologie | Wofür |
-| --- | --- |
-| HTML, CSS, JavaScript | ganze Seite |
-| [GSAP](https://gsap.com) und ScrollTrigger | Scrollytelling |
-| YouTube-Einbettung (youtube-nocookie) | lange Videos im Kapitel Digezz |
-| [canvas-confetti](https://github.com/catdad/canvas-confetti) | Konfetti auf der Gewinnseite |
-| _PHP und Datenbank_ | _Accounts, Labubuech (geplant)_ |
+| Technologie                                                  | Wofür                           |
+| ------------------------------------------------------------ | ------------------------------- |
+| HTML, CSS, JavaScript                                        | ganze Seite                     |
+| [GSAP](https://gsap.com) und ScrollTrigger                   | Scrollytelling                  |
+| YouTube-Einbettung (youtube-nocookie)                        | lange Videos im Kapitel Digezz  |
+| [canvas-confetti](https://github.com/catdad/canvas-confetti) | Konfetti auf der Gewinnseite    |
+| _PHP und Datenbank_                                          | _Accounts, Labubuech (geplant)_ |
 
 ## Ordnerstruktur
 
@@ -54,16 +54,16 @@ _Beschreiben, wie man die Seite öffnet, z. B. mit der VS-Code-Erweiterung «Liv
 
 ## Easter Eggs (Liste für die Dozierenden)
 
-| Easter Egg | Wo | Auslöser | Achievement |
-| --- | --- | --- | --- |
-| Faahhhh-Button | Footer | Gelben Knopf «Nicht drücken» drücken | FAAHHHH |
-| Geheimfoto | Jeder goldene Vogel | Innerhalb von 1,5 Sekunden fünfmal anklicken | Geheimfoto |
-| Inside Joke | Bildunterschriften | Gepunktet unterstrichenes Wort antippen oder darüberfahren | Insider |
-| Ganz unten | Ende der Seite | Bis zum Footer scrollen | Ganz unten |
-| Legacy | Footer | Dreimal auf den Schriftzug «MMP PREMIUM» klicken | Legacy |
-| Jackpot | legacy.html | «Gewinnspiel hier drücken», Gewinnchance 1 % | Jackpot |
-| Buttadawg | legacy.html | Bild rechts: darüberfahren und anklicken | – |
-| _weitere_ | | | |
+| Easter Egg     | Wo                  | Auslöser                                                   | Achievement |
+| -------------- | ------------------- | ---------------------------------------------------------- | ----------- |
+| Faahhhh-Button | Footer              | Gelben Knopf «Nicht drücken» drücken                       | FAAHHHH     |
+| Geheimfoto     | Jeder goldene Vogel | Innerhalb von 1,5 Sekunden fünfmal anklicken               | Geheimfoto  |
+| Inside Joke    | Bildunterschriften  | Gepunktet unterstrichenes Wort antippen oder darüberfahren | Insider     |
+| Ganz unten     | Ende der Seite      | Bis zum Footer scrollen                                    | Ganz unten  |
+| Legacy         | Footer              | Dreimal auf den Schriftzug «MMP PREMIUM» klicken           | Legacy      |
+| Jackpot        | legacy.html         | «Gewinnspiel hier drücken», Gewinnchance 1 %               | Jackpot     |
+| Buttadawg      | legacy.html         | Bild rechts: darüberfahren und anklicken                   | –           |
+| _weitere_      |                     |                                                            |             |
 
 ## Learnings
 
