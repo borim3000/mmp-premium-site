@@ -506,9 +506,26 @@ a {
   gap: 12px;
   width: min(clamp(260px, 26vw, 380px), calc(68vh * 9 / 16));
 }
+.scrub__sound {
+  justify-self: start;
+  gap: 8px;
+}
+.scrub__sound svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
 .scrub figcaption {
   font-size: 0.875rem;
   color: var(--ink-soft);
+}
+.scrub figcaption a {
+  color: var(--pink-strong);
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+.scrub figcaption a:hover {
+  color: var(--ink);
 }
 .scrub .bird--peek {
   width: 130px;
@@ -878,6 +895,37 @@ a {
 .egg-dialog form {
   display: flex;
   justify-content: flex-end;
+}
+
+.video-dialog {
+  padding: 16px;
+  border: 0;
+  border-radius: 24px;
+  background: var(--ink);
+}
+.video-dialog::backdrop {
+  background: rgba(33, 33, 33, 0.8);
+}
+.video-dialog video {
+  display: block;
+  height: min(78vh, 760px);
+  width: auto;
+  max-width: calc(100vw - 64px);
+  aspect-ratio: 9 / 16;
+  border-radius: 14px;
+  background: #000;
+}
+.video-dialog form {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+.video-dialog .btn--secondary {
+  border-color: var(--white);
+  color: var(--white);
+}
+.video-dialog .btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .toasts {

@@ -134,12 +134,13 @@ if (hasGsap && !reduceMotion) {
     const pin = section.querySelector(".chapter__pin");
     const bar = section.querySelector("[data-scrub-progress]");
     const media = section.querySelector(".scrub .media");
+    const length = Number(section.dataset.scrubLength) || 200; // in % der Bildschirmhöhe
     prepareVideos(section);
     ScrollTrigger.create({
       trigger: section,
       pin,
       start: "top top",
-      end: "+=200%",
+      end: `+=${length}%`,
       scrub: true,
       onUpdate: (self) => {
         bar.style.width = `${self.progress * 100}%`;
@@ -156,7 +157,7 @@ if (hasGsap && !reduceMotion) {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "+=200%",
+          end: `+=${length}%`,
           scrub: true,
         },
       }
@@ -285,6 +286,31 @@ document.querySelectorAll("[data-gallery]").forEach((pin) => {
     },
     { passive: true }
   );
+});
+
+/* ---------- Video mit Ton ----------
+   Beim Scrollen läuft das Video stumm. Der Knopf öffnet es in einem Fenster
+   mit Ton und Steuerung, ab der Stelle, an der man gerade ist. */
+
+const soundDialog = document.querySelector("[data-sound-dialog]");
+const soundVideo = soundDialog.querySelector("video");
+
+document.querySelectorAll("[data-sound-play]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const source = button.closest("figure").querySelector("video");
+    soundVideo.src = source.currentSrc || source.src;
+    soundVideo.poster = source.poster;
+    const start = source.currentTime || 0;
+    // Fast am Ende? Dann von vorne beginnen
+    soundVideo.currentTime = start > (source.duration || 0) - 2 ? 0 : start;
+    soundDialog.showModal();
+    soundVideo.play().catch(() => {});
+  });
+});
+
+soundDialog.addEventListener("close", () => soundVideo.pause());
+soundDialog.addEventListener("click", (event) => {
+  if (event.target === soundDialog) soundDialog.close(); // Klick neben das Video schliesst
 });
 
 /* =========================================================
