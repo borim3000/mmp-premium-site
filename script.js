@@ -539,34 +539,20 @@ new IntersectionObserver((entries, observer) => {
   }
 }).observe(document.querySelector(".site-footer"));
 
+
 /* =========================================================
    Labubuech
    Zugeklapptes Buch im Hero und am Ende. Das Lesezeichen öffnet es als Pop-up.
-   Seiten: Vorwort, alte Einträge, zuletzt die leere Seite zum Schreiben.
+   Seiten: Vorwort, alle Einträge, zuletzt die leere Seite zum Schreiben.
    Pro Tag 2 Minuten, die Zeit läuft ab dem ersten Buchstaben.
 
-   Vorerst wird im Browser gespeichert (localStorage), damit man es schon ausprobieren kann.
-   Später: Einträge per fetch() aus PHP laden und in saveEntry() dorthin schicken.
-   Zum Testen zurücksetzen (Konsole): localStorage.removeItem("mmp_labubuech_tag")
+   Einträge kommen aus der Datenbank über php/labubuech.php.
+   Der Server prüft die Regeln (Länge, einmal pro Tag, 2 Minuten), der Browser zeigt nur an.
+   Ohne PHP (z. B. GitHub Pages oder Live Server) zeigt das Buch "gerade nicht erreichbar".
    ========================================================= */
 
-const BOOK_ENTRIES_KEY = "mmp_labubuech";
-const BOOK_DAY_KEY = "mmp_labubuech_tag";
+const BOOK_API = "php/labubuech.php";
 const BOOK_SECONDS = 120;
-
-// Platzhalter, bis die Einträge aus der Datenbank kommen
-const DEMO_ENTRIES = [
-  {
-    name: "robin",
-    text: "Platzhalter-Eintrag. Hier stehen später die echten Einträge aus der Datenbank.",
-    date: "2026-10-20T10:42:00",
-  },
-  {
-    name: "naim",
-    text: "Noch ein Platzhalter. Mit den Pfeilen unten blätterst du durch das Buch.",
-    date: "2026-10-22T16:05:00",
-  },
-];
 
 const bookDialog = document.querySelector("[data-book-dialog]");
 const bookPages = bookDialog.querySelector("[data-book-pages]");
@@ -580,48 +566,49 @@ const dateFormat = new Intl.DateTimeFormat("de-CH", {
   year: "numeric",
 });
 
+let entries = []; // Einträge aus der Datenbank
+let bookState = "open"; // "open" = schreiben möglich, "written" / "expired" = für heute zu, "offline" = Server nicht erreichbar
+let deadline = null; // Zeitpunkt (ms), an dem die zwei Minuten vorbei sind; null = noch nicht angefangen
 let pages = []; // alle Seiten als Elemente
 let view = 0; // erste sichtbare Seite
 let bookTimer = null;
+let starting = false;
+let saving = false;
 
-function readJson(key, fallback) {
+// Anfrage an php/labubuech.php. Wirft einen Fehler mit status, wenn der Server ablehnt.
+async function bookApi(method, data) {
+  const response = await fetch(BOOK_API, {
+    method,
+    body: data ? new URLSearchParams(data) : undefined,
+    headers: { Accept: "application/json" },
+  });
+  const json = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(json.error || "Das hat nicht geklappt.");
+    error.status = response.status;
+    throw error;
+  }
+  return json;
+}
+
+async function loadBook() {
   try {
-    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+    const data = await bookApi("GET");
+    // Ohne PHP liefert der Server die Datei als Text statt JSON
+    if (!Array.isArray(data.entries)) throw new Error("Keine Antwort von PHP");
+    entries = data.entries;
+    deadline = data.left === null ? null : Date.now() + data.left * 1000;
+    if (data.wroteToday) bookState = "written";
+    else if (data.left !== null && data.left <= 0) bookState = "expired";
+    else bookState = "open";
   } catch {
-    return fallback;
+    entries = [];
+    bookState = "offline";
   }
 }
-function writeJson(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* privates Fenster */
-  }
-}
 
-function today() {
-  return new Date().toLocaleDateString("sv-SE"); // JJJJ-MM-TT, lokale Zeit
-}
-
-// Wie viel Zeit heute noch übrig ist
-function loadDay() {
-  const day = readJson(BOOK_DAY_KEY, null);
-  if (!day || day.day !== today())
-    return { day: today(), left: BOOK_SECONDS, done: false };
-  return day;
-}
-let bookDay = loadDay();
-
-function loadEntries() {
-  return [...DEMO_ENTRIES, ...readJson(BOOK_ENTRIES_KEY, [])];
-}
-
-function saveEntry(entry) {
-  const own = readJson(BOOK_ENTRIES_KEY, []);
-  own.push(entry);
-  writeJson(BOOK_ENTRIES_KEY, own);
-  // Später: fetch("labubuech.php", { method: "POST", body: new URLSearchParams(entry) })
-}
+const timeLeft = () =>
+  deadline ? Math.max(0, (deadline - Date.now()) / 1000) : BOOK_SECONDS;
 
 function makePage(type) {
   const page = document.createElement("article");
@@ -629,17 +616,34 @@ function makePage(type) {
   return page;
 }
 
-function buildWritePage() {
+function notePage(title, text) {
   const page = makePage("write");
-  if (bookDay.done) {
-    const title = document.createElement("h3");
-    title.textContent = "Für heute zu";
-    const text = document.createElement("p");
-    text.textContent =
-      "Du hast heute schon ins Labubuech geschrieben. Morgen hast du wieder zwei Minuten.";
-    page.append(title, text);
-    return page;
-  }
+  const h3 = document.createElement("h3");
+  h3.textContent = title;
+  const p = document.createElement("p");
+  p.textContent = text;
+  page.append(h3, p);
+  return page;
+}
+
+function buildWritePage() {
+  if (bookState === "offline")
+    return notePage(
+      "Gerade nicht erreichbar",
+      "Das Labubuech ist im Moment nicht erreichbar. Versuch es später nochmal."
+    );
+  if (bookState === "written")
+    return notePage(
+      "Für heute zu",
+      "Du hast heute schon ins Labubuech geschrieben. Morgen hast du wieder zwei Minuten."
+    );
+  if (bookState === "expired")
+    return notePage(
+      "Für heute zu",
+      "Deine zwei Minuten für heute sind vorbei. Morgen kannst du wieder ins Labubuech schreiben."
+    );
+
+  const page = makePage("write");
   page.append(writeTemplate.content.cloneNode(true));
   const form = page.querySelector("[data-book-form]");
   form.elements.message.addEventListener("input", startTimer);
@@ -649,7 +653,7 @@ function buildWritePage() {
       form.elements.message.focus();
       return;
     }
-    finishEntry("Eingetragen", "Danke! Dein Eintrag steht jetzt im Labubuech.");
+    finishEntry(false);
   });
   return page;
 }
@@ -671,7 +675,7 @@ function buildPages() {
     <img src="img/vogel.png" alt="" width="90" height="110" />`;
   list.push(intro);
 
-  loadEntries().forEach((entry) => {
+  entries.forEach((entry) => {
     const page = makePage("entry");
     const name = document.createElement("h3");
     name.textContent = entry.name;
@@ -735,29 +739,36 @@ function showView(index, direction = 0) {
 function showTime() {
   const form = bookPages.querySelector("[data-book-form]");
   if (!form) return;
-  const left = Math.max(0, Math.ceil(bookDay.left));
+  const left = Math.ceil(timeLeft());
   form.querySelector("[data-book-time]").textContent = `${String(
     Math.floor(left / 60)
   ).padStart(2, "0")}:${String(left % 60).padStart(2, "0")}`;
   form.querySelector("[data-book-progress]").style.width = `${
-    (Math.max(0, bookDay.left) / BOOK_SECONDS) * 100
+    (timeLeft() / BOOK_SECONDS) * 100
   }%`;
 }
 
-function startTimer() {
-  if (bookTimer || bookDay.done) return;
-  let last = performance.now();
+// Erster Buchstabe: der Server startet die zwei Minuten und meldet die Restzeit
+async function startTimer() {
+  if (deadline) return startTicking();
+  if (starting || bookState !== "open") return;
+  starting = true;
+  try {
+    const data = await bookApi("POST", { action: "start" });
+    deadline = Date.now() + data.left * 1000;
+    startTicking();
+  } catch (error) {
+    handleBookError(error);
+  } finally {
+    starting = false;
+  }
+}
+
+function startTicking() {
+  if (bookTimer) return;
   bookTimer = setInterval(() => {
-    const now = performance.now();
-    bookDay.left -= (now - last) / 1000;
-    last = now;
-    writeJson(BOOK_DAY_KEY, bookDay);
     showTime();
-    if (bookDay.left <= 0)
-      finishEntry(
-        "Zeit um",
-        "Was du geschrieben hast, steht trotzdem im Labubuech."
-      );
+    if (timeLeft() <= 0) finishEntry(true);
   }, 250);
 }
 
@@ -766,38 +777,67 @@ function stopTimer() {
   bookTimer = null;
 }
 
+// Server lehnt ab: heute schon geschrieben (429) oder Zeit vorbei (403) -> Buch zu.
+// Sonst (z. B. kein Internet) bleibt der Text stehen, damit nichts verloren geht.
+function handleBookError(error) {
+  toast("Labubuech", error.message);
+  if (error.status === 429 || error.status === 403) {
+    stopTimer();
+    bookState = error.status === 429 ? "written" : "expired";
+    buildPages();
+    showView(lastView());
+  }
+}
+
 // Eintrag speichern (Knopf oder Zeit abgelaufen), danach ist das Buch für heute zu
-function finishEntry(title, text) {
+async function finishEntry(timeUp) {
+  if (saving) return;
+  saving = true;
   stopTimer();
   const form = bookPages.querySelector("[data-book-form]");
   const message = form ? form.elements.message.value.trim() : "";
-  if (message) {
-    saveEntry({
-      name: form.elements.name.value.trim() || "anonym",
-      text: message,
-      date: new Date().toISOString(),
-    });
-    toast(title, text);
-  } else {
-    toast(
-      "Zeit um",
-      "Das Labubuech ist für heute zu. Morgen hast du wieder zwei Minuten."
-    );
+  if (form) form.querySelector("button[type=submit]").disabled = true;
+
+  try {
+    if (message) {
+      const data = await bookApi("POST", {
+        action: "save",
+        name: form.elements.name.value.trim(),
+        text: message,
+      });
+      entries.push(data.entry);
+      toast(
+        timeUp ? "Zeit um" : "Eingetragen",
+        timeUp
+          ? "Was du geschrieben hast, steht trotzdem im Labubuech."
+          : "Danke! Dein Eintrag steht jetzt im Labubuech."
+      );
+    } else {
+      toast(
+        "Zeit um",
+        "Das Labubuech ist für heute zu. Morgen hast du wieder zwei Minuten."
+      );
+    }
+    bookState = message ? "written" : "expired";
+    if (form) form.reset();
+    buildPages();
+    // Doppelseite mit dem neusten Eintrag zeigen (Seite 0 ist das Vorwort)
+    const newest = entries.length;
+    showView(newest - (newest % perView()));
+  } catch (error) {
+    if (form) form.querySelector("button[type=submit]").disabled = false;
+    handleBookError(error);
+  } finally {
+    saving = false;
   }
-  bookDay.done = true;
-  writeJson(BOOK_DAY_KEY, bookDay);
-  if (form) form.reset();
-  buildPages();
-  // Doppelseite mit dem neusten Eintrag zeigen
-  const newest = loadEntries().length; // Seite 0 ist das Vorwort
-  showView(newest - (newest % perView()));
 }
 
-function openBook() {
-  bookDay = loadDay(); // neuer Tag, neue zwei Minuten
+async function openBook() {
+  await loadBook();
   buildPages();
   showView(lastView()); // aufschlagen bei der Seite zum Schreiben
-  bookDialog.showModal();
+  if (!bookDialog.open) bookDialog.showModal();
+  if (bookState === "open" && deadline) startTicking(); // Zeit läuft schon seit vorhin
 }
 
 document
@@ -824,7 +864,8 @@ bookDialog.addEventListener("keydown", (event) => {
   if (event.key === "ArrowLeft") showView(view - perView(), -1);
   if (event.key === "ArrowRight") showView(view + perView(), 1);
 });
-bookDialog.addEventListener("close", stopTimer); // Zeit läuft nur bei offenem Buch
+// Anzeige stoppen beim Schliessen. Die zwei Minuten laufen auf dem Server weiter.
+bookDialog.addEventListener("close", stopTimer);
 bookDialog.addEventListener("click", (event) => {
   if (event.target === bookDialog) bookDialog.close();
 });

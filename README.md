@@ -36,8 +36,8 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | [GSAP](https://gsap.com) und ScrollTrigger                   | Scrollytelling                                                          |
 | YouTube-Einbettung (youtube-nocookie)                        | Featured, Awards und Digezz                                             |
 | [canvas-confetti](https://github.com/catdad/canvas-confetti) | Konfetti auf der Gewinnseite                                            |
-| localStorage                                                 | Achievements und Labubuech-Einträge (vorläufig, nur im eigenen Browser) |
-| _PHP und Datenbank_                                          | _Accounts, Labubuech für alle (geplant)_                                |
+| localStorage                                                 | Achievements (vorläufig, nur im eigenen Browser)                        |
+| PHP (PDO) und MySQL                                          | Labubuech: Einträge laden und speichern, Regeln prüfen                  |
 
 ## Ordnerstruktur
 
@@ -50,15 +50,30 @@ script.js       Scrollytelling, Easter Eggs, Achievements
 img/            Bilder
 video/          Videos und Poster-Bilder
 sound/          Sounds
+php/            Labubuech: labubuech.php, config.example.php, labubuech.sql
 ```
 
 ## Lokal starten
 
 _Beschreiben, wie man die Seite öffnet, z. B. mit der VS-Code-Erweiterung «Live Server» oder `php -S localhost:8000`._
 
-## Labubuech zurücksetzen (zum Testen)
+## Labubuech (PHP und Datenbank)
 
-Solange es noch kein PHP gibt, speichert das Labubuech nur im eigenen Browser. In der Browser-Konsole gibt `localStorage.removeItem("mmp_labubuech_tag")` wieder zwei Minuten, `localStorage.removeItem("mmp_labubuech")` löscht die eigenen Einträge.
+Das Labubuech braucht einen Server mit PHP und MySQL. Auf GitHub Pages oder mit Live Server zeigt das Buch «Gerade nicht erreichbar».
+
+1. Tabelle anlegen: `php/labubuech.sql` (in phpMyAdmin unter «SQL» einfügen), falls sie noch nicht existiert.
+2. `php/config.example.php` kopieren, die Kopie `php/config.php` nennen und Zugangsdaten, Tabellenname und einen langen Zufallstext als `salt` eintragen. `config.php` steht in der `.gitignore` und kommt nicht ins Repo.
+3. Alle Dateien auf den Server laden, auch `php/config.php`.
+
+Der Server prüft die Regeln, nicht der Browser:
+
+- Name höchstens 24, Nachricht höchstens 400 Zeichen, Nachricht nicht leer
+- ein Eintrag pro Besucher und Tag (Schweizer Zeit). Besucher werden über ein Cookie erkannt, nicht über die IP-Adresse, weil sich im FH-WLAN alle eine IP teilen.
+- gespeichert wird nur innerhalb von 2 Minuten ab dem ersten Buchstaben (mit 15 Sekunden Puffer)
+
+Einen Eintrag ausblenden: in phpMyAdmin bei diesem Eintrag `hidden` auf `1` setzen.
+
+Zum Testen nochmals schreiben: im Browser die Cookies der Seite löschen, dann gilt man als neuer Besucher.
 
 ## Easter Eggs (Liste für die Dozierenden)
 
