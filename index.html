@@ -6,7 +6,7 @@
     <title>MMP Premium – Content Portfolio</title>
     <meta
       name="description"
-      content="Der Content von MMP Premium: L.I.F.T, Berlin, Rotterdam und Digezz."
+      content="Der Content von MMP Premium: Cuschinar Difficil, L.I.F.T, Berlin, Multimedia Awards 2025, Rotterdam und Digezz."
     />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <a class="skip-link" href="#lift">Zum Content springen</a>
+    <a class="skip-link" href="#featured">Zum Content springen</a>
 
     <!-- ============ KOPFZEILE ============ -->
     <header class="site-header">
@@ -35,7 +35,6 @@
           </svg>
           <span data-achievement-count>0/6</span>
         </span>
-        <a class="btn btn--primary" href="#labubuech">Labubuech</a>
       </div>
       <div class="scroll-progress" aria-hidden="true">
         <span data-scroll-progress></span>
@@ -52,16 +51,142 @@
         </div>
         <h1 class="hero__title visually-hidden" id="hero-title">MMP Premium</h1>
         <p class="hero__subtitle">Content Portfolio</p>
-        <img
+
+        <!-- Labubuech: zugeklapptes Buch. Das Lesezeichen öffnet das Buch (Pop-up unten). -->
+        <div class="book book--hero" data-book>
+          <div class="book__cover" aria-hidden="true">
+            <span class="book__title">Labubuech</span>
+          </div>
+          <button
+            class="book__ribbon"
+            type="button"
+            data-book-open
+            aria-label="Labubuech öffnen"
+            title="Labubuech öffnen"
+          ></button>
+        </div>
+
+        <!-- Vogel: sitzt, beim Scrollen wechselt er zum fliegenden Bild und fliegt ein Stück weg.
+           img/vogel-fliegt.png ist ein Platzhalter (gedrehter Vogel) und wird durch das echte Bild ersetzt. -->
+        <span
           class="bird bird--hero"
           data-bird
           data-egg="img/geheimfoto-platzhalter.svg"
-          src="img/vogel.png"
-          alt=""
-          width="160"
-          height="195"
-        />
+        >
+          <img
+            class="bird__sit"
+            src="img/vogel.png"
+            alt=""
+            width="160"
+            height="195"
+          />
+          <img
+            class="bird__fly"
+            src="img/vogel-fliegt.png"
+            alt=""
+            width="160"
+            height="186"
+          />
+        </span>
         <p class="hero__hint" aria-hidden="true">Scrollen</p>
+      </section>
+
+      <!-- ============ FEATURED: CUSCHINAR DIFFICIL ============ -->
+      <!-- Unser Highlight zuerst. Gepinnt: Die sechs Folgen fahren beim Scrollen seitwärts.
+         Pro Folge bei data-youtube die Video-ID eintragen (Teil nach "v=" im YouTube-Link). -->
+      <section
+        class="chapter chapter--gallery chapter--featured"
+        id="featured"
+        aria-labelledby="featured-title"
+      >
+        <div class="chapter__pin" data-gallery>
+          <header class="chapter__head chapter__head--row">
+            <p class="kicker">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 2.5l2.9 6.2 6.8.7-5.1 4.6 1.4 6.7L12 17.3l-6 3.4 1.4-6.7-5.1-4.6 6.8-.7z"
+                />
+              </svg>
+              Featured
+            </p>
+            <h2 id="featured-title">Cuschinar Difficil</h2>
+            <p class="chapter__sub">Sechs Folgen auf YouTube</p>
+          </header>
+
+          <div
+            class="gallery"
+            tabindex="0"
+            aria-label="Cuschinar Difficil, sechs Folgen, horizontal scrollbar"
+          >
+            <ol class="gallery__track">
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="VIDEO_ID"
+                  data-title="Cuschinar Difficil, Folge 1"
+                  data-label="Folge 1, YouTube"
+                ></div>
+                <h3>Folge 1</h3>
+                <p class="post__meta">Titel folgt</p>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="VIDEO_ID"
+                  data-title="Cuschinar Difficil, Folge 2"
+                  data-label="Folge 2, YouTube"
+                ></div>
+                <h3>Folge 2</h3>
+                <p class="post__meta">Titel folgt</p>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="VIDEO_ID"
+                  data-title="Cuschinar Difficil, Folge 3"
+                  data-label="Folge 3, YouTube"
+                ></div>
+                <h3>Folge 3</h3>
+                <p class="post__meta">Titel folgt</p>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="VIDEO_ID"
+                  data-title="Cuschinar Difficil, Folge 4"
+                  data-label="Folge 4, YouTube"
+                ></div>
+                <h3>Folge 4</h3>
+                <p class="post__meta">Titel folgt</p>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="VIDEO_ID"
+                  data-title="Cuschinar Difficil, Folge 5"
+                  data-label="Folge 5, YouTube"
+                ></div>
+                <h3>Folge 5</h3>
+                <p class="post__meta">Titel folgt</p>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="VIDEO_ID"
+                  data-title="Cuschinar Difficil, Folge 6"
+                  data-label="Folge 6, YouTube"
+                ></div>
+                <h3>Folge 6</h3>
+                <p class="post__meta">Titel folgt</p>
+              </li>
+            </ol>
+          </div>
+
+          <div class="gallery__progress">
+            <div class="progress"><span data-gallery-progress></span></div>
+            <output data-gallery-count>1 / 6</output>
+          </div>
+        </div>
       </section>
 
       <!-- ============ 01 L.I.F.T ============ -->
@@ -213,15 +338,73 @@
         </div>
       </section>
 
-      <!-- ============ 03 ROTTERDAM ============ -->
+      <!-- ============ 03 MULTIMEDIA AWARDS 2025 ============ -->
+      <!-- Nicht gepinnt: Pokal, Text und Bilder fliegen beim Hineinscrollen ein. -->
       <section
-        class="chapter chapter--gallery chapter--white"
+        class="chapter chapter--awards chapter--white"
+        id="awards"
+        aria-labelledby="awards-title"
+      >
+        <div class="chapter__pin">
+          <header class="chapter__head chapter__head--row">
+            <span class="chapter__num" aria-hidden="true">03</span>
+            <h2 id="awards-title">Multimedia Awards 2025</h2>
+          </header>
+
+          <div class="awards" data-reveal-group>
+            <div class="awards__text" data-reveal>
+              <p class="award-badge">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 14.9V18h3v3H8v-3h3v-3.1A5 5 0 0 1 8.4 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1 1.7V7zm10 0v2.7A2 2 0 0 0 18 8V7h-1z"
+                  />
+                </svg>
+                Platzhalter: Gewinner oder Nominiert
+              </p>
+              <p class="awards__category">Kategorie folgt</p>
+              <p>
+                Zwei, drei Sätze: Mit welchem Projekt wart ihr dabei und was ist
+                passiert?
+              </p>
+              <a class="project__link" href="#">Mehr zu den Awards</a>
+            </div>
+            <div
+              class="media media--wide awards__main"
+              data-reveal
+              data-youtube="VIDEO_ID"
+              data-title="Multimedia Awards 2025"
+              data-label="Video 16:9, YouTube"
+            ></div>
+            <div class="awards__photos">
+              <div
+                class="media media--photo"
+                data-reveal
+                data-label="Foto"
+              ></div>
+              <div
+                class="media media--square"
+                data-reveal
+                data-label="Foto"
+              ></div>
+              <div
+                class="media media--photo"
+                data-reveal
+                data-label="Foto"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 04 ROTTERDAM ============ -->
+      <section
+        class="chapter chapter--gallery"
         id="rotterdam"
         aria-labelledby="rotterdam-title"
       >
         <div class="chapter__pin" data-gallery>
           <header class="chapter__head chapter__head--row">
-            <span class="chapter__num" aria-hidden="true">03</span>
+            <span class="chapter__num" aria-hidden="true">04</span>
             <h2 id="rotterdam-title">Rotterdam</h2>
             <p class="chapter__sub">Recaps</p>
           </header>
@@ -271,17 +454,17 @@
         </div>
       </section>
 
-      <!-- ============ 04 DIGEZZ ============ -->
-      <!-- Gepinnt: Pro Projekt eine Bildschirmhöhe. Scrollen spult das Video, danach wechselt das Projekt. -->
+      <!-- ============ 05 DIGEZZ ============ -->
+      <!-- Gepinnt: Pro Projekt eine Bildschirmhöhe, danach wechselt das Projekt. -->
       <section
-        class="chapter chapter--projects"
+        class="chapter chapter--projects chapter--white"
         id="digezz"
         data-projects
         aria-labelledby="digezz-title"
       >
         <div class="chapter__pin">
           <header class="chapter__head chapter__head--row">
-            <span class="chapter__num" aria-hidden="true">04</span>
+            <span class="chapter__num" aria-hidden="true">05</span>
             <h2 id="digezz-title">Digezz</h2>
             <p class="chapter__sub">Projekte</p>
           </header>
@@ -291,7 +474,7 @@
               <li class="project is-active" data-project>
                 <h3>
                   <button class="project__title" type="button">
-                    Projekt 1
+                    Cuschinar Difficil
                   </button>
                 </h3>
                 <p class="project__meta">Jahr, eure Rolle</p>
@@ -299,26 +482,17 @@
                   Zwei Sätze zum Projekt: worum es geht und was ihr gemacht
                   habt.
                 </p>
-                <a class="project__link" href="#">Auf Digezz ansehen</a>
+                <a
+                  class="project__link"
+                  href="https://www.digezz.ch/mmp-premium-cuschinar-difficil/"
+                  target="_blank"
+                  rel="noopener"
+                  >Auf Digezz ansehen</a
+                >
               </li>
               <li class="project" data-project>
                 <h3>
-                  <button class="project__title" type="button">
-                    Projekt 2
-                  </button>
-                </h3>
-                <p class="project__meta">Jahr, eure Rolle</p>
-                <p class="project__text">
-                  Zwei Sätze zum Projekt: worum es geht und was ihr gemacht
-                  habt.
-                </p>
-                <a class="project__link" href="#">Auf Digezz ansehen</a>
-              </li>
-              <li class="project" data-project>
-                <h3>
-                  <button class="project__title" type="button">
-                    Projekt 3
-                  </button>
+                  <button class="project__title" type="button">ISEMAA</button>
                 </h3>
                 <p class="project__meta">Jahr, eure Rolle</p>
                 <p class="project__text">
@@ -347,22 +521,15 @@
                 class="media media--wide is-active"
                 data-project-media
                 data-youtube="VIDEO_ID"
-                data-title="Projekt 1"
-                data-label="Projekt 1, YouTube"
+                data-title="Cuschinar Difficil"
+                data-label="Cuschinar Difficil, YouTube"
               ></div>
               <div
                 class="media media--wide"
                 data-project-media
                 data-youtube="VIDEO_ID"
-                data-title="Projekt 2"
-                data-label="Projekt 2, YouTube"
-              ></div>
-              <div
-                class="media media--wide"
-                data-project-media
-                data-youtube="VIDEO_ID"
-                data-title="Projekt 3"
-                data-label="Projekt 3, YouTube"
+                data-title="ISEMAA"
+                data-label="ISEMAA, YouTube"
               ></div>
               <div class="progress"><span data-scrub-progress></span></div>
             </div>
@@ -370,8 +537,26 @@
         </div>
       </section>
 
+      <!-- ============ STAY TUNED ============ -->
+      <!-- Der Satz fährt beim Scrollen seitwärts durchs Bild. -->
+      <section class="outro" aria-label="Ausblick">
+        <p class="outro__line" data-outro>
+          Stay tuned for the future
+          <span class="outro__emoji" aria-hidden="true">🤪</span
+          ><span class="outro__emoji" aria-hidden="true">🤪</span
+          ><span class="outro__emoji" aria-hidden="true">🤪</span>
+        </p>
+        <a
+          class="outro__link"
+          href="https://www.instagram.com/mmp_premium"
+          target="_blank"
+          rel="noopener"
+          >Neues zuerst auf Instagram @mmp_premium</a
+        >
+      </section>
+
       <!-- ============ LABUBUECH ============ -->
-      <!-- Grundgerüst. Timer, Cooldown und Einträge kommen später über PHP und die Datenbank. -->
+      <!-- Zweiter Eingang zum gleichen Buch wie im Hero. -->
       <section
         class="labubuech"
         id="labubuech"
@@ -380,52 +565,35 @@
         <div class="labubuech__intro">
           <h2 id="labubuech-title">Labubuech</h2>
           <p>
-            Unser Gästebuch. Du hast pro Tag zwei Minuten, um etwas
-            hineinzuschreiben. Danach ist das Buch für dich bis morgen zu.
+            Unser Gästebuch. Pro Tag hast du zwei Minuten, um etwas
+            hineinzuschreiben. Zieh am Lesezeichen und blättere durch, was
+            andere geschrieben haben.
           </p>
+          <button class="btn btn--primary" type="button" data-book-open>
+            Labubuech öffnen
+          </button>
         </div>
 
-        <div class="labubuech__grid">
-          <form class="writer" data-writer>
-            <img
-              class="bird bird--guard"
-              data-bird
-              data-egg="img/geheimfoto-platzhalter.svg"
-              src="img/vogel.png"
-              alt=""
-              width="110"
-              height="134"
-            />
-            <p class="writer__timer">
-              <span data-writer-time>02:00</span> <small>noch übrig</small>
-            </p>
-            <div class="progress progress--soft">
-              <span data-writer-progress style="width: 100%"></span>
-            </div>
-            <label class="field">
-              <span>Deine Nachricht</span>
-              <textarea
-                name="message"
-                rows="4"
-                maxlength="500"
-                placeholder="Was willst du loswerden?"
-              ></textarea>
-            </label>
-            <button class="btn btn--primary" type="submit">
-              Eintrag speichern
-            </button>
-          </form>
-
-          <ol class="entries" data-entries>
-            <li class="entry">
-              <p class="entry__meta">
-                <strong>robin</strong> <time>heute, 10:42</time>
-              </p>
-              <p>
-                Platzhalter-Eintrag. Hier erscheinen später die echten Einträge.
-              </p>
-            </li>
-          </ol>
+        <div class="book book--large" data-book>
+          <img
+            class="bird bird--guard"
+            data-bird
+            data-egg="img/geheimfoto-platzhalter.svg"
+            src="img/vogel.png"
+            alt=""
+            width="110"
+            height="134"
+          />
+          <div class="book__cover" aria-hidden="true">
+            <span class="book__title">Labubuech</span>
+          </div>
+          <button
+            class="book__ribbon"
+            type="button"
+            data-book-open
+            aria-label="Labubuech öffnen"
+            title="Labubuech öffnen"
+          ></button>
         </div>
       </section>
     </main>
@@ -454,6 +622,70 @@
         HS26.
       </p>
     </footer>
+
+    <!-- Labubuech als aufgeschlagenes Buch.
+       Die Seiten baut script.js ("Labubuech"): Vorwort, alte Einträge, zuletzt die leere Seite zum Schreiben. -->
+    <dialog class="book-dialog" data-book-dialog aria-label="Labubuech">
+      <form method="dialog" class="book-dialog__close">
+        <button type="submit" aria-label="Labubuech schliessen">×</button>
+      </form>
+      <div class="open-book">
+        <div class="open-book__pages" data-book-pages></div>
+        <button
+          class="open-book__arrow open-book__arrow--prev"
+          type="button"
+          data-book-prev
+          aria-label="Zurückblättern"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7" />
+          </svg>
+        </button>
+        <button
+          class="open-book__arrow open-book__arrow--next"
+          type="button"
+          data-book-next
+          aria-label="Weiterblättern"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </dialog>
+
+    <!-- Vorlage für die Schreibseite (wird ins Buch kopiert) -->
+    <template id="book-write-page">
+      <form class="book-write" data-book-form>
+        <h3>Dein Eintrag</h3>
+        <p class="book-write__timer">
+          <span data-book-time>02:00</span> <small>noch übrig</small>
+        </p>
+        <div class="progress progress--soft">
+          <span data-book-progress style="width: 100%"></span>
+        </div>
+        <label class="book-field">
+          <span>Name</span>
+          <input
+            name="name"
+            type="text"
+            maxlength="24"
+            autocomplete="nickname"
+            placeholder="anonym"
+          />
+        </label>
+        <label class="book-field book-field--grow">
+          <span>Nachricht</span>
+          <textarea
+            name="message"
+            maxlength="400"
+            required
+            placeholder="Die Zeit läuft ab dem ersten Buchstaben."
+          ></textarea>
+        </label>
+        <button class="btn btn--primary" type="submit">Eintragen</button>
+      </form>
+    </template>
 
     <!-- Geheimfoto (Easter Egg: 5x auf den Vogel klicken) -->
     <dialog class="egg-dialog" data-egg-dialog aria-label="Geheimfoto">

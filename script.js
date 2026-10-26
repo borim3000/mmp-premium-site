@@ -89,7 +89,21 @@ function stopYouTube(media) {
 
 document.querySelectorAll("[data-youtube]").forEach(showYouTubePreview);
 
+// Video, das aus dem Bild gescrollt wird, stoppt von selbst
+const ytObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) stopYouTube(entry.target);
+  });
+});
+document
+  .querySelectorAll("[data-youtube]")
+  .forEach((media) => ytObserver.observe(media));
+
 /* ---------- Animationen ---------- */
+
+// ScrollTrigger in Seitenreihenfolge berechnen (wichtig, weil gepinnte Kapitel die Seite verlängern)
+const sections = [...document.querySelectorAll("main > section")];
+const order = (el) => -sections.indexOf(el.closest("main > section"));
 
 if (hasGsap && !reduceMotion) {
   // Hero: Berge scrollen langsamer (Parallax), Untertitel blendet aus
@@ -114,20 +128,39 @@ if (hasGsap && !reduceMotion) {
       scrub: true,
     },
   });
-  // Vogel springt beim ersten Scroll aus dem Bild
-  gsap.to(".bird--hero", {
-    y: -220,
-    x: 120,
-    rotation: 20,
-    opacity: 0,
-    ease: "power1.in",
-    scrollTrigger: {
-      trigger: ".hero",
-      start: "top top",
-      end: "40% top",
-      scrub: true,
-    },
-  });
+  // Vogel: wechselt beim ersten Scroll zum fliegenden Bild und fliegt ein Stück nach oben rechts
+  const heroBird = document.querySelector(".bird--hero");
+  gsap
+    .timeline({
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "60% top",
+        scrub: 0.6,
+        invalidateOnRefresh: true,
+      },
+    })
+    .to(
+      heroBird.querySelector(".bird__sit"),
+      { opacity: 0, duration: 0.1 },
+      0.04
+    )
+    .to(
+      heroBird.querySelector(".bird__fly"),
+      { opacity: 1, duration: 0.1 },
+      0.04
+    )
+    .to(
+      heroBird,
+      {
+        x: () => window.innerWidth * 0.1,
+        y: () => -window.innerHeight * 0.22,
+        rotation: -8,
+        ease: "power1.out",
+        duration: 1,
+      },
+      0
+    );
 
   // 01 L.I.F.T: gepinnt, Scroll spult das Reel
   document.querySelectorAll("[data-scrub]").forEach((section) => {
@@ -142,6 +175,7 @@ if (hasGsap && !reduceMotion) {
       start: "top top",
       end: `+=${length}%`,
       scrub: true,
+      refreshPriority: order(section),
       onUpdate: (self) => {
         bar.style.width = `${self.progress * 100}%`;
         scrubVideo(media, self.progress);
@@ -188,6 +222,7 @@ if (hasGsap && !reduceMotion) {
           end: () => `+=${distance()}`,
           scrub: 0.5,
           invalidateOnRefresh: true,
+          refreshPriority: order(pin),
           onUpdate: (self) => {
             bar.style.width = `${self.progress * 100}%`;
             count.textContent = `${Math.min(
@@ -220,6 +255,7 @@ if (hasGsap && !reduceMotion) {
       start: "top top",
       end: `+=${items.length * 100}%`,
       scrub: true,
+      refreshPriority: order(section),
       onUpdate: (self) => {
         const pos = self.progress * items.length;
         const index = Math.min(items.length - 1, Math.floor(pos));
@@ -246,6 +282,59 @@ if (hasGsap && !reduceMotion) {
         });
       });
     });
+  });
+
+  // 03 Awards: Text, Video und Fotos fliegen nacheinander ein, der Pokal dreht sich hinein
+  document.querySelectorAll("[data-reveal-group]").forEach((group) => {
+    gsap.from(group.querySelectorAll("[data-reveal]"), {
+      y: 60,
+      opacity: 0,
+      duration: 0.8,
+      ease: "power2.out",
+      stagger: 0.12,
+      scrollTrigger: {
+        trigger: group,
+        start: "top 80%",
+        refreshPriority: order(group),
+      },
+    });
+  });
+  gsap.from(".award-badge svg", {
+    rotation: -30,
+    scale: 0.3,
+    duration: 1,
+    ease: "back.out(2.5)",
+    scrollTrigger: {
+      trigger: ".award-badge",
+      start: "top 85%",
+      refreshPriority: order(document.querySelector(".award-badge")),
+    },
+  });
+
+  // Stay tuned: Der Satz fährt beim Scrollen von rechts nach links, die Emojis drehen sich
+  const outro = document.querySelector("[data-outro]");
+  const outroScroll = {
+    trigger: ".outro",
+    start: "top bottom",
+    end: "bottom top",
+    scrub: true,
+    invalidateOnRefresh: true,
+    refreshPriority: order(outro),
+  };
+  gsap.fromTo(
+    outro,
+    { x: () => window.innerWidth * 0.4 },
+    {
+      x: () => -(outro.scrollWidth - window.innerWidth * 0.6),
+      ease: "none",
+      scrollTrigger: outroScroll,
+    }
+  );
+  gsap.to(".outro__emoji", {
+    rotation: 360,
+    ease: "none",
+    stagger: 0.15,
+    scrollTrigger: { ...outroScroll },
   });
 
   window.addEventListener("load", () => ScrollTrigger.refresh());
@@ -448,12 +537,297 @@ new IntersectionObserver((entries, observer) => {
   }
 }).observe(document.querySelector(".site-footer"));
 
-/* ---------- Labubuech (nur Oberfläche, Backend folgt) ---------- */
+/* =========================================================
+   Labubuech
+   Zugeklapptes Buch im Hero und am Ende. Das Lesezeichen öffnet es als Pop-up.
+   Seiten: Vorwort, alte Einträge, zuletzt die leere Seite zum Schreiben.
+   Pro Tag 2 Minuten, die Zeit läuft ab dem ersten Buchstaben.
 
-document.querySelector("[data-writer]").addEventListener("submit", (event) => {
-  event.preventDefault();
-  toast(
-    "Noch nicht verbunden",
-    "Das Labubuech speichert, sobald PHP und Datenbank angeschlossen sind."
+   Vorerst wird im Browser gespeichert (localStorage), damit man es schon ausprobieren kann.
+   Später: Einträge per fetch() aus PHP laden und in saveEntry() dorthin schicken.
+   Zum Testen zurücksetzen (Konsole): localStorage.removeItem("mmp_labubuech_tag")
+   ========================================================= */
+
+const BOOK_ENTRIES_KEY = "mmp_labubuech";
+const BOOK_DAY_KEY = "mmp_labubuech_tag";
+const BOOK_SECONDS = 120;
+
+// Platzhalter, bis die Einträge aus der Datenbank kommen
+const DEMO_ENTRIES = [
+  {
+    name: "robin",
+    text: "Platzhalter-Eintrag. Hier stehen später die echten Einträge aus der Datenbank.",
+    date: "2026-10-20T10:42:00",
+  },
+  {
+    name: "naim",
+    text: "Noch ein Platzhalter. Mit den Pfeilen unten blätterst du durch das Buch.",
+    date: "2026-10-22T16:05:00",
+  },
+];
+
+const bookDialog = document.querySelector("[data-book-dialog]");
+const bookPages = bookDialog.querySelector("[data-book-pages]");
+const bookPrev = bookDialog.querySelector("[data-book-prev]");
+const bookNext = bookDialog.querySelector("[data-book-next]");
+const writeTemplate = document.querySelector("#book-write-page");
+const twoPages = window.matchMedia("(min-width: 760px)"); // Doppelseite oder Einzelseite
+const dateFormat = new Intl.DateTimeFormat("de-CH", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+let pages = []; // alle Seiten als Elemente
+let view = 0; // erste sichtbare Seite
+let bookTimer = null;
+
+function readJson(key, fallback) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+function writeJson(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    /* privates Fenster */
+  }
+}
+
+function today() {
+  return new Date().toLocaleDateString("sv-SE"); // JJJJ-MM-TT, lokale Zeit
+}
+
+// Wie viel Zeit heute noch übrig ist
+function loadDay() {
+  const day = readJson(BOOK_DAY_KEY, null);
+  if (!day || day.day !== today())
+    return { day: today(), left: BOOK_SECONDS, done: false };
+  return day;
+}
+let bookDay = loadDay();
+
+function loadEntries() {
+  return [...DEMO_ENTRIES, ...readJson(BOOK_ENTRIES_KEY, [])];
+}
+
+function saveEntry(entry) {
+  const own = readJson(BOOK_ENTRIES_KEY, []);
+  own.push(entry);
+  writeJson(BOOK_ENTRIES_KEY, own);
+  // Später: fetch("labubuech.php", { method: "POST", body: new URLSearchParams(entry) })
+}
+
+function makePage(type) {
+  const page = document.createElement("article");
+  page.className = `book-page book-page--${type}`;
+  return page;
+}
+
+function buildWritePage() {
+  const page = makePage("write");
+  if (bookDay.done) {
+    const title = document.createElement("h3");
+    title.textContent = "Für heute zu";
+    const text = document.createElement("p");
+    text.textContent =
+      "Du hast heute schon ins Labubuech geschrieben. Morgen hast du wieder zwei Minuten.";
+    page.append(title, text);
+    return page;
+  }
+  page.append(writeTemplate.content.cloneNode(true));
+  const form = page.querySelector("[data-book-form]");
+  form.elements.message.addEventListener("input", startTimer);
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!form.elements.message.value.trim()) {
+      form.elements.message.focus();
+      return;
+    }
+    finishEntry("Eingetragen", "Danke! Dein Eintrag steht jetzt im Labubuech.");
+  });
+  return page;
+}
+
+function buildPages() {
+  // Angefangenen Text behalten, falls das Buch neu aufgebaut wird
+  const oldForm = bookPages.querySelector("[data-book-form]");
+  const draft = oldForm && {
+    name: oldForm.elements.name.value,
+    message: oldForm.elements.message.value,
+  };
+
+  const list = [];
+  const intro = makePage("intro");
+  intro.innerHTML = `
+    <h3>Labubuech</h3>
+    <p>Unser Gästebuch. Pro Tag hast du zwei Minuten, um etwas hineinzuschreiben.</p>
+    <p>Mit den Pfeilen unten blätterst du durch die Einträge. Ganz hinten wartet deine Seite.</p>
+    <img src="img/vogel.png" alt="" width="90" height="110" />`;
+  list.push(intro);
+
+  loadEntries().forEach((entry) => {
+    const page = makePage("entry");
+    const name = document.createElement("h3");
+    name.textContent = entry.name;
+    const time = document.createElement("time");
+    time.dateTime = entry.date;
+    time.textContent = dateFormat.format(new Date(entry.date));
+    const text = document.createElement("p");
+    text.textContent = entry.text; // als Text, nie als HTML
+    page.append(name, time, text);
+    list.push(page);
+  });
+
+  // Bei der Doppelseite soll die Schreibseite rechts liegen, sonst eine leere Seite einschieben
+  if (twoPages.matches && list.length % 2 === 0) {
+    const blank = makePage("blank");
+    blank.innerHTML = `<img src="img/vogel.png" alt="" width="90" height="110" />`;
+    list.push(blank);
+  }
+  list.push(buildWritePage());
+
+  const numbered = list.filter(
+    (p) => !p.classList.contains("book-page--blank")
   );
+  numbered.forEach((page, i) => {
+    const num = document.createElement("p");
+    num.className = "book-page__num";
+    num.textContent = `Seite ${i + 1} von ${numbered.length}`;
+    page.prepend(num);
+  });
+
+  pages = list;
+  bookPages.replaceChildren(...pages);
+
+  const form = bookPages.querySelector("[data-book-form]");
+  if (form && draft) {
+    form.elements.name.value = draft.name;
+    form.elements.message.value = draft.message;
+  }
+  showTime();
+}
+
+const perView = () => (twoPages.matches ? 2 : 1);
+const lastView = () => Math.max(0, pages.length - perView());
+
+function showView(index, direction = 0) {
+  view = Math.max(0, Math.min(index, lastView()));
+  pages.forEach((page, i) => {
+    page.hidden = i < view || i >= view + perView();
+    page.classList.remove("is-turning-next", "is-turning-prev");
+  });
+  if (direction && !reduceMotion) {
+    // Die neu aufgedeckte Seite klappt um, wie beim Umblättern
+    const page = pages[direction > 0 ? view : view + perView() - 1];
+    void page.offsetWidth;
+    page.classList.add(direction > 0 ? "is-turning-next" : "is-turning-prev");
+  }
+  bookPrev.disabled = view === 0;
+  bookNext.disabled = view >= lastView();
+}
+
+function showTime() {
+  const form = bookPages.querySelector("[data-book-form]");
+  if (!form) return;
+  const left = Math.max(0, Math.ceil(bookDay.left));
+  form.querySelector("[data-book-time]").textContent = `${String(
+    Math.floor(left / 60)
+  ).padStart(2, "0")}:${String(left % 60).padStart(2, "0")}`;
+  form.querySelector("[data-book-progress]").style.width = `${
+    (Math.max(0, bookDay.left) / BOOK_SECONDS) * 100
+  }%`;
+}
+
+function startTimer() {
+  if (bookTimer || bookDay.done) return;
+  let last = performance.now();
+  bookTimer = setInterval(() => {
+    const now = performance.now();
+    bookDay.left -= (now - last) / 1000;
+    last = now;
+    writeJson(BOOK_DAY_KEY, bookDay);
+    showTime();
+    if (bookDay.left <= 0)
+      finishEntry(
+        "Zeit um",
+        "Was du geschrieben hast, steht trotzdem im Labubuech."
+      );
+  }, 250);
+}
+
+function stopTimer() {
+  clearInterval(bookTimer);
+  bookTimer = null;
+}
+
+// Eintrag speichern (Knopf oder Zeit abgelaufen), danach ist das Buch für heute zu
+function finishEntry(title, text) {
+  stopTimer();
+  const form = bookPages.querySelector("[data-book-form]");
+  const message = form ? form.elements.message.value.trim() : "";
+  if (message) {
+    saveEntry({
+      name: form.elements.name.value.trim() || "anonym",
+      text: message,
+      date: new Date().toISOString(),
+    });
+    toast(title, text);
+  } else {
+    toast(
+      "Zeit um",
+      "Das Labubuech ist für heute zu. Morgen hast du wieder zwei Minuten."
+    );
+  }
+  bookDay.done = true;
+  writeJson(BOOK_DAY_KEY, bookDay);
+  if (form) form.reset();
+  buildPages();
+  // Doppelseite mit dem neusten Eintrag zeigen
+  const newest = loadEntries().length; // Seite 0 ist das Vorwort
+  showView(newest - (newest % perView()));
+}
+
+function openBook() {
+  bookDay = loadDay(); // neuer Tag, neue zwei Minuten
+  buildPages();
+  showView(lastView()); // aufschlagen bei der Seite zum Schreiben
+  bookDialog.showModal();
+}
+
+document
+  .querySelectorAll("[data-book-open]")
+  .forEach((button) => button.addEventListener("click", openBook));
+
+// Klick auf den Buchdeckel: das Lesezeichen wackelt als Hinweis
+document.querySelectorAll("[data-book]").forEach((book) => {
+  const ribbon = book.querySelector(".book__ribbon");
+  book.querySelector(".book__cover").addEventListener("click", () => {
+    ribbon.classList.remove("is-wiggling");
+    void ribbon.offsetWidth;
+    ribbon.classList.add("is-wiggling");
+  });
+  ribbon.addEventListener("animationend", () =>
+    ribbon.classList.remove("is-wiggling")
+  );
+});
+
+bookPrev.addEventListener("click", () => showView(view - perView(), -1));
+bookNext.addEventListener("click", () => showView(view + perView(), 1));
+bookDialog.addEventListener("keydown", (event) => {
+  if (event.target.matches("input, textarea")) return;
+  if (event.key === "ArrowLeft") showView(view - perView(), -1);
+  if (event.key === "ArrowRight") showView(view + perView(), 1);
+});
+bookDialog.addEventListener("close", stopTimer); // Zeit läuft nur bei offenem Buch
+bookDialog.addEventListener("click", (event) => {
+  if (event.target === bookDialog) bookDialog.close();
+});
+twoPages.addEventListener("change", () => {
+  if (!bookDialog.open) return;
+  buildPages();
+  showView(lastView());
 });

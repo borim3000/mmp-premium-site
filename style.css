@@ -289,6 +289,18 @@ a {
   right: 12%;
   top: 60%;
 }
+/* Sitzender und fliegender Vogel liegen übereinander, GSAP blendet um */
+.bird--hero img {
+  width: 100%;
+  height: auto;
+}
+.bird--hero .bird__fly {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+}
 .bird--peek {
   width: 140px;
 }
@@ -608,6 +620,46 @@ a {
   text-align: right;
 }
 
+/* ---------- Featured (dunkel, grosse YouTube-Karten) ---------- */
+
+.chapter--featured {
+  background: var(--ink);
+  color: var(--white);
+  --card-w: min(56vw, calc(46svh * 16 / 9));
+}
+.chapter--featured h2 {
+  font-size: clamp(3rem, 6.5vw, 6rem);
+}
+.chapter--featured .chapter__sub,
+.chapter--featured .post__meta {
+  color: var(--grey);
+}
+.chapter--featured .post .media--wide {
+  width: var(--card-w);
+  background: #333333; /* Platzhalter sichtbar auf dunklem Grund */
+}
+.chapter--featured .progress {
+  background: rgba(255, 255, 255, 0.2);
+}
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: center;
+  padding: 6px 14px 6px 10px;
+  border-radius: 999px;
+  background: var(--pink-strong);
+  color: var(--white);
+  font: 600 0.875rem/1 var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.kicker svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
 /* Desktop mit Animation: GSAP verschiebt die Spur, natives Scrollen aus */
 .is-pinned .gallery {
   overflow: visible;
@@ -650,7 +702,54 @@ a {
   opacity: 1;
 }
 
-/* ---------- 04 Digezz ---------- */
+/* ---------- 03 Multimedia Awards ---------- */
+
+.chapter--awards .chapter__pin {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+.awards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+  gap: 40px clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+.awards__text {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  font-size: 1.125rem;
+}
+.award-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px 10px 12px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.award-badge svg {
+  width: 28px;
+  height: 28px;
+  fill: var(--gold);
+}
+.awards__category {
+  font: italic 400 1.75rem/1.2 var(--font-display);
+}
+.awards__photos {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+}
+.awards__photos .media {
+  height: clamp(180px, 26vw, 320px);
+}
+
+/* ---------- 05 Digezz ---------- */
 
 .chapter--projects .chapter__pin {
   display: flex;
@@ -723,99 +822,411 @@ a {
   grid-area: 2 / 1;
 }
 
-/* ---------- Labubuech ---------- */
+/* ---------- Stay tuned ---------- */
+
+.outro {
+  overflow: hidden;
+  padding: clamp(96px, 16vh, 180px) 0;
+  background: var(--pink);
+  color: var(--white);
+  text-align: center;
+}
+.outro__line {
+  width: max-content;
+  padding: 0 var(--gutter);
+  font: 400 clamp(3.5rem, 11vw, 10rem) / 1.05 var(--font-display);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.outro__emoji {
+  display: inline-block;
+  margin-left: 0.08em;
+}
+.outro__link {
+  display: inline-block;
+  margin-top: 40px;
+  font-weight: 600;
+  text-underline-offset: 4px;
+}
+
+/* ---------- Labubuech: zugeklapptes Buch ---------- */
+
+:root {
+  --book-blue: #1f47c2;
+  --book-blue-dark: #142f86;
+  --book-paper: #fbf6ea;
+}
+
+.book {
+  position: absolute;
+  width: var(--book-w, 80px);
+  aspect-ratio: 3 / 4;
+  rotate: -6deg;
+}
+/* Seitenblock, schaut rechts und unten etwas hervor */
+.book::before {
+  content: "";
+  position: absolute;
+  inset: 4% -5% -3% 6%;
+  border-radius: 2px 6px 6px 2px;
+  background: repeating-linear-gradient(
+      to bottom,
+      var(--book-paper) 0 2px,
+      #e6dcc4 2px 3px
+    ),
+    var(--book-paper);
+  box-shadow: 0 10px 24px rgba(33, 33, 33, 0.28);
+}
+.book__cover {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  border-radius: 3px 8px 8px 3px;
+  background: linear-gradient(
+      90deg,
+      var(--book-blue-dark) 0 9%,
+      rgba(255, 255, 255, 0.18) 9% 10%,
+      transparent 10%
+    ),
+    var(--book-blue);
+  box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.book__title {
+  padding-left: 8%;
+  color: var(--gold);
+  font: italic 500 calc(var(--book-w, 80px) * 0.16) / 1 var(--font-display);
+}
+/* Lesezeichen: hängt unten raus, ist der Knopf zum Öffnen */
+.book__ribbon {
+  position: absolute;
+  z-index: 1;
+  left: 64%;
+  top: 86%;
+  width: calc(var(--book-w, 80px) * 0.16);
+  min-width: 12px;
+  height: calc(14% + 34px);
+  padding: 0;
+  border: 0;
+  background: var(--pink);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 86%, 0 100%);
+  transform-origin: top center;
+  cursor: pointer;
+  transition: height 0.2s, background-color 0.2s;
+  animation: ribbon-sway 3.2s ease-in-out infinite;
+}
+/* grössere Klickfläche als das schmale Band */
+.book__ribbon::before {
+  content: "";
+  position: absolute;
+  inset: -6px -14px -10px;
+}
+.book__ribbon:hover,
+.book__ribbon:focus-visible {
+  height: calc(14% + 44px);
+  background: var(--pink-strong);
+}
+.book__ribbon:focus-visible {
+  outline-offset: 2px;
+}
+.book__ribbon.is-wiggling {
+  animation: ribbon-wiggle 0.6s ease-in-out;
+}
+@keyframes ribbon-sway {
+  0%,
+  100% {
+    rotate: -3deg;
+  }
+  50% {
+    rotate: 3deg;
+  }
+}
+@keyframes ribbon-wiggle {
+  0%,
+  100% {
+    rotate: 0deg;
+  }
+  25% {
+    rotate: 14deg;
+  }
+  50% {
+    rotate: -12deg;
+  }
+  75% {
+    rotate: 6deg;
+  }
+}
+
+.book--hero {
+  --book-w: clamp(64px, 6.5vw, 96px);
+  left: 9%;
+  top: 60%;
+  z-index: 2;
+}
+
+/* ---------- Labubuech am Ende ---------- */
 
 .labubuech {
-  padding: 120px var(--gutter);
+  display: grid;
+  grid-template-columns: minmax(0, 640px) auto;
+  justify-content: space-between;
+  align-items: center;
+  gap: 64px;
+  padding: 140px var(--gutter) 160px;
   background: var(--paper);
 }
 .labubuech__intro {
   display: grid;
-  gap: 20px;
-  max-width: 640px;
-  margin-bottom: 140px;
-} /* Platz für den Vogel auf der Karte */
+  gap: 24px;
+  justify-items: start;
+}
 .labubuech h2 {
   font-size: clamp(3.5rem, 9vw, 7.5rem);
 }
 .labubuech__intro p {
   font-size: 1.25rem;
 }
-
-.labubuech__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 520px) minmax(0, 1fr);
-  gap: clamp(32px, 6vw, 80px);
-  align-items: start;
-}
-
-.writer {
+.book--large {
+  --book-w: clamp(160px, 18vw, 240px);
   position: relative;
-  display: grid;
-  gap: 20px;
-  padding: 40px;
-  border-radius: 28px;
-  background: var(--white);
+  margin-right: clamp(0px, 6vw, 96px);
 }
-.writer__timer {
+.book--large .bird--guard {
+  z-index: 3;
+  width: 46%;
+  right: 6%;
+  top: auto;
+  bottom: 96%;
+  rotate: 6deg;
+}
+
+/* ---------- Labubuech: aufgeschlagenes Buch (Pop-up) ---------- */
+
+.book-dialog {
+  width: min(960px, calc(100vw - 32px));
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  overflow: visible;
+}
+.book-dialog::backdrop {
+  background: rgba(33, 33, 33, 0.7);
+}
+.book-dialog__close {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+.book-dialog__close button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--ink);
+  font: 400 1.75rem/1 var(--font-body);
+  cursor: pointer;
+}
+
+.open-book {
+  position: relative;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--book-blue);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+.open-book__pages {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: min(600px, calc(100svh - 120px));
+  perspective: 1600px;
+}
+
+.book-page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  padding: 48px 40px 76px;
+  overflow-y: auto;
+  background: var(--book-paper);
+  font: 400 1.1875rem/1.5 var(--font-display);
+}
+.book-page[hidden] {
+  display: none;
+}
+/* linke und rechte Seite mit Schatten zum Buchrücken */
+.book-page:nth-child(odd) {
+  border-radius: 6px 0 0 6px;
+  background-image: linear-gradient(
+    to left,
+    rgba(33, 33, 33, 0.14),
+    rgba(33, 33, 33, 0) 9%
+  );
+}
+.book-page:nth-child(even) {
+  border-radius: 0 6px 6px 0;
+  background-image: linear-gradient(
+    to right,
+    rgba(33, 33, 33, 0.14),
+    rgba(33, 33, 33, 0) 9%
+  );
+}
+.book-page__num {
+  position: absolute;
+  top: 18px;
+  right: 28px;
+  color: var(--ink-soft);
+  font: 400 0.8125rem/1 var(--font-body);
+}
+.book-page h3 {
+  font-size: 2rem;
+}
+.book-page time {
+  color: var(--ink-soft);
+  font: 400 0.875rem/1 var(--font-body);
+}
+.book-page p {
+  overflow-wrap: anywhere;
+}
+.book-page--blank img {
+  margin: auto;
+  opacity: 0.25;
+}
+.book-page--intro img {
+  width: 90px;
+  margin-top: auto;
+  align-self: center;
+}
+
+/* Umblättern */
+.book-page.is-turning-next {
+  transform-origin: right center;
+  animation: page-turn-next 0.45s ease-out;
+}
+.book-page.is-turning-prev {
+  transform-origin: left center;
+  animation: page-turn-prev 0.45s ease-out;
+}
+@keyframes page-turn-next {
+  from {
+    transform: rotateY(80deg);
+  }
+}
+@keyframes page-turn-prev {
+  from {
+    transform: rotateY(-80deg);
+  }
+}
+
+/* Pfeile unten links und rechts, wie im Minecraft-Buch */
+.open-book__arrow {
+  position: absolute;
+  bottom: 30px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--pink-strong);
+  cursor: pointer;
+}
+.open-book__arrow--prev {
+  left: 34px;
+}
+.open-book__arrow--next {
+  right: 34px;
+}
+.open-book__arrow svg {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.open-book__arrow:hover {
+  background: var(--pink-soft);
+}
+.open-book__arrow:disabled {
+  visibility: hidden;
+}
+
+/* Schreibseite */
+.book-write {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+}
+.book-write__timer {
   display: flex;
   align-items: baseline;
-  gap: 12px;
+  gap: 10px;
 }
-.writer__timer span {
-  font: 400 4.5rem/1 var(--font-display);
+.book-write__timer span {
+  font: 400 2.75rem/1 var(--font-display);
   color: var(--pink);
 }
-.writer__timer small {
-  font-size: 1rem;
+.book-write__timer small {
+  color: var(--ink-soft);
+  font: 400 0.875rem/1 var(--font-body);
+}
+.book-field {
+  display: grid;
+  gap: 4px;
+}
+.book-field--grow {
+  flex: 1;
+  grid-template-rows: auto 1fr;
+  min-height: 120px;
+}
+.book-field > span {
+  font: 600 0.8125rem/1.2 var(--font-body);
   color: var(--ink-soft);
 }
-
-.field {
-  display: grid;
-  gap: 8px;
-}
-.field > span {
-  font-weight: 600;
-  font-size: 0.9375rem;
-}
-.field textarea {
-  font: inherit;
-  padding: 14px 18px;
-  border-radius: 16px;
-  border: 2px solid var(--grey);
-  background: var(--paper);
+.book-field input,
+.book-field textarea {
+  width: 100%;
+  padding: 4px 2px;
+  border: 0;
+  border-bottom: 1.5px solid #d8cdb2;
+  background: transparent;
   color: var(--ink);
-  resize: vertical;
+  font: inherit;
 }
-.field textarea:focus {
+/* liniertes Papier */
+.book-field textarea {
+  resize: none;
+  line-height: 32px;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 31px,
+    #e3d8bd 31px 32px
+  );
+  border-bottom: 0;
+}
+.book-field input:focus,
+.book-field textarea:focus {
   outline: none;
   border-color: var(--pink);
 }
-.writer .btn {
-  justify-self: start;
+.book-field textarea:focus {
+  box-shadow: inset 0 -2px 0 var(--pink);
 }
-
-.entries {
-  display: grid;
-  gap: 16px;
-}
-.entry {
-  display: grid;
-  gap: 8px;
-  padding: 20px 24px;
-  border-radius: 20px;
-  background: var(--white);
-}
-.entry__meta {
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-  font-size: 0.875rem;
-  color: var(--ink-soft);
-}
-.entry__meta strong {
-  color: var(--ink);
+.book-write .btn {
+  align-self: flex-start;
 }
 
 /* ---------- Footer ---------- */
@@ -964,9 +1375,6 @@ a {
   .brand span {
     font-size: 1.125rem;
   }
-  .site-header__actions .btn {
-    display: none;
-  }
 
   /* Hero: Bild als Band oben, damit der Schriftzug ganz sichtbar bleibt */
   .hero {
@@ -1057,24 +1465,68 @@ a {
     top: -86px;
   }
 
-  .labubuech {
-    padding: 88px var(--gutter);
+  .book--hero {
+    --book-w: 60px;
+    left: var(--gutter);
+    top: auto;
+    bottom: 64px;
   }
-  .labubuech__intro {
-    margin-bottom: 110px;
+
+  .chapter--featured {
+    --card-w: 82vw;
   }
-  .labubuech__grid {
+  .chapter--featured h2 {
+    font-size: 2.75rem;
+  }
+
+  .awards {
     grid-template-columns: 1fr;
   }
-  .writer {
-    padding: 28px 24px;
+  .awards__photos {
+    overflow-x: auto;
+    gap: 14px;
   }
-  .writer__timer span {
-    font-size: 3.5rem;
+  .awards__photos .media {
+    height: 200px;
+    flex: none;
+  }
+
+  .labubuech {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    padding: 88px var(--gutter) 110px;
+    row-gap: 120px;
+  }
+  .book--large {
+    --book-w: 150px;
+    margin: 0 0 0 12px;
   }
 
   .site-footer {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Buch-Pop-up auf schmalen Bildschirmen: eine Seite statt Doppelseite (gleiche Grenze wie in script.js) */
+@media (max-width: 759px) {
+  .open-book {
+    padding: 10px;
+  }
+  .open-book__pages {
+    grid-template-columns: 1fr;
+    height: min(620px, calc(100svh - 100px));
+  }
+  .book-page,
+  .book-page:nth-child(n) {
+    padding: 44px 24px 72px;
+    border-radius: 6px;
+    background-image: none;
+  }
+  .open-book__arrow--prev {
+    left: 20px;
+  }
+  .open-book__arrow--next {
+    right: 20px;
   }
 }
 
@@ -1089,5 +1541,12 @@ a {
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+  }
+  .book__ribbon {
+    animation: none;
+  }
+  .outro__line {
+    width: auto;
+    white-space: normal;
   }
 }
