@@ -8,7 +8,7 @@ Ein Scrollytelling-Portfolio für den Content von [MMP Premium](https://www.inst
 **Modul:** Interaktive Medien 5, FH Graubünden, HS26
 **Live:** _URL eintragen_
 
-![Screenshot der Startseite](_pfad/zum/screenshot.png_)
+![Screenshot der Startseite](_img/berge.jpg_)
 
 ## Kurzbeschreibung
 
