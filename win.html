@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MMP PREMIUM - GEWONNEN!</title>
+    <link rel="icon" href="img/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="img/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -217,13 +220,14 @@
       }
 
       // 2. Party-Sound abspielen (Eigene MP3 + Synthesizer-Fallback)
+      // Sound schon beim Laden der Seite holen, damit er ohne Verzögerung startet
+      const partySound = new Audio("sound/confetti.mp3");
+      partySound.preload = "auto";
+
+      // Gibt ein Promise zurück: klappt nicht, wenn der Browser Ton ohne Klick blockiert
       function playPartySound() {
-        const audio = new Audio("sound/confetti.mp3");
-        audio.play().catch(() => {
-          // Falls sound/party.mp3 noch nicht existiert oder Autoplay greift:
-          // Kurze Party-Fanfare über die Web Audio API erzeugen
-          playSynthFanfare();
-        });
+        partySound.currentTime = 0;
+        return partySound.play();
       }
 
       function playSynthFanfare() {
@@ -262,16 +266,28 @@
         /* privates Fenster: dann eben ohne Speichern */
       }
 
-      // Beim Laden der Seite direkt starten
-      window.addEventListener("DOMContentLoaded", () => {
-        fireConfetti();
-        playPartySound();
+      const partyBtn = document.getElementById("partyBtn");
+
+      // Beim Laden der Seite direkt Konfetti und Sound.
+      // Kommt man über den Knopf in legacy.html, spielen Chrome und Edge den Ton sofort ab.
+      // Ruft man die Seite ohne Klick auf (z. B. Adresse eingetippt), blockieren Browser den Ton:
+      // dann kommt er beim ersten Tippen, Klicken oder Tastendruck.
+      fireConfetti();
+      playPartySound().catch(() => {
+        const events = ["pointerdown", "keydown", "touchstart"];
+        const catchUp = (event) => {
+          events.forEach((type) => removeEventListener(type, catchUp));
+          if (partyBtn.contains(event.target)) return; // der Knopf spielt selbst
+          playPartySound().catch(playSynthFanfare);
+          fireConfetti();
+        };
+        events.forEach((type) => addEventListener(type, catchUp));
       });
 
-      // Button für extra Konfetti & Sound (umgeht auch jede Browser-Autoplay-Sperre)
-      document.getElementById("partyBtn").addEventListener("click", () => {
+      // Button für extra Konfetti & Sound
+      partyBtn.addEventListener("click", () => {
         fireConfetti();
-        playPartySound();
+        playPartySound().catch(playSynthFanfare); // Ersatz-Fanfare, falls die MP3 fehlt
       });
     </script>
   </body>

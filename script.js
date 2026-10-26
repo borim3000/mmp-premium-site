@@ -522,10 +522,12 @@ legacyTrigger.addEventListener("click", () => {
     legacyClicks = 0;
   }, 1200);
   if (legacyClicks < 3) return;
+  legacyClicks = 0;
   unlock("legacy");
-  setTimeout(() => {
-    window.location.href = "legacy.html";
-  }, 900); // kurz warten, damit die Meldung sichtbar ist
+  // In einem neuen Tab öffnen (direkt im Klick, sonst blockt der Browser das Pop-up).
+  // Ist das Pop-up trotzdem blockiert, im gleichen Tab weiter.
+  const tab = window.open("legacy.html", "_blank");
+  if (!tab) window.location.href = "legacy.html";
 });
 
 /* ---------- Achievement: bis ganz unten gescrollt ---------- */
