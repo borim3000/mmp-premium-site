@@ -48,6 +48,47 @@ function prepareVideos(root) {
   });
 }
 
+/* ---------- YouTube ----------
+   <div class="media" data-youtube="VIDEO_ID" data-title="Titel"></div>
+   Zeigt zuerst nur das Vorschaubild. Das Video (youtube-nocookie) lädt erst beim Klick. */
+
+function isYouTubeId(id) {
+  return /^[\w-]{11}$/.test(id || "");
+}
+
+function showYouTubePreview(media) {
+  const id = media.dataset.youtube;
+  if (!isYouTubeId(id)) return; // Platzhalter bleibt sichtbar, bis eine echte ID drinsteht
+  const title = media.dataset.title || "Video";
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "yt";
+  button.style.backgroundImage = `url("https://i.ytimg.com/vi/${id}/hqdefault.jpg")`;
+  button.setAttribute("aria-label", `${title} auf YouTube abspielen`);
+  const play = document.createElement("span");
+  play.className = "yt__play";
+  const label = document.createElement("span");
+  label.className = "yt__title";
+  label.textContent = title;
+  button.append(play, label);
+  button.addEventListener("click", () => {
+    const iframe = document.createElement("iframe");
+    iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+    iframe.title = title;
+    iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    iframe.allowFullscreen = true;
+    media.replaceChildren(iframe);
+  });
+  media.replaceChildren(button);
+}
+
+// Laufendes Video stoppen, indem wieder das Vorschaubild gezeigt wird
+function stopYouTube(media) {
+  if (media && media.querySelector("iframe")) showYouTubePreview(media);
+}
+
+document.querySelectorAll("[data-youtube]").forEach(showYouTubePreview);
+
 /* ---------- Animationen ---------- */
 
 if (hasGsap && !reduceMotion) {
@@ -170,8 +211,9 @@ if (hasGsap && !reduceMotion) {
     const items = [...section.querySelectorAll("[data-project]")];
     const medias = [...section.querySelectorAll("[data-project-media]")];
     const bar = section.querySelector("[data-scrub-progress]");
+    let activeProject = 0;
     prepareVideos(section);
-    ScrollTrigger.create({
+    const trigger = ScrollTrigger.create({
       trigger: section,
       pin,
       start: "top top",
@@ -181,6 +223,10 @@ if (hasGsap && !reduceMotion) {
         const pos = self.progress * items.length;
         const index = Math.min(items.length - 1, Math.floor(pos));
         const local = Math.min(1, pos - index);
+        if (index !== activeProject) {
+          stopYouTube(medias[activeProject]); // verstecktes Video nicht weiterlaufen lassen
+          activeProject = index;
+        }
         items.forEach((el, i) => el.classList.toggle("is-active", i === index));
         medias.forEach((el, i) =>
           el.classList.toggle("is-active", i === index)
@@ -189,11 +235,30 @@ if (hasGsap && !reduceMotion) {
         scrubVideo(medias[index], local);
       },
     });
+    // Klick auf ein Projekt in der Liste scrollt zu diesem Projekt
+    items.forEach((item, i) => {
+      item.querySelector(".project__title").addEventListener("click", () => {
+        const step = (trigger.end - trigger.start) / items.length;
+        window.scrollTo({ top: trigger.start + step * i + 2, behavior: "smooth" });
+      });
+    });
   });
 
   window.addEventListener("load", () => ScrollTrigger.refresh());
 } else {
   prepareVideos(document);
+  // Ohne Animation: Projekte per Klick wechseln
+  document.querySelectorAll("[data-projects]").forEach((section) => {
+    const items = [...section.querySelectorAll("[data-project]")];
+    const medias = [...section.querySelectorAll("[data-project-media]")];
+    items.forEach((item, i) => {
+      item.querySelector(".project__title").addEventListener("click", () => {
+        medias.forEach((m) => stopYouTube(m));
+        items.forEach((el, j) => el.classList.toggle("is-active", j === i));
+        medias.forEach((el, j) => el.classList.toggle("is-active", j === i));
+      });
+    });
+  });
 }
 
 // Handy oder ohne Animation: Galerien werden gewischt, Balken und Zähler laufen mit
@@ -229,6 +294,8 @@ const ACHIEVEMENTS = {
   geheimfoto: "Geheimfoto",
   insidejoke: "Insider",
   ende: "Ganz unten",
+  legacy: "Legacy",
+  jackpot: "Jackpot", // wird in win.html freigeschaltet
 };
 const STORAGE_KEY = "mmp_achievements";
 
@@ -323,6 +390,24 @@ document.querySelectorAll(".joke").forEach((joke) => {
     unlock("insidejoke");
   });
   joke.addEventListener("mouseenter", () => unlock("insidejoke"));
+});
+
+/* ---------- Easter Egg: 3x auf den Footer-Schriftzug = Legacy ---------- */
+
+const legacyTrigger = document.querySelector("[data-legacy]");
+let legacyClicks = 0;
+let legacyTimer;
+legacyTrigger.addEventListener("click", () => {
+  legacyClicks += 1;
+  clearTimeout(legacyTimer);
+  legacyTimer = setTimeout(() => {
+    legacyClicks = 0;
+  }, 1200);
+  if (legacyClicks < 3) return;
+  unlock("legacy");
+  setTimeout(() => {
+    window.location.href = "legacy.html";
+  }, 900); // kurz warten, damit die Meldung sichtbar ist
 });
 
 /* ---------- Achievement: bis ganz unten gescrollt ---------- */

@@ -8,11 +8,11 @@
       name="description"
       content="Der Content von MMP Premium: L.I.F.T, Berlin, Rotterdam und Digezz."
     />
-    <link rel="icon" href="/img/vogel.png" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Monoton&family=Playfair+Display:ital@0;1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Hanken+Grotesk:wght@400;500;600&family=Monoton&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
@@ -33,7 +33,7 @@
               d="M12 2.5l2.9 6.2 6.8.7-5.1 4.6 1.4 6.7L12 17.3l-6 3.4 1.4-6.7-5.1-4.6 6.8-.7z"
             />
           </svg>
-          <span data-achievement-count>0/4</span>
+          <span data-achievement-count>0/6</span>
         </span>
         <a class="btn btn--primary" href="#labubuech">Labubuech</a>
       </div>
@@ -52,7 +52,6 @@
         </div>
         <h1 class="hero__title visually-hidden" id="hero-title">MMP Premium</h1>
         <p class="hero__subtitle">Content Portfolio</p>
-        <h3 style="transform: translateY(150px); text-align: center;">this site is currently being built as part of a university project. everything you see is a work in progress and subject to change.</h3>
         <img
           class="bird bird--hero"
           data-bird
@@ -88,8 +87,14 @@
           <figure class="scrub">
             <div class="media media--reel" data-label="Reel 9:16">
               <!-- Euer Video hier einfügen, z. B.:
-                 <video src="img/lift.mp4" muted playsinline preload="auto"></video>
+                 <video src="video/lift.mp4" muted playsinline preload="auto"></video>
                  Tipp: Für flüssiges Scrubben das Video mit vielen Keyframes exportieren. -->
+              <video
+                src="video/lift.mp4"
+                muted
+                playsinline
+                preload="auto"
+              ></video>
             </div>
             <div class="progress"><span data-scrub-progress></span></div>
             <figcaption>Hopecore-Edit, Instagram-Reel</figcaption>
@@ -257,7 +262,11 @@
           <div class="projects">
             <ol class="projects__list">
               <li class="project is-active" data-project>
-                <h3>Projekt 1</h3>
+                <h3>
+                  <button class="project__title" type="button">
+                    Projekt 1
+                  </button>
+                </h3>
                 <p class="project__meta">Jahr, eure Rolle</p>
                 <p class="project__text">
                   Zwei Sätze zum Projekt: worum es geht und was ihr gemacht
@@ -266,7 +275,11 @@
                 <a class="project__link" href="#">Auf Digezz ansehen</a>
               </li>
               <li class="project" data-project>
-                <h3>Projekt 2</h3>
+                <h3>
+                  <button class="project__title" type="button">
+                    Projekt 2
+                  </button>
+                </h3>
                 <p class="project__meta">Jahr, eure Rolle</p>
                 <p class="project__text">
                   Zwei Sätze zum Projekt: worum es geht und was ihr gemacht
@@ -275,7 +288,11 @@
                 <a class="project__link" href="#">Auf Digezz ansehen</a>
               </li>
               <li class="project" data-project>
-                <h3>Projekt 3</h3>
+                <h3>
+                  <button class="project__title" type="button">
+                    Projekt 3
+                  </button>
+                </h3>
                 <p class="project__meta">Jahr, eure Rolle</p>
                 <p class="project__text">
                   Zwei Sätze zum Projekt: worum es geht und was ihr gemacht
@@ -295,21 +312,30 @@
                 width="110"
                 height="134"
               />
-              <!-- Ein Medium pro Projekt, gleiche Reihenfolge wie die Liste -->
+              <!-- Ein Medium pro Projekt, gleiche Reihenfolge wie die Liste.
+                 YouTube: bei data-youtube die Video-ID eintragen. Die ID ist der Teil nach "v=" im Link,
+                 z. B. https://www.youtube.com/watch?v=dQw4w9WgXcQ  ->  data-youtube="dQw4w9WgXcQ".
+                 Das Video lädt erst beim Klick (schneller und datenschutzfreundlicher). -->
               <div
                 class="media media--wide is-active"
                 data-project-media
-                data-label="Projekt 1, Video 16:9"
+                data-youtube="VIDEO_ID"
+                data-title="Projekt 1"
+                data-label="Projekt 1, YouTube"
               ></div>
               <div
                 class="media media--wide"
                 data-project-media
-                data-label="Projekt 2, Video 16:9"
+                data-youtube="VIDEO_ID"
+                data-title="Projekt 2"
+                data-label="Projekt 2, YouTube"
               ></div>
               <div
                 class="media media--wide"
                 data-project-media
-                data-label="Projekt 3, Video 16:9"
+                data-youtube="VIDEO_ID"
+                data-title="Projekt 3"
+                data-label="Projekt 3, YouTube"
               ></div>
               <div class="progress"><span data-scrub-progress></span></div>
             </div>
@@ -379,7 +405,8 @@
 
     <!-- ============ FOOTER ============ -->
     <footer class="site-footer">
-      <p class="site-footer__brand">MMP PREMIUM</p>
+      <!-- Easter Egg: 3x auf den Schriftzug klicken öffnet legacy.html -->
+      <p class="site-footer__brand" data-legacy>MMP PREMIUM</p>
       <ul class="site-footer__links">
         <li>
           <a
@@ -390,7 +417,6 @@
           >
         </li>
         <li><a href="#labubuech">Labubuech</a></li>
-        <li><a href="legacy.html" target="_blank">Legacy</a></li>
       </ul>
       <button class="faah" type="button" data-faah>
         <span class="faah__knob" aria-hidden="true"></span>

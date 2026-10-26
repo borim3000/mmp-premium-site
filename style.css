@@ -4,9 +4,9 @@
    ========================================================= */
 
 :root {
-  --pink: #ff0078; /* Akzente, grosse Schrift, Fortschritt */
-  --pink-strong: #e0006b; /* Buttons, kleine pinke Schrift (besserer Kontrast) */
-  --pink-soft: #ffe3ef;
+  --pink: #ff007b; /* MMP-Pink: Akzente, grosse Schrift, Fortschritt */
+  --pink-strong: #e0006c; /* dunkleres MMP-Pink: Buttons, kleine pinke Schrift (Kontrast zu Weiss) */
+  --pink-soft: #ffe3f0;
   --ink: #212121; /* Text, Video-Flächen */
   --ink-soft: #5c5c5c;
   --gold: #dbab32; /* nur Vogel und Achievements */
@@ -15,8 +15,8 @@
   --paper: #f4f4f4; /* Hintergrund */
   --white: #ffffff;
 
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-neon: "Monoton", "Playfair Display", serif;
+  --font-display: "Bodoni Moda", Georgia, serif;
+  --font-neon: "Monoton", "Bodoni Moda", serif;
   --font-body: "Hanken Grotesk", system-ui, sans-serif;
 
   --gutter: clamp(20px, 5.5vw, 80px);
@@ -407,6 +407,64 @@ a {
 }
 
 /* Beschriftung nur solange kein Video/Bild drin ist */
+/* YouTube: Vorschaubild mit Play-Knopf, iframe lädt erst beim Klick */
+.media > iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.yt {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: var(--ink) center / cover no-repeat;
+  color: var(--white);
+  font: inherit;
+  cursor: pointer;
+}
+.yt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(33, 33, 33, 0.7), rgba(33, 33, 33, 0) 55%);
+}
+.yt__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--pink-strong);
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s;
+}
+.yt__play::after {
+  content: "";
+  position: absolute;
+  left: 31px;
+  top: 24px;
+  border-left: 22px solid var(--white);
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+}
+.yt:hover .yt__play,
+.yt:focus-visible .yt__play {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+.yt__title {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 14px;
+  text-align: left;
+  font-weight: 600;
+}
+
 .media:empty::after {
   content: attr(data-label);
   position: absolute;
@@ -593,6 +651,15 @@ a {
 .project h3 {
   font-size: 1.75rem;
 }
+.project__title {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
 .project__meta {
   font-size: 0.875rem;
 }
@@ -623,10 +690,13 @@ a {
 .projects__stage .media {
   grid-area: 1 / 1;
   opacity: 0;
-  transition: opacity 0.4s;
+  visibility: hidden; /* ausgeblendete Videos sind nicht klickbar */
+  transition: opacity 0.4s, visibility 0.4s;
 }
 .projects__stage .media.is-active {
+  z-index: 1;
   opacity: 1;
+  visibility: visible;
 }
 .projects__stage .progress {
   grid-area: 2 / 1;
@@ -739,6 +809,9 @@ a {
   color: var(--white);
 }
 .site-footer__brand {
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
   font: 400 2.5rem/1 var(--font-display);
 }
 .site-footer__links {

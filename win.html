@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de-CH">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,7 +25,12 @@
         justify-content: center;
         align-items: center;
         /* Leichter, knalliger Gradient um #ff007b herum */
-        background: radial-gradient(circle at center, #ff4da6 0%, #ff007b 55%, #b30056 100%);
+        background: radial-gradient(
+          circle at center,
+          #ff4da6 0%,
+          #ff007b 55%,
+          #b30056 100%
+        );
         font-family: "Bodoni Moda", serif;
         color: #ffffff;
         overflow: hidden;
@@ -70,7 +75,7 @@
         animation: pulseGlow 1.5s infinite alternate;
       }
 
-      .image-win img {
+      .image-win video {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -143,7 +148,7 @@
         .win-title {
           font-size: 2.4rem;
         }
-        .image-placeholder {
+        .image-win {
           width: 200px;
           height: 200px;
         }
@@ -156,13 +161,24 @@
 
       <!-- Bild-Platzhalter: Ersetze src mit deinem Bild/GIF -->
       <div class="image-win">
-        <img src="img/mmpdance-small.gif" alt="wow amazing du hast gewonnen gif und so"  />
+        <video
+          src="video/mmpdance.mp4"
+          poster="video/mmpdance-poster.jpg"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-label="wow amazing du hast gewonnen gif und so"
+        ></video>
       </div>
 
       <p class="win-text">
-        DU HAST GEWONNEN!!!!! AMAZING!!!!! 🔥 <br>
-        <strong>Schreib uns sofort auf Instagram eine Nachricht! <br> 
-        (Du hast 5 Minuten Zeit)</strong> <br>
+        DU HAST GEWONNEN!!!!! AMAZING!!!!! 🔥 <br />
+        <strong
+          >Schreib uns sofort auf Instagram eine Nachricht! <br />
+          (Du hast 5 Minuten Zeit)</strong
+        >
+        <br />
         Dann erhältst du deinen Gewinn!! Danke für's Spielen!
       </p>
 
@@ -223,7 +239,10 @@
           osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.12);
 
           gain.gain.setValueAtTime(0.25, ctx.currentTime + i * 0.12);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.12 + 0.4);
+          gain.gain.exponentialRampToValueAtTime(
+            0.001,
+            ctx.currentTime + i * 0.12 + 0.4
+          );
 
           osc.connect(gain);
           gain.connect(ctx.destination);
@@ -231,6 +250,16 @@
           osc.start(ctx.currentTime + i * 0.12);
           osc.stop(ctx.currentTime + i * 0.12 + 0.4);
         });
+      }
+
+      // Achievement "Jackpot" im Portfolio freischalten (gleicher Speicher wie script.js)
+      try {
+        const key = "mmp_achievements";
+        const found = new Set(JSON.parse(localStorage.getItem(key)) || []);
+        found.add("jackpot");
+        localStorage.setItem(key, JSON.stringify([...found]));
+      } catch {
+        /* privates Fenster: dann eben ohne Speichern */
       }
 
       // Beim Laden der Seite direkt starten
