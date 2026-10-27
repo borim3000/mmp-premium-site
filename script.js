@@ -476,11 +476,24 @@ document.querySelector("[data-faah]").addEventListener("click", () => {
 
 /* ---------- Easter Egg: 5x auf den Vogel = Geheimfoto ---------- */
 
+// Piepen bei jedem Klick auf einen Vogel. Jedes Piepen ist etwas anders hoch.
+// Eigenen Sound verwenden: sound/peep.mp3 ersetzen.
+const peep = new Audio("sound/peep.mp3");
+peep.preload = "auto";
+function playPeep() {
+  const sound = peep.cloneNode(); // schnelle Klicks dürfen sich überlagern
+  sound.preservesPitch = false; // Tempo ändert auch die Tonhöhe
+  sound.playbackRate = 0.85 + Math.random() * 0.4;
+  sound.volume = 0.6;
+  sound.play().catch(() => {});
+}
+
 const eggDialog = document.querySelector("[data-egg-dialog]");
 document.querySelectorAll("[data-bird]").forEach((bird) => {
   let clicks = 0;
   let timer;
   bird.addEventListener("click", () => {
+    playPeep();
     clicks += 1;
     clearTimeout(timer);
     timer = setTimeout(() => {

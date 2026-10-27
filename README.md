@@ -80,6 +80,7 @@ Zum Testen nochmals schreiben: im Browser die Cookies der Seite löschen, dann g
 | Easter Egg     | Wo                     | Auslöser                                                                 | Achievement |
 | -------------- | ---------------------- | ------------------------------------------------------------------------ | ----------- |
 | Faahhhh-Button | Footer                 | Gelben Knopf «Nicht drücken» drücken                                     | FAAHHHH     |
+| Piep           | Jeder goldene Vogel    | Anklicken, jedes Piepen ist etwas anders hoch                            | –           |
 | Geheimfoto     | Jeder goldene Vogel    | Innerhalb von 1,5 Sekunden fünfmal anklicken                             | Geheimfoto  |
 | Inside Joke    | Bildunterschriften     | Gepunktet unterstrichenes Wort antippen oder darüberfahren               | Insider     |
 | Ganz unten     | Ende der Seite         | Bis zum Footer scrollen                                                  | Ganz unten  |
