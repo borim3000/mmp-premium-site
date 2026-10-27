@@ -18,6 +18,8 @@
   --font-display: "Bodoni Moda", Georgia, serif;
   --font-neon: "Monoton", "Bodoni Moda", serif;
   --font-body: "Hanken Grotesk", system-ui, sans-serif;
+  --display-weight: 300; /* Stärke der grossen Bodoni-Schrift, 400 = ganz dünn */
+  --display-opsz: 30; /* Kontrast der grossen Bodoni-Schrift: kleiner = kräftigere Haarlinien, 96 = Original */
 
   --gutter: clamp(20px, 5.5vw, 80px);
   --header-h: 72px;
@@ -625,7 +627,11 @@ a {
 .chapter--featured {
   background: var(--ink);
   color: var(--white);
-  --card-w: min(56vw, calc(46svh * 16 / 9));
+  --card-w: min(
+    56vw,
+    calc(46svh * 16 / 9),
+    calc((100svh - 480px) * 16 / 9)
+  ); /* letzter Wert: auf niedrigen Bildschirmen kleiner, damit alles Platz hat */
 }
 .chapter--featured h2 {
   font-size: clamp(3rem, 6.5vw, 6rem);
@@ -1389,6 +1395,21 @@ a {
 .toast span {
   color: var(--grey);
   font-size: 0.9375rem;
+}
+
+/* ---------- Grosse Schrift kräftiger ----------
+   Bodoni Moda passt sich der Grösse an: Je grösser der Text, desto feiner die Haarlinien.
+   Bei grossen Titeln werden sie dadurch sehr dünn. Hier wird das für grosse Schrift begrenzt
+   und die Schrift etwas kräftiger gemacht. Kleine Schrift bleibt unverändert.
+   Feinjustieren über --display-weight und --display-opsz oben in :root. */
+h1,
+h2,
+.acronym,
+.outro__line,
+.book-write__timer span,
+.site-footer__brand {
+  font-weight: var(--display-weight);
+  font-variation-settings: "opsz" var(--display-opsz);
 }
 
 /* ---------- Mobil ---------- */
