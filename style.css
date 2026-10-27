@@ -6,6 +6,7 @@
 :root {
   --pink: #ff007b; /* MMP-Pink: Akzente, grosse Schrift, Fortschritt */
   --pink-strong: #e0006c; /* dunkleres MMP-Pink: Buttons, kleine pinke Schrift (Kontrast zu Weiss) */
+  --pink-pastel: #ff5baa;
   --pink-soft: #ffe3f0;
   --ink: #212121; /* Text, Video-Flächen */
   --ink-soft: #5c5c5c;
@@ -227,13 +228,18 @@ a {
   height: 100%;
   object-fit: cover;
 }
-.hero__media::after {
-  /* weicher Übergang in den hellen Hintergrund */
+.hero::after {
   content: "";
   position: absolute;
   inset: auto 0 0;
   height: 28%;
-  background: linear-gradient(to bottom, rgba(244, 244, 244, 0), var(--paper));
+  background: linear-gradient(
+    to bottom,
+    rgba(244, 244, 244, 0),
+    var(--pink-pastel)
+  );
+  pointer-events: none; /* Klicks auf Buch & Vogel nicht blockieren */
+  z-index: 1;
 }
 
 .hero__title {
@@ -256,26 +262,8 @@ a {
   color: var(--white);
   font: 400 clamp(1.25rem, 3vw, 2.75rem) / 1 var(--font-neon);
 }
-.hero__hint {
-  position: absolute;
-  left: 50%;
-  bottom: 40px;
-  z-index: 1;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.875rem;
-}
-.hero__hint::after {
-  content: "";
-  width: 1.5px;
-  height: 40px;
-  background: var(--ink);
-}
 
-/* ---------- Vogel ---------- */
+/* ---------- Fogel ---------- */
 
 .bird {
   position: absolute;
@@ -493,6 +481,37 @@ a {
   background: rgba(255, 255, 255, 0.92);
   color: var(--ink);
   font-size: 0.8125rem;
+}
+
+/* ---------- Vorhang (Featured section) ---------- */
+
+.curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.curtain__panel {
+  position: absolute;
+  top: -35%;
+  width: 75%;
+  height: 170%;
+  background: var(--pink-pastel);
+  will-change: transform;
+}
+
+.curtain__panel--left {
+  left: -10%;
+  border-radius: 0 50% 50% 0;
+  transform-origin: center center;
+}
+
+.curtain__panel--right {
+  right: -10%;
+  border-radius: 50% 0 0 50%;
+  transform-origin: center center;
 }
 
 /* ---------- 01 L.I.F.T (Video-Scrub) ---------- */
@@ -1598,5 +1617,8 @@ h2,
   .outro__line {
     width: auto;
     white-space: normal;
+  }
+  .curtain {  /* curtain doesn't stay closed if animations are turned off*/ 
+    display: none;
   }
 }

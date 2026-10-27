@@ -162,6 +162,30 @@ if (hasGsap && !reduceMotion) {
       0
     );
 
+    // Vorhang vor Featured: zieht sich beim Scrollen vom Hero zur ersten Sektion auf
+    gsap
+    .timeline({
+      scrollTrigger: {
+        trigger: "#featured",
+        start: "top 85%",
+        end: "top 5%",
+        scrub: 0.5,
+        refreshPriority: order(document.querySelector("#featured")),
+      },
+    })
+    .fromTo(
+      ".curtain__panel--left",
+      { xPercent: 0, rotation: 45 },
+      { xPercent: -120, rotation: 75, ease: "power1.inOut" },
+      0
+    )
+    .fromTo(
+      ".curtain__panel--right",
+      { xPercent: 0, rotation: -45 },
+      { xPercent: 120, rotation: -75, ease: "power1.inOut" },
+      0
+    );
+
   // 01 L.I.F.T: gepinnt, Scroll spult das Reel
   document.querySelectorAll("[data-scrub]").forEach((section) => {
     const pin = section.querySelector(".chapter__pin");
