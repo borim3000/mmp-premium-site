@@ -19,7 +19,7 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | Abschnitt                 | Inhalt                                                                       | Scrollytelling                                                  |
 | ------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | Hero                      | Bergbild, Content Portfolio, zugeklapptes Labubuech                          | Parallax, Vogel wechselt zum Flugbild und fliegt ein Stück weg  |
-| Featured                  | Cuschinar Difficil, 6 Folgen auf YouTube                                     | Gepinnt, Folgen fahren seitwärts, Video stoppt beim Wegscrollen |
+| Featured | Cuschinar Difficil, 6 Folgen auf YouTube | Pinker Vorhang geht auf, dann gepinnt: Folgen fahren seitwärts, Video stoppt beim Wegscrollen |
 | 01 L.I.F.T                | _Inhalt_                                                                     | Gepinnt, Scrollen spult das Video, mit Ton im Pop-up            |
 | 02 Berlin                 | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                |
 | 03 Multimedia Awards 2025 | _Inhalt_                                                                     | Pokal, Text und Bilder fliegen beim Hineinscrollen ein          |
@@ -76,6 +76,8 @@ Einen Eintrag ausblenden: in phpMyAdmin bei diesem Eintrag `hidden` auf `1` setz
 Zum Testen nochmals schreiben: im Browser die Cookies der Seite löschen, dann gilt man als neuer Besucher.
 
 ## Easter Eggs (Liste für die Dozierenden)
+
+Ein Klick auf den Zähler oben rechts (Stern) öffnet die Übersicht aller Achievements: gefundene mit Beschreibung, offene mit einem Tipp. Gespeichert wird im Browser (localStorage).
 
 | Easter Egg     | Wo                     | Auslöser                                                                 | Achievement |
 | -------------- | ---------------------- | ------------------------------------------------------------------------ | ----------- |

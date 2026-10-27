@@ -99,6 +99,33 @@ document
   .querySelectorAll("[data-youtube]")
   .forEach((media) => ytObserver.observe(media));
 
+/* ---------- Vorhang vor Featured ----------
+   Zwei pinke Vorhänge, oben festgemacht. Beim Scrollen geht zuerst unten in der Mitte
+   ein Spalt auf, der nach oben wächst. Die Öffnung sieht aus wie ein Pizzastück mit
+   geschwungenen Seiten, wie bei gerafften Theatervorhängen. Am Schluss sind beide ganz weg.
+   p = 0 (zu) bis 1 (offen). Koordinaten in Prozent der Fläche (0 bis 100). */
+
+const curtain = document.querySelector("[data-curtain]");
+
+function drawCurtain(p) {
+  if (!curtain) return;
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const smooth = (t) => t * t * (3 - 2 * t); // weich anfahren und abbremsen
+  const bottom = smooth(clamp(p / 0.75)); // unten geht zuerst auf ...
+  const top = smooth(clamp((p - 0.3) / 0.7)); // ... oben folgt später
+  const xb = 50.5 - 54 * bottom; // innere untere Ecke
+  const xt = 50.5 - 54 * top; // innere Kante oben
+  const yb = 100 - 16 * bottom; // untere Ecke hebt sich beim Raffen
+  // linke Bahn; die rechte ist gespiegelt
+  const panel = (x) =>
+    `M${x(-1)} -1 L${x(xt)} -1 ` +
+    `C${x(xt)} ${yb * 0.45} ${x(xb + (xt - xb) * 0.35)} ${yb * 0.85} ${x(xb)} ${yb} ` +
+    `Q${x(xb * 0.4)} ${(yb + 100) / 2 + 4} ${x(-1)} 101 Z`;
+  const [left, right] = curtain.querySelectorAll("path");
+  left.setAttribute("d", panel((x) => x));
+  right.setAttribute("d", panel((x) => 100 - x));
+}
+
 /* ---------- Animationen ---------- */
 
 // ScrollTrigger in Seitenreihenfolge berechnen (wichtig, weil gepinnte Kapitel die Seite verlängern)
@@ -162,30 +189,6 @@ if (hasGsap && !reduceMotion) {
       0
     );
 
-    // Vorhang vor Featured: zieht sich beim Scrollen vom Hero zur ersten Sektion auf
-    gsap
-    .timeline({
-      scrollTrigger: {
-        trigger: "#featured",
-        start: "top 85%",
-        end: "top 5%",
-        scrub: 0.5,
-        refreshPriority: order(document.querySelector("#featured")),
-      },
-    })
-    .fromTo(
-      ".curtain__panel--left",
-      { xPercent: 0, rotation: 45 },
-      { xPercent: -120, rotation: 75, ease: "power1.inOut" },
-      0
-    )
-    .fromTo(
-      ".curtain__panel--right",
-      { xPercent: 0, rotation: -45 },
-      { xPercent: 120, rotation: -75, ease: "power1.inOut" },
-      0
-    );
-
   // 01 L.I.F.T: gepinnt, Scroll spult das Reel
   document.querySelectorAll("[data-scrub]").forEach((section) => {
     const pin = section.querySelector(".chapter__pin");
@@ -234,36 +237,82 @@ if (hasGsap && !reduceMotion) {
       const bird = pin.querySelector(".bird--fly");
       const distance = () =>
         Math.max(0, track.scrollWidth - gallery.clientWidth + 40);
+      // Mit Vorhang (Featured): zuerst geht der Vorhang auf, dann fährt die Galerie
+      const withCurtain = curtain && pin.contains(curtain);
+      const curtainLength = () => (withCurtain ? window.innerHeight * 0.9 : 0);
+      const curtainShare =
+        curtainLength() / Math.max(1, curtainLength() + distance());
+      const curtainState = { p: 0 };
+      if (withCurtain) drawCurtain(0);
 
       pin.classList.add("is-pinned");
-      gsap.to(track, {
-        x: () => -distance(),
-        ease: "none",
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pin,
           pin: true,
           start: "top top",
-          end: () => `+=${distance()}`,
+          end: () => `+=${curtainLength() + distance()}`,
           scrub: 0.5,
           invalidateOnRefresh: true,
           refreshPriority: order(pin),
           onUpdate: (self) => {
-            bar.style.width = `${self.progress * 100}%`;
+            // Fortschritt nur für den Galerie-Teil
+            const progress = Math.min(
+              1,
+              Math.max(0, (self.progress - curtainShare) / (1 - curtainShare))
+            );
+            bar.style.width = `${progress * 100}%`;
             count.textContent = `${Math.min(
               posts,
-              Math.floor(self.progress * posts) + 1
+              Math.floor(progress * posts) + 1
             )} / ${posts}`;
             if (bird)
               gsap.set(bird, {
-                y: Math.sin(self.progress * Math.PI * 4) * 18,
-                x: -self.progress * 60,
+                y: Math.sin(progress * Math.PI * 4) * 18,
+                x: -progress * 60,
               });
           },
         },
       });
+      if (withCurtain) {
+        tl.to(curtainState, {
+          p: 1,
+          ease: "none",
+          duration: curtainShare,
+          onUpdate: () => drawCurtain(curtainState.p),
+        });
+      }
+      tl.to(track, {
+        x: () => -distance(),
+        ease: "none",
+        duration: 1 - curtainShare,
+      });
       return () => pin.classList.remove("is-pinned");
     });
   });
+
+  // Vorhang auf dem Handy: Galerien sind dort nicht gepinnt, darum kurz anhalten und öffnen
+  mm.add("(max-width: 899px)", () => {
+    if (!curtain) return;
+    const pin = curtain.closest(".chapter__pin");
+    const curtainState = { p: 0 };
+    drawCurtain(0);
+    gsap.to(curtainState, {
+      p: 1,
+      ease: "none",
+      onUpdate: () => drawCurtain(curtainState.p),
+      scrollTrigger: {
+        trigger: pin,
+        pin: true,
+        start: "top top",
+        end: "+=80%",
+        scrub: 0.5,
+        refreshPriority: order(pin),
+      },
+    });
+  });
+
+  if (curtain) curtain.classList.add("is-active");
 
   // 04 Digezz: pro Projekt eine Bildschirmhöhe
   document.querySelectorAll("[data-projects]").forEach((section) => {
@@ -431,13 +480,38 @@ soundDialog.addEventListener("click", (event) => {
    Später: in unlock() zusätzlich an PHP schicken (Accounts).
    ========================================================= */
 
+// name: Titel, done: steht da, wenn gefunden, hint: Tipp, solange noch nicht gefunden
 const ACHIEVEMENTS = {
-  faahhhh: "FAAHHHH",
-  geheimfoto: "Geheimfoto",
-  insidejoke: "Insider",
-  ende: "Ganz unten",
-  legacy: "Legacy",
-  jackpot: "Jackpot", // wird in win.html freigeschaltet
+  faahhhh: {
+    name: "FAAHHHH",
+    done: "Den Knopf gedrückt, den man nicht drücken soll.",
+    hint: "Manche Knöpfe sollte man besser nicht drücken.",
+  },
+  geheimfoto: {
+    name: "Geheimfoto",
+    done: "Den Vogel so lange genervt, bis er etwas zeigt.",
+    hint: "Der goldene Vogel mag Aufmerksamkeit.",
+  },
+  insidejoke: {
+    name: "Insider",
+    done: "Einen Inside Joke entdeckt.",
+    hint: "Nicht jedes unterstrichene Wort ist harmlos.",
+  },
+  ende: {
+    name: "Ganz unten",
+    done: "Bis ans Ende gescrollt.",
+    hint: "Durchhalten lohnt sich.",
+  },
+  legacy: {
+    name: "Legacy",
+    done: "Das alte Gewinnspiel gefunden.",
+    hint: "Unser Name hat eine Vergangenheit.",
+  },
+  jackpot: {
+    name: "Jackpot",
+    done: "Mit einem Prozent Chance gewonnen.",
+    hint: "Dafür braucht es Glück. Viel Glück.",
+  }, // wird in win.html freigeschaltet
 };
 const STORAGE_KEY = "mmp_achievements";
 
@@ -449,11 +523,13 @@ function loadUnlocked() {
   }
 }
 const unlocked = loadUnlocked();
+const achievementsTotal = Object.keys(ACHIEVEMENTS).length;
 
 function updateCounter() {
-  document.querySelector("[data-achievement-count]").textContent = `${
-    unlocked.size
-  }/${Object.keys(ACHIEVEMENTS).length}`;
+  document.querySelector(
+    "[data-achievement-count]"
+  ).textContent = `${unlocked.size}/${achievementsTotal}`;
+  renderAchievements();
 }
 
 function unlock(key) {
@@ -465,7 +541,7 @@ function unlock(key) {
     /* privates Fenster */
   }
   updateCounter();
-  toast("Achievement gefunden", ACHIEVEMENTS[key]);
+  toast("Achievement gefunden", ACHIEVEMENTS[key].name);
 }
 
 function toast(title, text) {
@@ -479,6 +555,55 @@ function toast(title, text) {
   document.querySelector("[data-toasts]").append(box);
   setTimeout(() => box.remove(), 4500);
 }
+
+/* ---------- Achievements-Übersicht (Pop-up) ---------- */
+
+const achievementsDialog = document.querySelector("[data-achievements-dialog]");
+
+function renderAchievements() {
+  const list = achievementsDialog.querySelector("[data-achievements-list]");
+  const items = Object.entries(ACHIEVEMENTS).map(([key, a]) => {
+    const found = unlocked.has(key);
+    const li = document.createElement("li");
+    li.className = `achievement${found ? " is-found" : ""}`;
+    const icon = document.createElement("span");
+    icon.className = "achievement__icon";
+    icon.setAttribute("aria-hidden", "true");
+    const title = document.createElement("strong");
+    title.textContent = found ? a.name : "???";
+    const status = document.createElement("span");
+    status.className = "visually-hidden";
+    status.textContent = found ? "gefunden" : "noch nicht gefunden";
+    const text = document.createElement("span");
+    text.className = "achievement__text";
+    text.textContent = found ? a.done : `Tipp: ${a.hint}`;
+    title.append(" ", status);
+    li.append(icon, title, text);
+    return li;
+  });
+  list.replaceChildren(...items);
+  achievementsDialog.querySelector("[data-achievements-summary]").textContent =
+    unlocked.size === achievementsTotal
+      ? "Alle gefunden. Respekt!"
+      : `${unlocked.size} von ${achievementsTotal} gefunden`;
+  achievementsDialog.querySelector(
+    "[data-achievements-progress]"
+  ).style.width = `${(unlocked.size / achievementsTotal) * 100}%`;
+}
+
+document
+  .querySelector("[data-achievements-open]")
+  .addEventListener("click", () => achievementsDialog.showModal());
+achievementsDialog.addEventListener("click", (event) => {
+  if (event.target === achievementsDialog) achievementsDialog.close(); // Klick daneben schliesst
+});
+
+// Jackpot wird in win.html (anderer Tab) freigeschaltet: hier gleich nachführen
+window.addEventListener("storage", (event) => {
+  if (event.key !== STORAGE_KEY) return;
+  loadUnlocked().forEach((key) => unlocked.add(key));
+  updateCounter();
+});
 
 updateCounter();
 

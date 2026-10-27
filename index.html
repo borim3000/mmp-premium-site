@@ -30,14 +30,20 @@
         <span>MMP PREMIUM</span>
       </a>
       <div class="site-header__actions">
-        <span class="achievements" title="Gefundene Achievements">
+        <button
+          class="achievements"
+          type="button"
+          data-achievements-open
+          aria-haspopup="dialog"
+          aria-label="Achievements anzeigen"
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M12 2.5l2.9 6.2 6.8.7-5.1 4.6 1.4 6.7L12 17.3l-6 3.4 1.4-6.7-5.1-4.6 6.8-.7z"
             />
           </svg>
           <span data-achievement-count>0/6</span>
-        </span>
+        </button>
       </div>
       <div class="scroll-progress" aria-hidden="true">
         <span data-scroll-progress></span>
@@ -103,9 +109,12 @@
       >
         <div class="chapter__pin" data-gallery>
 
-          <div class="curtain" aria-hidden="true">
-            <div class="curtain__panel curtain__panel--left"></div>
-            <div class="curtain__panel curtain__panel--right"></div>
+          <!-- Vorhang: zwei pinke Bahnen, Form wird in script.js ("Vorhang") beim Scrollen berechnet -->
+          <div class="curtain" data-curtain aria-hidden="true">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path class="curtain__panel" d="M-1 -1H50.5V101H-1Z" />
+              <path class="curtain__panel" d="M101 -1H49.5V101H101Z" />
+            </svg>
           </div>
 
           <header class="chapter__head chapter__head--row">
@@ -740,6 +749,30 @@
         <button class="btn btn--primary" type="submit">Eintragen</button>
       </form>
     </template>
+
+    <!-- Achievements-Übersicht (Klick auf den Zähler oben rechts). Die Liste baut script.js. -->
+    <dialog
+      class="achievements-dialog"
+      data-achievements-dialog
+      aria-labelledby="achievements-title"
+    >
+      <header class="achievements-dialog__head">
+        <h2 id="achievements-title">Achievements</h2>
+        <form method="dialog">
+          <button
+            class="achievements-dialog__close"
+            aria-label="Achievements schliessen"
+          >
+            ×
+          </button>
+        </form>
+      </header>
+      <p class="achievements-dialog__count" data-achievements-summary></p>
+      <div class="progress progress--gold">
+        <span data-achievements-progress></span>
+      </div>
+      <ul class="achievement-list" data-achievements-list></ul>
+    </dialog>
 
     <!-- Geheimfoto (Easter Egg: 5x auf den Vogel klicken) -->
     <dialog class="egg-dialog" data-egg-dialog aria-label="Geheimfoto">
