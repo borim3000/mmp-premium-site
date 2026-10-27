@@ -68,7 +68,8 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
     if (!target) return;
     event.preventDefault();
     target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
-    if (link.classList.contains("skip-link")) target.focus({ preventScroll: true });
+    if (link.classList.contains("skip-link"))
+      target.focus({ preventScroll: true });
   });
 });
 
@@ -86,7 +87,10 @@ function seekVideo(video, time) {
 function scrubVideo(container, progress) {
   const video = container && container.querySelector("video");
   if (!video || !video.duration) return;
-  video.scrubTarget = Math.min(video.duration - 0.05, progress * video.duration);
+  video.scrubTarget = Math.min(
+    video.duration - 0.05,
+    progress * video.duration
+  );
   if (video.seeking) return; // wird nach "seeked" nachgeholt
   // Kleine Änderungen (unter einem Bild) gar nicht erst verlangen
   if (

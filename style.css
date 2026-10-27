@@ -148,7 +148,12 @@ a {
   transition: background-color 0.3s, color 0.3s;
 }
 .site-header.is-solid {
-  background: rgba(244, 244, 244, 0.97); /* ohne Weichzeichner: der kostet beim Scrollen viel Leistung */
+  background: rgba(
+    244,
+    244,
+    244,
+    0.97
+  ); /* ohne Weichzeichner: der kostet beim Scrollen viel Leistung */
   color: var(--ink);
 }
 
@@ -1728,7 +1733,8 @@ h2,
     width: auto;
     white-space: normal;
   }
-  .curtain {  /* curtain doesn't stay closed if animations are turned off*/ 
+  .curtain {
+    /* curtain doesn't stay closed if animations are turned off*/
     display: none;
   }
 }
