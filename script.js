@@ -107,6 +107,12 @@ document
 
 const curtain = document.querySelector("[data-curtain]");
 
+// Wann und wie lange der Vorhang aufgeht, in Bildschirmhöhen:
+const CURTAIN = {
+  early: 0.9, // so weit vor dem Anhalten der Sektion beginnt er aufzugehen (0 = erst wenn sie oben ankommt)
+  length: 0.9, // Scrollweg vom ersten Spalt bis ganz offen
+};
+
 function drawCurtain(p) {
   if (!curtain) return;
   const clamp = (v) => Math.min(1, Math.max(0, v));
@@ -119,11 +125,19 @@ function drawCurtain(p) {
   // linke Bahn; die rechte ist gespiegelt
   const panel = (x) =>
     `M${x(-1)} -1 L${x(xt)} -1 ` +
-    `C${x(xt)} ${yb * 0.45} ${x(xb + (xt - xb) * 0.35)} ${yb * 0.85} ${x(xb)} ${yb} ` +
+    `C${x(xt)} ${yb * 0.45} ${x(xb + (xt - xb) * 0.35)} ${yb * 0.85} ${x(
+      xb
+    )} ${yb} ` +
     `Q${x(xb * 0.4)} ${(yb + 100) / 2 + 4} ${x(-1)} 101 Z`;
   const [left, right] = curtain.querySelectorAll("path");
-  left.setAttribute("d", panel((x) => x));
-  right.setAttribute("d", panel((x) => 100 - x));
+  left.setAttribute(
+    "d",
+    panel((x) => x)
+  );
+  right.setAttribute(
+    "d",
+    panel((x) => 100 - x)
+  );
 }
 
 /* ---------- Animationen ---------- */
@@ -237,13 +251,14 @@ if (hasGsap && !reduceMotion) {
       const bird = pin.querySelector(".bird--fly");
       const distance = () =>
         Math.max(0, track.scrollWidth - gallery.clientWidth + 40);
-      // Mit Vorhang (Featured): zuerst geht der Vorhang auf, dann fährt die Galerie
+      // Mit Vorhang (Featured): die Galerie wartet, bis der Vorhang ganz offen ist
       const withCurtain = curtain && pin.contains(curtain);
-      const curtainLength = () => (withCurtain ? window.innerHeight * 0.9 : 0);
+      const curtainLength = () =>
+        withCurtain
+          ? Math.max(0, CURTAIN.length - CURTAIN.early) * window.innerHeight
+          : 0; // Teil des Vorhangs, der erst nach dem Anhalten aufgeht
       const curtainShare =
         curtainLength() / Math.max(1, curtainLength() + distance());
-      const curtainState = { p: 0 };
-      if (withCurtain) drawCurtain(0);
 
       pin.classList.add("is-pinned");
       const tl = gsap.timeline({
@@ -274,14 +289,7 @@ if (hasGsap && !reduceMotion) {
           },
         },
       });
-      if (withCurtain) {
-        tl.to(curtainState, {
-          p: 1,
-          ease: "none",
-          duration: curtainShare,
-          onUpdate: () => drawCurtain(curtainState.p),
-        });
-      }
+      if (curtainShare > 0) tl.to({}, { duration: curtainShare }); // warten
       tl.to(track, {
         x: () => -distance(),
         ease: "none",
@@ -291,10 +299,9 @@ if (hasGsap && !reduceMotion) {
     });
   });
 
-  // Vorhang auf dem Handy: Galerien sind dort nicht gepinnt, darum kurz anhalten und öffnen
-  mm.add("(max-width: 899px)", () => {
-    if (!curtain) return;
-    const pin = curtain.closest(".chapter__pin");
+  // Vorhang: beginnt CURTAIN.early Bildschirmhöhen vor dem Anhalten aufzugehen
+  if (curtain) {
+    const section = curtain.closest("section");
     const curtainState = { p: 0 };
     drawCurtain(0);
     gsap.to(curtainState, {
@@ -302,17 +309,30 @@ if (hasGsap && !reduceMotion) {
       ease: "none",
       onUpdate: () => drawCurtain(curtainState.p),
       scrollTrigger: {
-        trigger: pin,
-        pin: true,
-        start: "top top",
-        end: "+=80%",
+        trigger: section,
+        start: () => `top ${CURTAIN.early * 100}%`,
+        end: () => `+=${CURTAIN.length * window.innerHeight}`,
         scrub: 0.5,
-        refreshPriority: order(pin),
+        invalidateOnRefresh: true,
+        refreshPriority: order(section),
       },
     });
-  });
+    curtain.classList.add("is-active");
+  }
 
-  if (curtain) curtain.classList.add("is-active");
+  // Handy: Galerien sind nicht gepinnt. Die Sektion hält kurz an, bis der Vorhang offen ist.
+  mm.add("(max-width: 899px)", () => {
+    if (!curtain || CURTAIN.length <= CURTAIN.early) return;
+    const pin = curtain.closest(".chapter__pin");
+    ScrollTrigger.create({
+      trigger: pin,
+      pin: true,
+      start: "top top",
+      end: () => `+=${(CURTAIN.length - CURTAIN.early) * window.innerHeight}`,
+      invalidateOnRefresh: true,
+      refreshPriority: order(pin),
+    });
+  });
 
   // 04 Digezz: pro Projekt eine Bildschirmhöhe
   document.querySelectorAll("[data-projects]").forEach((section) => {
@@ -700,7 +720,6 @@ new IntersectionObserver((entries, observer) => {
     observer.disconnect();
   }
 }).observe(document.querySelector(".site-footer"));
-
 
 /* =========================================================
    Labubuech
