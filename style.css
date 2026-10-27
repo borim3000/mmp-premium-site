@@ -35,9 +35,9 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* Kein "scroll-behavior: smooth" hier: Das verträgt sich nicht mit GSAP ScrollTrigger
+   (vor allem in Firefox springen dann die gepinnten Kapitel). Weiches Scrollen zu
+   Ankern macht script.js. */
 
 body {
   margin: 0;
@@ -148,8 +148,7 @@ a {
   transition: background-color 0.3s, color 0.3s;
 }
 .site-header.is-solid {
-  background: rgba(244, 244, 244, 0.94);
-  backdrop-filter: blur(10px);
+  background: rgba(244, 244, 244, 0.97); /* ohne Weichzeichner: der kostet beim Scrollen viel Leistung */
   color: var(--ink);
 }
 
@@ -212,8 +211,9 @@ a {
 .scroll-progress span {
   display: block;
   height: 100%;
-  width: 0;
   background: var(--pink);
+  transform: scaleX(0); /* script.js setzt scaleX(0 bis 1) */
+  transform-origin: left;
 }
 
 /* ---------- Hero ---------- */
@@ -229,6 +229,7 @@ a {
 .hero__media {
   position: absolute;
   inset: 0;
+  will-change: transform; /* Parallax ohne Neuzeichnen */
 }
 .hero__media img {
   width: 100%;
@@ -376,8 +377,9 @@ a {
 .progress span {
   display: block;
   height: 100%;
-  width: 0;
   background: var(--pink);
+  transform: scaleX(0); /* script.js setzt scaleX(0 bis 1) */
+  transform-origin: left;
 }
 .progress--soft {
   background: var(--pink-soft);
@@ -713,6 +715,9 @@ a {
 }
 
 /* Desktop mit Animation: GSAP verschiebt die Spur, natives Scrollen aus */
+.is-pinned .gallery__track {
+  will-change: transform; /* eigene Ebene: Verschieben ohne Neuzeichnen */
+}
 .is-pinned .gallery {
   overflow: visible;
   scroll-snap-type: none;

@@ -9,37 +9,101 @@ const reduceMotion = window.matchMedia(
 const hasGsap =
   typeof window.gsap !== "undefined" &&
   typeof window.ScrollTrigger !== "undefined";
-if (hasGsap) gsap.registerPlugin(ScrollTrigger);
+if (hasGsap) {
+  gsap.registerPlugin(ScrollTrigger);
+  // Handy: Ein- und Ausblenden der Adressleiste soll nicht alles neu berechnen (ruckelt sonst)
+  ScrollTrigger.config({ ignoreMobileResize: true });
+}
 
-/* ---------- Kopfzeile und Fortschritt ---------- */
+// Fortschrittsbalken über transform statt width: der Browser muss dafür nichts neu anordnen
+function setBar(el, progress) {
+  if (el) el.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
+}
+
+/* ---------- Kopfzeile und Fortschritt ----------
+   Grössen werden nur bei Änderungen gemessen, nicht bei jedem Scroll-Schritt,
+   und gezeichnet wird höchstens einmal pro Bild (requestAnimationFrame). */
 
 const header = document.querySelector(".site-header");
 const pageProgress = document.querySelector("[data-scroll-progress]");
 const hero = document.querySelector(".hero");
+let scrollMax = 1;
+let solidFrom = 0;
+let headerTicking = false;
+
+function measureHeader() {
+  scrollMax = Math.max(
+    1,
+    document.documentElement.scrollHeight - window.innerHeight
+  );
+  solidFrom = hero.offsetHeight - 80;
+}
 
 function updateHeader() {
-  const max = document.documentElement.scrollHeight - window.innerHeight;
-  pageProgress.style.width = `${(window.scrollY / Math.max(1, max)) * 100}%`;
-  header.classList.toggle("is-solid", window.scrollY > hero.offsetHeight - 80);
+  headerTicking = false;
+  setBar(pageProgress, window.scrollY / scrollMax);
+  header.classList.toggle("is-solid", window.scrollY > solidFrom);
 }
-window.addEventListener("scroll", updateHeader, { passive: true });
+
+window.addEventListener(
+  "scroll",
+  () => {
+    if (headerTicking) return;
+    headerTicking = true;
+    requestAnimationFrame(updateHeader);
+  },
+  { passive: true }
+);
+window.addEventListener("resize", () => {
+  measureHeader();
+  updateHeader();
+});
+measureHeader();
 updateHeader();
+
+// Links innerhalb der Seite weich scrollen (statt CSS scroll-behavior, das stört ScrollTrigger)
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const target = document.querySelector(link.getAttribute("href"));
+    if (!target) return;
+    event.preventDefault();
+    target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+    if (link.classList.contains("skip-link")) target.focus({ preventScroll: true });
+  });
+});
 
 /* ---------- Video-Scrub-Hilfe ----------
    Steuert ein <video> über den Scroll-Fortschritt (0 bis 1).
    Ist (noch) kein Video da, läuft nur der Fortschrittsbalken. */
 
+// Neue Position erst setzen, wenn der Browser mit der letzten fertig ist.
+// Sonst stauen sich die Sprünge, vor allem in Firefox, und das Video hängt hinterher.
+function seekVideo(video, time) {
+  video.scrubSent = time; // zuletzt verlangte Stelle
+  video.currentTime = time;
+}
+
 function scrubVideo(container, progress) {
   const video = container && container.querySelector("video");
   if (!video || !video.duration) return;
-  video.currentTime = Math.min(
-    video.duration - 0.05,
-    progress * video.duration
-  );
+  video.scrubTarget = Math.min(video.duration - 0.05, progress * video.duration);
+  if (video.seeking) return; // wird nach "seeked" nachgeholt
+  // Kleine Änderungen (unter einem Bild) gar nicht erst verlangen
+  if (
+    video.scrubSent != null &&
+    Math.abs(video.scrubSent - video.scrubTarget) < 1 / 30
+  )
+    return;
+  seekVideo(video, video.scrubTarget);
 }
 
 function prepareVideos(root) {
   root.querySelectorAll("video").forEach((video) => {
+    // Ist während des Springens weitergescrollt worden, jetzt die neuste Stelle holen
+    video.addEventListener("seeked", () => {
+      if (video.scrubTarget != null && video.scrubTarget !== video.scrubSent)
+        seekVideo(video, video.scrubTarget);
+    });
     video.muted = true;
     video.playsInline = true;
     video.preload = "auto";
@@ -213,12 +277,13 @@ if (hasGsap && !reduceMotion) {
     ScrollTrigger.create({
       trigger: section,
       pin,
+      anticipatePin: 1, // verhindert ein kurzes Springen beim Anhalten
       start: "top top",
       end: `+=${length}%`,
       scrub: true,
       refreshPriority: order(section),
       onUpdate: (self) => {
-        bar.style.width = `${self.progress * 100}%`;
+        setBar(bar, self.progress);
         scrubVideo(media, self.progress);
       },
     });
@@ -265,6 +330,7 @@ if (hasGsap && !reduceMotion) {
         scrollTrigger: {
           trigger: pin,
           pin: true,
+          anticipatePin: 1,
           start: "top top",
           end: () => `+=${curtainLength() + distance()}`,
           scrub: 0.5,
@@ -276,7 +342,7 @@ if (hasGsap && !reduceMotion) {
               1,
               Math.max(0, (self.progress - curtainShare) / (1 - curtainShare))
             );
-            bar.style.width = `${progress * 100}%`;
+            setBar(bar, progress);
             count.textContent = `${Math.min(
               posts,
               Math.floor(progress * posts) + 1
@@ -327,6 +393,7 @@ if (hasGsap && !reduceMotion) {
     ScrollTrigger.create({
       trigger: pin,
       pin: true,
+      anticipatePin: 1,
       start: "top top",
       end: () => `+=${(CURTAIN.length - CURTAIN.early) * window.innerHeight}`,
       invalidateOnRefresh: true,
@@ -345,6 +412,7 @@ if (hasGsap && !reduceMotion) {
     const trigger = ScrollTrigger.create({
       trigger: section,
       pin,
+      anticipatePin: 1,
       start: "top top",
       end: `+=${items.length * 100}%`,
       scrub: true,
@@ -361,7 +429,7 @@ if (hasGsap && !reduceMotion) {
         medias.forEach((el, i) =>
           el.classList.toggle("is-active", i === index)
         );
-        bar.style.width = `${local * 100}%`;
+        setBar(bar, local);
         scrubVideo(medias[index], local);
       },
     });
@@ -430,7 +498,14 @@ if (hasGsap && !reduceMotion) {
     scrollTrigger: { ...outroScroll },
   });
 
+  // Nach Bildern und Schriften neu messen: Die Höhen ändern sich, sonst stimmen die Haltepunkte nicht
   window.addEventListener("load", () => ScrollTrigger.refresh());
+  if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
+  // Kopfzeilen-Fortschritt: Seitenhöhe ändert sich durch die gepinnten Kapitel
+  ScrollTrigger.addEventListener("refresh", () => {
+    measureHeader();
+    updateHeader();
+  });
 } else {
   prepareVideos(document);
   // Ohne Animation: Projekte per Klick wechseln
@@ -460,7 +535,7 @@ document.querySelectorAll("[data-gallery]").forEach((pin) => {
       const p =
         gallery.scrollLeft /
         Math.max(1, gallery.scrollWidth - gallery.clientWidth);
-      bar.style.width = `${p * 100}%`;
+      setBar(bar, p);
       count.textContent = `${Math.min(
         posts,
         Math.round(p * (posts - 1)) + 1
@@ -606,9 +681,10 @@ function renderAchievements() {
     unlocked.size === achievementsTotal
       ? "Alle gefunden. Respekt!"
       : `${unlocked.size} von ${achievementsTotal} gefunden`;
-  achievementsDialog.querySelector(
-    "[data-achievements-progress]"
-  ).style.width = `${(unlocked.size / achievementsTotal) * 100}%`;
+  setBar(
+    achievementsDialog.querySelector("[data-achievements-progress]"),
+    unlocked.size / achievementsTotal
+  );
 }
 
 document
@@ -924,9 +1000,7 @@ function showTime() {
   form.querySelector("[data-book-time]").textContent = `${String(
     Math.floor(left / 60)
   ).padStart(2, "0")}:${String(left % 60).padStart(2, "0")}`;
-  form.querySelector("[data-book-progress]").style.width = `${
-    (timeLeft() / BOOK_SECONDS) * 100
-  }%`;
+  setBar(form.querySelector("[data-book-progress]"), timeLeft() / BOOK_SECONDS);
 }
 
 // Erster Buchstabe: der Server startet die zwei Minuten und meldet die Restzeit
