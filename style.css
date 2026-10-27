@@ -335,7 +335,7 @@ a {
   background: var(--paper);
 }
 .chapter--white,
-.chapter--scrub {
+.chapter--lift {
   background: var(--white);
 }
 
@@ -485,6 +485,31 @@ a {
   font-weight: 600;
 }
 
+/* Instagram: Vorschaubild mit Schriftzug, nach dem Klick der echte Beitrag */
+.ig__badge {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.media.is-embed {
+  aspect-ratio: auto; /* Instagram bestimmt die Höhe selbst */
+  overflow: visible;
+  background: none;
+  border-radius: 0;
+}
+.media.is-embed .instagram-media,
+.media.is-embed iframe {
+  width: 100% !important;
+  min-width: 326px !important;
+  margin: 0 !important;
+}
+
 .media:empty::after {
   content: attr(data-label);
   position: absolute;
@@ -523,9 +548,9 @@ a {
   vector-effect: non-scaling-stroke;
 }
 
-/* ---------- 01 L.I.F.T (Video-Scrub) ---------- */
+/* ---------- 01 L.I.F.T (Instagram-Reel) ---------- */
 
-.chapter--scrub .chapter__pin {
+.chapter--lift .chapter__pin {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -541,35 +566,30 @@ a {
   color: var(--pink);
 }
 
-.scrub {
+.lift-post {
   position: relative;
   z-index: 3;
   display: grid;
   gap: 12px;
-  width: min(clamp(260px, 26vw, 380px), calc(68vh * 9 / 16));
+  width: clamp(
+    328px,
+    26vw,
+    380px
+  ); /* Instagram braucht mindestens 326px Breite */
 }
-.scrub__sound {
-  justify-self: start;
-  gap: 8px;
-}
-.scrub__sound svg {
-  width: 18px;
-  height: 18px;
-  fill: currentColor;
-}
-.scrub figcaption {
+.lift-post figcaption {
   font-size: 0.875rem;
   color: var(--ink-soft);
 }
-.scrub figcaption a {
+.lift-post figcaption a {
   color: var(--pink-strong);
   font-weight: 600;
   text-underline-offset: 3px;
 }
-.scrub figcaption a:hover {
+.lift-post figcaption a:hover {
   color: var(--ink);
 }
-.scrub .bird--peek {
+.lift-post .bird--peek {
   width: 130px;
   right: -92px;
   top: 24px;
@@ -1303,7 +1323,7 @@ a {
   color: var(--white);
 }
 .site-footer__brand {
-  cursor: default;
+  cursor: pointer; /* zeigt, dass man klicken kann (3x = legacy.html) */
   -webkit-user-select: none;
   user-select: none;
   font: 400 2.5rem/1 var(--font-display);
@@ -1473,37 +1493,6 @@ a {
   justify-content: flex-end;
 }
 
-.video-dialog {
-  padding: 16px;
-  border: 0;
-  border-radius: 24px;
-  background: var(--ink);
-}
-.video-dialog::backdrop {
-  background: rgba(33, 33, 33, 0.8);
-}
-.video-dialog video {
-  display: block;
-  height: min(78vh, 760px);
-  width: auto;
-  max-width: calc(100vw - 64px);
-  aspect-ratio: 9 / 16;
-  border-radius: 14px;
-  background: #000;
-}
-.video-dialog form {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 12px;
-}
-.video-dialog .btn--secondary {
-  border-color: var(--white);
-  color: var(--white);
-}
-.video-dialog .btn--secondary:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
 .toasts {
   position: fixed;
   left: 16px;
@@ -1598,7 +1587,7 @@ h2,
     font-size: 1.375rem;
   }
 
-  .chapter--scrub .chapter__pin {
+  .chapter--lift .chapter__pin {
     grid-template-columns: 1fr;
     row-gap: 28px;
     align-content: start;
@@ -1607,18 +1596,18 @@ h2,
   .acronym {
     font-size: 1.375rem;
   }
-  .scrub {
+  .lift-post {
     justify-self: start;
-    width: auto;
+    width: min(100%, 326px);
+    margin-top: 60px; /* Platz für den Vogel */
   }
-  .scrub .media {
-    height: 46svh;
-    width: calc(46svh * 9 / 16);
-    max-height: none;
-  }
-  .scrub .bird--peek {
-    width: 84px;
-    right: -70px;
+  /* Vogel sitzt auf dem Reel statt dahinter, sonst ragt er aus dem Bildschirm */
+  .lift-post .bird--peek {
+    width: 80px;
+    right: 12px;
+    top: -66px;
+    z-index: 1;
+    rotate: 0deg;
   }
 
   .chapter--gallery {

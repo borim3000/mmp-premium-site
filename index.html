@@ -246,18 +246,16 @@
       </section>
 
       <!-- ============ 01 L.I.F.T ============ -->
-      <!-- Gepinnt: Scrollen spult das Video vor und zurück (siehe script.js, "Video-Scrub").
-         data-scrub-length = Scroll-Strecke in Bildschirmhöhen x 100 (600 = sechs Bildschirmhöhen).
-         Längeres Video -> grösserer Wert, damit es nicht zu schnell spult. -->
+      <!-- Das Reel kommt von Instagram und lädt erst beim Klick (wie die YouTube-Videos).
+         data-instagram = der Teil nach /p/ oder /reel/ im Instagram-Link
+         data-poster    = eigenes Vorschaubild (Instagram liefert ohne Login keins) -->
       <section
-        class="chapter chapter--scrub"
+        class="chapter chapter--lift"
         id="lift"
-        data-scrub
-        data-scrub-length="600"
         aria-labelledby="lift-title"
       >
-        <div class="chapter__pin">
-          <header class="chapter__head">
+        <div class="chapter__pin" data-reveal-group>
+          <header class="chapter__head" data-reveal>
             <span class="chapter__num" aria-hidden="true">01</span>
             <h2 id="lift-title">L.I.F.T</h2>
             <p class="acronym">
@@ -268,7 +266,7 @@
             </p>
           </header>
 
-          <figure class="scrub">
+          <figure class="lift-post" data-reveal>
             <img
               class="bird bird--peek"
               data-bird
@@ -278,35 +276,13 @@
               width="140"
               height="170"
             />
-            <div class="media media--reel" data-label="Reel 9:16">
-              <!-- Beim Scrollen stumm gespult. Mit Ton: Knopf darunter.
-                 Tipp: Für flüssiges Scrubben das Video mit vielen Keyframes exportieren. -->
-              <video
-                src="video/lift.mp4"
-                poster="video/lift-poster.jpg"
-                muted
-                playsinline
-                preload="auto"
-              ></video>
-            </div>
-            <div class="progress"><span data-scrub-progress></span></div>
-            <button
-              class="btn btn--primary scrub__sound"
-              type="button"
-              data-sound-play
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M4 9v6h4l5 4V5L8 9H4z" />
-                <path
-                  d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
-              </svg>
-              Mit Ton ansehen
-            </button>
+            <div
+              class="media media--reel"
+              data-instagram="DGOKaPTRu8j"
+              data-poster="video/lift-poster.jpg"
+              data-title="L.I.F.T, Hopecore-Edit"
+              data-label="Instagram-Reel"
+            ></div>
             <figcaption>
               <a
                 href="https://www.instagram.com/p/DGOKaPTRu8j/"
@@ -776,14 +752,6 @@
     <!-- Geheimfoto (Easter Egg: 5x auf den Vogel klicken) -->
     <dialog class="egg-dialog" data-egg-dialog aria-label="Geheimfoto">
       <img src="" alt="Geheimfoto von MMP Premium" />
-      <form method="dialog">
-        <button class="btn btn--secondary">Schliessen</button>
-      </form>
-    </dialog>
-
-    <!-- Video mit Ton (Knopf "Mit Ton ansehen") -->
-    <dialog class="video-dialog" data-sound-dialog aria-label="Video mit Ton">
-      <video controls playsinline preload="none"></video>
       <form method="dialog">
         <button class="btn btn--secondary">Schliessen</button>
       </form>

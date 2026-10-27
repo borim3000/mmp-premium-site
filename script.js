@@ -208,6 +208,79 @@ function drawCurtain(p) {
   );
 }
 
+/* ---------- Instagram ----------
+   <div class="media" data-instagram="POST_ID" data-poster="bild.jpg" data-title="Titel"></div>
+   Zeigt zuerst das eigene Vorschaubild. Erst beim Klick lädt der Beitrag von Instagram
+   (Video, Reel oder Carousel). Funktioniert nur mit öffentlichen Beiträgen. */
+
+function isInstagramId(id) {
+  return /^[\w-]{6,40}$/.test(id || "") && id !== "POST_ID";
+}
+
+function showInstagramPreview(media) {
+  const id = media.dataset.instagram;
+  if (!isInstagramId(id)) return; // Platzhalter bleibt, bis eine echte ID drinsteht
+  const title = media.dataset.title || "Beitrag";
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "yt ig";
+  if (media.dataset.poster)
+    button.style.backgroundImage = `url("${media.dataset.poster}")`;
+  button.setAttribute("aria-label", `${title} auf Instagram abspielen`);
+  const badge = document.createElement("span");
+  badge.className = "ig__badge";
+  badge.textContent = "Instagram";
+  const play = document.createElement("span");
+  play.className = "yt__play";
+  const label = document.createElement("span");
+  label.className = "yt__title";
+  label.textContent = title;
+  button.append(badge, play, label);
+  button.addEventListener("click", () => loadInstagram(media, id));
+  media.replaceChildren(button);
+}
+
+// Instagrams eigenes Einbett-Skript macht aus dem blockquote den Beitrag
+function loadInstagram(media, id) {
+  const link = `https://www.instagram.com/p/${id}/`;
+  const quote = document.createElement("blockquote");
+  quote.className = "instagram-media";
+  quote.dataset.instgrmPermalink = link;
+  quote.dataset.instgrmVersion = "14";
+  const a = document.createElement("a");
+  a.href = link;
+  a.target = "_blank";
+  a.rel = "noopener";
+  a.textContent = "Beitrag auf Instagram ansehen";
+  quote.append(a);
+  media.classList.add("is-embed");
+  media.replaceChildren(quote);
+  if (window.instgrm) {
+    window.instgrm.Embeds.process();
+  } else if (!document.querySelector("script[data-instagram-embed]")) {
+    const script = document.createElement("script");
+    script.src = "https://www.instagram.com/embed.js";
+    script.async = true;
+    script.dataset.instagramEmbed = "";
+    document.body.append(script);
+  }
+}
+
+document.querySelectorAll("[data-instagram]").forEach(showInstagramPreview);
+
+// Der geladene Beitrag ist höher als das Vorschaubild. Damit die gepinnten Kapitel
+// danach noch an der richtigen Stelle anhalten, die Haltepunkte neu berechnen.
+if (hasGsap && "ResizeObserver" in window) {
+  let refreshTimer;
+  const embedResize = new ResizeObserver(() => {
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
+  });
+  document
+    .querySelectorAll("[data-instagram]")
+    .forEach((media) => embedResize.observe(media));
+}
+
 /* ---------- Animationen ---------- */
 
 // ScrollTrigger in Seitenreihenfolge berechnen (wichtig, weil gepinnte Kapitel die Seite verlängern)
@@ -270,43 +343,6 @@ if (hasGsap && !reduceMotion) {
       },
       0
     );
-
-  // 01 L.I.F.T: gepinnt, Scroll spult das Reel
-  document.querySelectorAll("[data-scrub]").forEach((section) => {
-    const pin = section.querySelector(".chapter__pin");
-    const bar = section.querySelector("[data-scrub-progress]");
-    const media = section.querySelector(".scrub .media");
-    const length = Number(section.dataset.scrubLength) || 200; // in % der Bildschirmhöhe
-    prepareVideos(section);
-    ScrollTrigger.create({
-      trigger: section,
-      pin,
-      anticipatePin: 1, // verhindert ein kurzes Springen beim Anhalten
-      start: "top top",
-      end: `+=${length}%`,
-      scrub: true,
-      refreshPriority: order(section),
-      onUpdate: (self) => {
-        setBar(bar, self.progress);
-        scrubVideo(media, self.progress);
-      },
-    });
-    // Vogel schaut beim Spulen weiter hervor
-    gsap.fromTo(
-      section.querySelector(".bird--peek"),
-      { x: -30 },
-      {
-        x: 20,
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: `+=${length}%`,
-          scrub: true,
-        },
-      }
-    );
-  });
 
   // 02/03 Galerien: auf grossen Bildschirmen gepinnt und seitwärts
   const mm = gsap.matchMedia();
@@ -547,31 +583,6 @@ document.querySelectorAll("[data-gallery]").forEach((pin) => {
     },
     { passive: true }
   );
-});
-
-/* ---------- Video mit Ton ----------
-   Beim Scrollen läuft das Video stumm. Der Knopf öffnet es in einem Fenster
-   mit Ton und Steuerung, ab der Stelle, an der man gerade ist. */
-
-const soundDialog = document.querySelector("[data-sound-dialog]");
-const soundVideo = soundDialog.querySelector("video");
-
-document.querySelectorAll("[data-sound-play]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const source = button.closest("figure").querySelector("video");
-    soundVideo.src = source.currentSrc || source.src;
-    soundVideo.poster = source.poster;
-    const start = source.currentTime || 0;
-    // Fast am Ende? Dann von vorne beginnen
-    soundVideo.currentTime = start > (source.duration || 0) - 2 ? 0 : start;
-    soundDialog.showModal();
-    soundVideo.play().catch(() => {});
-  });
-});
-
-soundDialog.addEventListener("close", () => soundVideo.pause());
-soundDialog.addEventListener("click", (event) => {
-  if (event.target === soundDialog) soundDialog.close(); // Klick neben das Video schliesst
 });
 
 /* =========================================================
