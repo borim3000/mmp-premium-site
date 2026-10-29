@@ -20,6 +20,21 @@ function setBar(el, progress) {
   if (el) el.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
 }
 
+// Klick neben ein Pop-up schliesst es. Geprüft wird die Klickposition: Ein Klick auf den
+// Innenrand des Pop-ups trifft technisch auch das Pop-up selbst und soll es nicht schliessen.
+function closeOnBackdrop(dialog) {
+  dialog.addEventListener("click", (event) => {
+    if (event.target !== dialog) return;
+    const r = dialog.getBoundingClientRect();
+    const inside =
+      event.clientX >= r.left &&
+      event.clientX <= r.right &&
+      event.clientY >= r.top &&
+      event.clientY <= r.bottom;
+    if (!inside) dialog.close();
+  });
+}
+
 /* ---------- Kopfzeile und Fortschritt ----------
    Grössen werden nur bei Änderungen gemessen, nicht bei jedem Scroll-Schritt,
    und gezeichnet wird höchstens einmal pro Bild (requestAnimationFrame). */
@@ -784,9 +799,7 @@ function renderAchievements() {
 document
   .querySelector("[data-achievements-open]")
   .addEventListener("click", () => achievementsDialog.showModal());
-achievementsDialog.addEventListener("click", (event) => {
-  if (event.target === achievementsDialog) achievementsDialog.close(); // Klick daneben schliesst
-});
+closeOnBackdrop(achievementsDialog);
 
 // Jackpot wird in win.html (anderer Tab) freigeschaltet: hier gleich nachführen
 window.addEventListener("storage", (event) => {
@@ -828,6 +841,7 @@ function playPeep() {
 }
 
 const eggDialog = document.querySelector("[data-egg-dialog]");
+closeOnBackdrop(eggDialog); // Klick neben das Foto schliesst
 document.querySelectorAll("[data-bird]").forEach((bird) => {
   let clicks = 0;
   let timer;
@@ -1215,9 +1229,7 @@ bookDialog.addEventListener("keydown", (event) => {
 });
 // Anzeige stoppen beim Schliessen. Die zwei Minuten laufen auf dem Server weiter.
 bookDialog.addEventListener("close", stopTimer);
-bookDialog.addEventListener("click", (event) => {
-  if (event.target === bookDialog) bookDialog.close();
-});
+closeOnBackdrop(bookDialog);
 twoPages.addEventListener("change", () => {
   if (!bookDialog.open) return;
   buildPages();

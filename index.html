@@ -667,7 +667,13 @@
        Die Seiten baut script.js ("Labubuech"): Vorwort, alte Einträge, zuletzt die leere Seite zum Schreiben. -->
     <dialog class="book-dialog" data-book-dialog aria-label="Labubuech">
       <form method="dialog" class="book-dialog__close">
-        <button type="submit" aria-label="Labubuech schliessen">×</button>
+        <button
+          class="close-x"
+          type="submit"
+          aria-label="Labubuech schliessen"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        </button>
       </form>
       <div class="open-book">
         <div class="open-book__pages" data-book-pages></div>
@@ -737,10 +743,10 @@
         <h2 id="achievements-title">Achievements</h2>
         <form method="dialog">
           <button
-            class="achievements-dialog__close"
+            class="achievements-dialog__close close-x"
             aria-label="Achievements schliessen"
           >
-            ×
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
           </button>
         </form>
       </header>
