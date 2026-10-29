@@ -841,7 +841,6 @@ function playPeep() {
 }
 
 const eggDialog = document.querySelector("[data-egg-dialog]");
-closeOnBackdrop(eggDialog); // Klick neben das Foto schliesst
 document.querySelectorAll("[data-bird]").forEach((bird) => {
   let clicks = 0;
   let timer;
