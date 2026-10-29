@@ -209,24 +209,34 @@ function drawCurtain(p) {
 }
 
 /* ---------- Instagram ----------
-   <div class="media" data-instagram="POST_ID" data-poster="bild.jpg" data-title="Titel"></div>
-   Zeigt zuerst das eigene Vorschaubild. Erst beim Klick lädt der Beitrag von Instagram
-   (Video, Reel oder Carousel). Funktioniert nur mit öffentlichen Beiträgen. */
+   <div class="media" data-instagram="ID" data-instagram-type="reel" data-poster="bild.jpg" data-title="Titel"></div>
+   Der Beitrag (Reel, Video oder Carousel) lädt unsichtbar im Hintergrund, sobald die Seite
+   geladen ist. Bis er bereit ist, steht das eigene Vorschaubild da, dann wird überblendet.
+   So ist er schon fertig, wenn man hinscrollt. Blockiert der Browser Instagram
+   (z. B. Werbeblocker), bleibt das Vorschaubild und ein Klick öffnet den Beitrag auf Instagram.
+   Funktioniert nur mit öffentlichen Beiträgen. */
 
 function isInstagramId(id) {
   return /^[\w-]{6,40}$/.test(id || "") && id !== "POST_ID";
 }
 
+function instagramLink(media) {
+  const type = media.dataset.instagramType === "reel" ? "reel" : "p";
+  return `https://www.instagram.com/${type}/${media.dataset.instagram}/`;
+}
+
+// Vorschaubild: führt zu Instagram, solange der eingebettete Beitrag nicht da ist
 function showInstagramPreview(media) {
-  const id = media.dataset.instagram;
-  if (!isInstagramId(id)) return; // Platzhalter bleibt, bis eine echte ID drinsteht
+  if (!isInstagramId(media.dataset.instagram)) return; // Platzhalter bleibt, bis eine echte ID drinsteht
   const title = media.dataset.title || "Beitrag";
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "yt ig";
+  const link = document.createElement("a");
+  link.className = "yt ig";
+  link.href = instagramLink(media);
+  link.target = "_blank";
+  link.rel = "noopener";
   if (media.dataset.poster)
-    button.style.backgroundImage = `url("${media.dataset.poster}")`;
-  button.setAttribute("aria-label", `${title} auf Instagram abspielen`);
+    link.style.backgroundImage = `url("${media.dataset.poster}")`;
+  link.setAttribute("aria-label", `${title} auf Instagram ansehen`);
   const badge = document.createElement("span");
   badge.className = "ig__badge";
   badge.textContent = "Instagram";
@@ -235,38 +245,62 @@ function showInstagramPreview(media) {
   const label = document.createElement("span");
   label.className = "yt__title";
   label.textContent = title;
-  button.append(badge, play, label);
-  button.addEventListener("click", () => loadInstagram(media, id));
-  media.replaceChildren(button);
+  link.append(badge, play, label);
+  media.replaceChildren(link);
 }
 
-// Instagrams eigenes Einbett-Skript macht aus dem blockquote den Beitrag
-function loadInstagram(media, id) {
-  const link = `https://www.instagram.com/p/${id}/`;
+// Beitrag unsichtbar laden; Instagrams embed.js macht aus dem blockquote ein iframe
+function embedInstagram(media) {
+  const holder = document.createElement("div");
+  holder.className = "ig-embed";
   const quote = document.createElement("blockquote");
   quote.className = "instagram-media";
-  quote.dataset.instgrmPermalink = link;
-  quote.dataset.instgrmVersion = "14";
-  const a = document.createElement("a");
-  a.href = link;
-  a.target = "_blank";
-  a.rel = "noopener";
-  a.textContent = "Beitrag auf Instagram ansehen";
-  quote.append(a);
-  media.classList.add("is-embed");
-  media.replaceChildren(quote);
+  quote.setAttribute("data-instgrm-permalink", instagramLink(media));
+  quote.setAttribute("data-instgrm-version", "14");
+  quote.setAttribute("data-instgrm-captioned", ""); // mit Bildunterschrift
+  holder.append(quote);
+  media.append(holder);
+
+  // Bereit, wenn das iframe da ist und seine Höhe nicht mehr ändert
+  let settle;
+  const watch = new ResizeObserver(() => {
+    if (!holder.querySelector("iframe") || holder.offsetHeight < 300) return;
+    clearTimeout(settle);
+    settle = setTimeout(() => {
+      watch.disconnect();
+      clearTimeout(giveUp);
+      media.classList.add("is-embed"); // überblenden, Vorschaubild weg
+    }, 400);
+  });
+  watch.observe(holder);
+  // Kommt nach 15 Sekunden nichts (blockiert oder offline), Vorschaubild behalten
+  const giveUp = setTimeout(() => {
+    watch.disconnect();
+    holder.remove();
+  }, 15000);
+}
+
+function startInstagramEmbeds() {
+  const medias = [...document.querySelectorAll("[data-instagram]")].filter(
+    (media) => isInstagramId(media.dataset.instagram)
+  );
+  if (!medias.length) return;
+  medias.forEach(embedInstagram);
   if (window.instgrm) {
     window.instgrm.Embeds.process();
-  } else if (!document.querySelector("script[data-instagram-embed]")) {
+  } else {
     const script = document.createElement("script");
     script.src = "https://www.instagram.com/embed.js";
     script.async = true;
-    script.dataset.instagramEmbed = "";
     document.body.append(script);
   }
 }
 
 document.querySelectorAll("[data-instagram]").forEach(showInstagramPreview);
+// Erst nach dem Laden der Seite, damit der Seitenaufbau nicht warten muss
+if (document.readyState === "complete") setTimeout(startInstagramEmbeds, 300);
+else
+  window.addEventListener("load", () => setTimeout(startInstagramEmbeds, 300));
 
 // Der geladene Beitrag ist höher als das Vorschaubild. Damit die gepinnten Kapitel
 // danach noch an der richtigen Stelle anhalten, die Haltepunkte neu berechnen.
@@ -310,6 +344,51 @@ if (hasGsap && !reduceMotion) {
       scrub: true,
     },
   });
+  // Hero: Maus-Parallaxe. Der Titel folgt der Maus und kippt leicht, das Bergbild
+  // weicht in die Gegenrichtung aus. So wirkt der Titel, als schwebe er vor den Bergen.
+  // Nur mit Maus (nicht auf dem Handy). Stärke über MOUSE_PARALLAX einstellen.
+  const MOUSE_PARALLAX = {
+    title: 36, // Verschiebung des Titels in px
+    tilt: 8, // Kippen des Titels in Grad
+    subtitle: 18, // "Content Portfolio" in px (nur seitlich)
+    background: 22, // Bergbild in px, gegenläufig
+  };
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const heroTitle = document.querySelector(".hero__title");
+    const heroMedia = document.querySelector("[data-hero-media]");
+    const heroSubtitle = document.querySelector(".hero__subtitle");
+    gsap.set(heroTitle, { transformPerspective: 900 });
+    gsap.set(heroMedia, { scale: 1.06 }); // etwas grösser, damit beim Verschieben kein Rand sichtbar wird
+    const follow = (el, prop) =>
+      gsap.quickTo(el, prop, { duration: 0.9, ease: "power3.out" });
+    const move = {
+      titleX: follow(heroTitle, "x"),
+      titleY: follow(heroTitle, "y"),
+      titleRotY: follow(heroTitle, "rotationY"),
+      titleRotX: follow(heroTitle, "rotationX"),
+      subtitleX: follow(heroSubtitle, "x"),
+      mediaX: follow(heroMedia, "x"),
+      mediaY: follow(heroMedia, "y"),
+    };
+    const parallax = (nx, ny) => {
+      // nx, ny: Mausposition von -0.5 (links/oben) bis 0.5 (rechts/unten)
+      move.titleX(nx * MOUSE_PARALLAX.title);
+      move.titleY(ny * MOUSE_PARALLAX.title * 0.6);
+      move.titleRotY(nx * MOUSE_PARALLAX.tilt);
+      move.titleRotX(-ny * MOUSE_PARALLAX.tilt * 0.75);
+      move.subtitleX(nx * MOUSE_PARALLAX.subtitle);
+      move.mediaX(-nx * MOUSE_PARALLAX.background);
+      move.mediaY(-ny * MOUSE_PARALLAX.background * 0.6);
+    };
+    hero.addEventListener("pointermove", (event) =>
+      parallax(
+        event.clientX / window.innerWidth - 0.5,
+        event.clientY / window.innerHeight - 0.5
+      )
+    );
+    hero.addEventListener("pointerleave", () => parallax(0, 0)); // sanft zurück in die Mitte
+  }
+
   // Vogel: wechselt beim ersten Scroll zum fliegenden Bild und fliegt ein Stück nach oben rechts
   const heroBird = document.querySelector(".bird--hero");
   gsap

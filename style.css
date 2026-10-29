@@ -485,7 +485,11 @@ a {
   font-weight: 600;
 }
 
-/* Instagram: Vorschaubild mit Schriftzug, nach dem Klick der echte Beitrag */
+/* Instagram: Vorschaubild, bis der Beitrag im Hintergrund fertig geladen ist */
+.yt.ig {
+  display: block;
+  text-decoration: none;
+}
 .ig__badge {
   position: absolute;
   left: 14px;
@@ -497,17 +501,39 @@ a {
   font-size: 0.8125rem;
   font-weight: 600;
 }
+/* Lädt unsichtbar hinter dem Vorschaubild */
+.ig-embed {
+  position: absolute;
+  inset: 0 0 auto;
+  opacity: 0;
+  pointer-events: none;
+}
+.ig-embed .instagram-media,
+.ig-embed iframe {
+  width: 100% !important;
+  min-width: 326px !important;
+  margin: 0 !important;
+}
+/* Fertig: Beitrag einblenden, Vorschaubild weg, Instagram bestimmt die Höhe */
 .media.is-embed {
-  aspect-ratio: auto; /* Instagram bestimmt die Höhe selbst */
+  aspect-ratio: auto;
   overflow: visible;
   background: none;
   border-radius: 0;
 }
-.media.is-embed .instagram-media,
-.media.is-embed iframe {
-  width: 100% !important;
-  min-width: 326px !important;
-  margin: 0 !important;
+.media.is-embed > .ig {
+  display: none;
+}
+.media.is-embed .ig-embed {
+  position: static;
+  opacity: 1;
+  pointer-events: auto;
+  animation: ig-in 0.5s ease-out;
+}
+@keyframes ig-in {
+  from {
+    opacity: 0;
+  }
 }
 
 .media:empty::after {

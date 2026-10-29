@@ -52,8 +52,8 @@
 
     <main id="top">
       <!-- ============ HERO ============ -->
-      <!-- Das Bergbild enthält den Schriftzug schon. Sobald ihr eine Version ohne Schriftzug habt:
-         img/berge.jpg ersetzen und beim <h1> die Klasse "visually-hidden" entfernen. -->
+      <!-- Bergbild ohne Schriftzug, der Titel liegt als Text darüber.
+         Mit der Maus bewegen sich Titel und Bild leicht gegeneinander (script.js, "Maus-Parallaxe"). -->
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero__media" data-hero-media>
           <img src="img/berge_clean_v2.jpg" alt="" />
@@ -246,9 +246,10 @@
       </section>
 
       <!-- ============ 01 L.I.F.T ============ -->
-      <!-- Das Reel kommt von Instagram und lädt erst beim Klick (wie die YouTube-Videos).
-         data-instagram = der Teil nach /p/ oder /reel/ im Instagram-Link
-         data-poster    = eigenes Vorschaubild (Instagram liefert ohne Login keins) -->
+      <!-- Das Reel kommt von Instagram und lädt im Hintergrund, bis dahin steht das Vorschaubild.
+         data-instagram      = der Teil nach /p/ oder /reel/ im Instagram-Link
+         data-instagram-type = "reel" bei Reels, sonst weglassen (Beiträge und Carousels)
+         data-poster         = eigenes Vorschaubild (Instagram liefert ohne Login keins) -->
       <section
         class="chapter chapter--lift"
         id="lift"
@@ -279,6 +280,7 @@
             <div
               class="media media--reel"
               data-instagram="DGOKaPTRu8j"
+              data-instagram-type="reel"
               data-poster="video/lift-poster.jpg"
               data-title="L.I.F.T, Hopecore-Edit"
               data-label="Instagram-Reel"
