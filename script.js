@@ -131,7 +131,7 @@ function showYouTubePreview(media) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "yt";
-  button.style.backgroundImage = `url("https://i.ytimg.com/vi/${id}/hqdefault.jpg")`;
+  button.style.backgroundImage = `url("https://i.ytimg.com/vi/${id}/maxresdefault.jpg")`;
   button.setAttribute("aria-label", `${title} auf YouTube abspielen`);
   const play = document.createElement("span");
   play.className = "yt__play";
