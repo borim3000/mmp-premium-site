@@ -27,7 +27,7 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | 05 Digezz                 | Cuschinar Difficil, ISEMAA                                                   | Gepinnt, Projekte wechseln beim Scrollen, Videos über YouTube                                 |
 | Stay tuned                | Ausblick                                                                     | Satz fährt beim Scrollen durchs Bild                                                          |
 | Labubuech                 | Gästebuch als Buch-Pop-up: mit Pfeilen blättern, 2 Minuten pro Tag schreiben | Lesezeichen öffnet das Buch, Seiten klappen beim Blättern um                                  |
-| Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord |
+| Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord, Ton aus (Knopf oder Taste M) |
 
 ## Technologien
 
@@ -83,7 +83,7 @@ Zum Testen nochmals schreiben: im Browser die Cookies der Seite löschen, dann g
 
 ## Easter Eggs (Liste für die Dozierenden)
 
-Ein Klick auf den Zähler oben rechts (Stern) öffnet die Übersicht aller Achievements: gefundene mit Beschreibung, offene mit einem Tipp. Gespeichert wird im Browser (localStorage). Sind alle gefunden, kann man sie dort mit «Achievements nochmal neu suchen» (mit Bestätigung) zurücksetzen.
+Ein Klick auf den Zähler oben rechts (Stern) öffnet die Übersicht aller Achievements: gefundene mit Beschreibung, offene mit einem Tipp. Gespeichert wird im Browser (localStorage). Sind alle gefunden, kann man sie dort mit «Achievements nochmal neu suchen» (mit Bestätigung) zurücksetzen. Beim Finden erscheint unten links eine Meldung und es spielt `sound/achievement.mp3`.
 
 | Easter Egg     | Wo                     | Auslöser                                                                 | Achievement |
 | -------------- | ---------------------- | ------------------------------------------------------------------------ | ----------- |
@@ -96,7 +96,7 @@ Ein Klick auf den Zähler oben rechts (Stern) öffnet die Übersicht aller Achie
 | Jackpot        | legacy.html            | «Gewinnspiel hier drücken», Gewinnchance 1 %                             | Jackpot     |
 | Buttadawg      | legacy.html            | Bild rechts: darüberfahren und anklicken                                 | –           |
 | Labubuech      | Hero links und am Ende | Am pinken Lesezeichen ziehen (Klick auf den Deckel lässt es wackeln)     | –           |
-| Flappy Spatz   | Pinker Spatz bei Rotterdam | Anklicken, führt zum Spiel                                              | Flappy Spatz |
+| Flappy Spatz   | Pinker Spatz bei Rotterdam | Innerhalb von 1,5 Sekunden fünfmal anklicken, führt zum Spiel           | Flappy Spatz |
 | Vielflieger    | flappy.html            | 10 Punkte schaffen                                                       | Vielflieger |
 | _weitere_      |                        |                                                                          |             |
 

@@ -67,7 +67,35 @@ mountains.addEventListener("load", () => {
 
 const peep = new Audio("sound/peep.mp3");
 const faah = new Audio("sound/faahhhh.mp3");
+// Ton an/aus, wird im Browser gemerkt. Gilt auch für den Achievement-Ton (shared.js).
+const MUTE_KEY = "mmp_flappy_muted";
+const muteButton = document.querySelector("[data-flappy-mute]");
+let muted = false;
+try {
+  muted = localStorage.getItem(MUTE_KEY) === "1";
+} catch {
+  /* privates Fenster */
+}
+
+function setMuted(value) {
+  muted = value;
+  soundsMuted = value; // shared.js: Achievement-Ton
+  muteButton.setAttribute("aria-pressed", String(value));
+  muteButton.setAttribute("aria-label", value ? "Ton an" : "Ton aus");
+  muteButton.title = value ? "Ton an (M)" : "Ton aus (M)";
+  try {
+    localStorage.setItem(MUTE_KEY, value ? "1" : "0");
+  } catch {
+    /* privates Fenster */
+  }
+}
+setMuted(muted);
+// Mit der Maus geklickt: Knopf nicht fokussieren, sonst würde die Leertaste danach ihn drücken statt zu flattern
+muteButton.addEventListener("mousedown", (event) => event.preventDefault());
+muteButton.addEventListener("click", () => setMuted(!muted));
+
 function playSound(audio, { volume = 1, rate = 1 } = {}) {
+  if (muted) return;
   const sound = audio.cloneNode();
   sound.volume = volume;
   sound.preservesPitch = false;
@@ -78,6 +106,7 @@ function playSound(audio, { volume = 1, rate = 1 } = {}) {
 // Kurzer "Ding" für einen Punkt, mit der Web Audio API erzeugt
 let audioCtx = null;
 function ding() {
+  if (muted) return;
   try {
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
     const osc = audioCtx.createOscillator();
@@ -428,6 +457,10 @@ new ResizeObserver(resize).observe(stage);
 const dialogOpen = () => document.querySelector("dialog[open]");
 
 window.addEventListener("keydown", (event) => {
+  if (event.code === "KeyM" && !dialogOpen() && !event.repeat) {
+    setMuted(!muted);
+    return;
+  }
   if (!["Space", "ArrowUp", "KeyW"].includes(event.code)) return;
   const onControl =
     event.target instanceof Element &&

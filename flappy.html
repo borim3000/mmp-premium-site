@@ -59,7 +59,8 @@
           Säule gibt einen Punkt.
         </p>
         <p class="flappy__keys">
-          <kbd>Leertaste</kbd>, Klick oder Tippen: flattern
+          <kbd>Leertaste</kbd>, Klick oder Tippen: flattern<br />
+          <kbd>M</kbd>: Ton an oder aus
         </p>
         <dl class="flappy__stats">
           <div>
@@ -81,6 +82,24 @@
           aria-label="Spiel Flappy Spatz. Mit Leertaste, Klick oder Tippen flattert der Spatz."
         ></canvas>
         <p class="visually-hidden" data-flappy-status aria-live="polite"></p>
+        <!-- Ton an/aus (auch mit der Taste M). Wird im Browser gemerkt. -->
+        <button
+          class="flappy__mute"
+          type="button"
+          data-flappy-mute
+          aria-pressed="false"
+          aria-label="Ton aus"
+          title="Ton aus (M)"
+        >
+          <svg class="flappy__mute-on" viewBox="0 0 24 24" aria-hidden="true">
+            <path class="fill" d="M4 9v6h4l5 4V5L8 9H4z" />
+            <path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" />
+          </svg>
+          <svg class="flappy__mute-off" viewBox="0 0 24 24" aria-hidden="true">
+            <path class="fill" d="M4 9v6h4l5 4V5L8 9H4z" />
+            <path d="M16 9.5l5 5M21 9.5l-5 5" />
+          </svg>
+        </button>
       </div>
     </main>
 

@@ -676,7 +676,7 @@ document.querySelector("[data-faah]").addEventListener("click", () => {
   unlock("faahhhh");
 });
 
-/* ---------- Easter Egg: 5x auf den Vogel = Geheimfoto, pinker Spatz = Spiel ---------- */
+/* ---------- Easter Egg: 5x auf einen goldenen Vogel = Geheimfoto, 5x auf den pinken Spatz = Spiel ---------- */
 
 // Piepen bei jedem Klick auf einen Vogel. Jedes Piepen ist etwas anders hoch.
 // Eigenen Sound verwenden: sound/peep.mp3 ersetzen.
@@ -696,11 +696,6 @@ document.querySelectorAll("[data-bird]").forEach((bird) => {
   let timer;
   bird.addEventListener("click", () => {
     playPeep();
-    // Pinker Spatz: ein Klick führt zum Spiel (kurz warten, damit man das Piepen hört)
-    if (bird.dataset.flappy) {
-      setTimeout(() => (window.location.href = bird.dataset.flappy), 250);
-      return;
-    }
     clicks += 1;
     clearTimeout(timer);
     timer = setTimeout(() => {
@@ -714,6 +709,11 @@ document.querySelectorAll("[data-bird]").forEach((bird) => {
       );
     if (clicks < 5) return;
     clicks = 0;
+    // Pinker Spatz: nach 5 Klicks zum Spiel (kurz warten, damit man das letzte Piepen hört)
+    if (bird.dataset.flappy) {
+      setTimeout(() => (window.location.href = bird.dataset.flappy), 250);
+      return;
+    }
     eggDialog.querySelector("img").src = bird.dataset.egg;
     eggDialog.showModal();
     unlock("geheimfoto");

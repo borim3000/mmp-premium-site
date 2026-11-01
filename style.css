@@ -1410,19 +1410,24 @@ a {
 
 /* ---------- Achievements-Übersicht (Pop-up unter dem Zähler) ---------- */
 
+/* Kopf (Titel, Zähler, Balken) bleibt stehen, nur die Liste scrollt */
 .achievements-dialog {
   position: fixed;
   inset: calc(var(--header-h) + 4px) var(--gutter) auto auto;
   width: min(380px, calc(100vw - 32px));
-  max-height: calc(100svh - var(--header-h) - 24px);
+  max-height: min(560px, calc(100svh - var(--header-h) - 24px));
   margin: 0;
-  padding: 24px;
+  padding: 24px 24px 18px;
   border: 0;
   border-radius: 20px;
   background: var(--white);
   color: var(--ink);
   box-shadow: 0 18px 48px rgba(33, 33, 33, 0.22);
-  overflow-y: auto;
+  overflow: hidden;
+}
+.achievements-dialog[open] {
+  display: flex;
+  flex-direction: column;
 }
 .achievements-dialog::backdrop {
   background: rgba(33, 33, 33, 0.25);
@@ -1470,7 +1475,8 @@ a {
 
 /* Erscheint, wenn alle gefunden sind */
 .achievements-reset {
-  margin-top: 18px;
+  flex: none;
+  margin-top: 12px;
   text-align: center;
 }
 .achievements-reset[hidden],
@@ -1511,7 +1517,23 @@ a {
 .achievement-list {
   display: grid;
   gap: 8px;
-  margin-top: 18px;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 18px -8px 0 0;
+  padding: 0 8px 14px 0;
+  overflow-y: auto;
+  overscroll-behavior: contain; /* Scrollen in der Liste scrollt nicht die Seite dahinter */
+  scrollbar-width: thin;
+  scrollbar-color: var(--grey) transparent;
+}
+/* unten weich ausblenden, solange es weitergeht (Klasse setzt shared.js) */
+.achievement-list.has-more {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 calc(100% - 36px),
+    transparent
+  );
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent);
 }
 .achievement {
   display: grid;
@@ -1581,22 +1603,101 @@ a {
   gap: 10px;
   width: min(360px, calc(100vw - 32px));
 }
+/* Meldung: eckig, dunkel, gleitet von links herein. Unten läuft ein Zeitbalken ab. */
 .toast {
-  display: grid;
-  gap: 2px;
-  padding: 14px 18px;
-  border-radius: 14px;
-  border-left: 5px solid var(--gold);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px 16px;
+  border-left: 4px solid var(--pink);
+  border-radius: 20px;
   background: var(--ink);
   color: var(--white);
-  box-shadow: 0 10px 28px rgba(33, 33, 33, 0.25);
+  box-shadow: 0 14px 34px rgba(33, 33, 33, 0.3);
+  overflow: hidden;
+  animation: toast-in 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2);
 }
-.toast strong {
-  font-weight: 600;
+.toast.is-leaving {
+  animation: toast-out 0.35s ease-in forwards;
 }
-.toast span {
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-110%);
+  }
+}
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(-110%);
+  }
+}
+.toast__body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.toast__label {
   color: var(--grey);
-  font-size: 0.9375rem;
+  font: 600 0.75rem/1.2 var(--font-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.toast__text {
+  font: 600 0.9375rem/1.35 var(--font-body);
+}
+.toast__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--pink);
+  transform-origin: left;
+  animation: toast-time var(--toast-time, 4500ms) linear forwards;
+}
+@keyframes toast-time {
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Achievement gefunden: Gold statt Pink, Stern und Name gross in Bodoni */
+.toast--achievement {
+  border-left-color: var(--gold);
+  padding-left: 14px;
+}
+.toast--achievement .toast__label {
+  color: var(--gold);
+}
+.toast--achievement .toast__text {
+  font: 500 1.5rem/1.1 var(--font-display);
+}
+.toast--achievement .toast__bar {
+  background: var(--gold);
+}
+.toast__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  background: var(--gold);
+  animation: toast-star 0.7s 0.15s ease-out both;
+}
+.toast__icon svg {
+  width: 26px;
+  height: 26px;
+  fill: var(--white);
+}
+@keyframes toast-star {
+  from {
+    transform: scale(0.3) rotate(-90deg);
+  }
+  60% {
+    transform: scale(1.15) rotate(8deg);
+  }
 }
 
 /* ---------- Grosse Schrift kräftiger ----------
@@ -1707,6 +1808,44 @@ h2,
   overflow: hidden;
   background: var(--pink-soft);
   box-shadow: 0 24px 60px rgba(33, 33, 33, 0.18);
+}
+.flappy__mute {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(33, 33, 33, 0.55);
+  color: var(--white);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.flappy__mute:hover {
+  background: rgba(33, 33, 33, 0.8);
+}
+.flappy__mute svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+.flappy__mute .fill {
+  fill: currentColor;
+  stroke: none;
+}
+.flappy__mute-off,
+.flappy__mute[aria-pressed="true"] .flappy__mute-on {
+  display: none;
+}
+.flappy__mute[aria-pressed="true"] .flappy__mute-off {
+  display: block;
 }
 .flappy__canvas {
   display: block;

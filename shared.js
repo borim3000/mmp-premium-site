@@ -98,19 +98,54 @@ function unlock(key) {
     /* privates Fenster */
   }
   updateCounter();
-  toast("Achievement gefunden", ACHIEVEMENTS[key].name);
+  playAchievementSound();
+  toast("Achievement gefunden", ACHIEVEMENTS[key].name, "achievement");
 }
 
-function toast(title, text) {
+// Ton beim Finden. Flappy Spatz schaltet ihn mit "Ton aus" stumm (soundsMuted).
+let soundsMuted = false;
+const achievementSound = new Audio("sound/achievement.mp3");
+achievementSound.preload = "auto";
+function playAchievementSound() {
+  if (soundsMuted) return;
+  const sound = achievementSound.cloneNode(); // mehrere kurz nacheinander dürfen sich überlagern
+  sound.volume = 0.7;
+  sound.play().catch(() => {}); // Browser blockiert Ton ohne vorherigen Klick: dann eben still
+}
+
+/* Meldung unten links. type "achievement": mit goldenem Stern und Name gross.
+   Verschwindet nach 4,5 Sekunden, der Balken unten zeigt die Zeit. */
+const TOAST_TIME = 4500;
+function toast(title, text, type = "info") {
   const box = document.createElement("div");
-  box.className = "toast";
-  const strong = document.createElement("strong");
-  strong.textContent = title;
-  const span = document.createElement("span");
-  span.textContent = text;
-  box.append(strong, span);
+  box.className = `toast toast--${type}`;
+  box.style.setProperty("--toast-time", `${TOAST_TIME}ms`);
+  if (type === "achievement") {
+    const icon = document.createElement("span");
+    icon.className = "toast__icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.innerHTML =
+      '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.2 6.8.7-5.1 4.6 1.4 6.7L12 17.3l-6 3.4 1.4-6.7-5.1-4.6 6.8-.7z"/></svg>';
+    box.append(icon);
+  }
+  const body = document.createElement("div");
+  body.className = "toast__body";
+  const label = document.createElement("small");
+  label.className = "toast__label";
+  label.textContent = title;
+  const main = document.createElement("strong");
+  main.className = "toast__text";
+  main.textContent = text;
+  const bar = document.createElement("span");
+  bar.className = "toast__bar";
+  bar.setAttribute("aria-hidden", "true");
+  body.append(label, main);
+  box.append(body, bar);
   document.querySelector("[data-toasts]").append(box);
-  setTimeout(() => box.remove(), 4500);
+  setTimeout(() => {
+    box.classList.add("is-leaving"); // rausgleiten, dann entfernen
+    setTimeout(() => box.remove(), 350);
+  }, TOAST_TIME);
 }
 
 /* ---------- Achievements-Übersicht (Pop-up) ---------- */
@@ -185,9 +220,24 @@ resetBox.querySelector("[data-reset-confirm]").addEventListener("click", () => {
   toast("Zurückgesetzt", "Viel Spass beim Suchen!");
 });
 
+// Liste unten ausblenden, solange man noch weiterscrollen kann
+const achievementList = achievementsDialog.querySelector("[data-achievements-list]");
+function updateListFade() {
+  achievementList.classList.toggle(
+    "has-more",
+    achievementList.scrollTop + achievementList.clientHeight <
+      achievementList.scrollHeight - 4
+  );
+}
+achievementList.addEventListener("scroll", updateListFade, { passive: true });
+
 document
   .querySelector("[data-achievements-open]")
-  .addEventListener("click", () => achievementsDialog.showModal());
+  .addEventListener("click", () => {
+    achievementsDialog.showModal();
+    achievementList.scrollTop = 0;
+    updateListFade();
+  });
 closeOnBackdrop(achievementsDialog);
 
 // In einem anderen Tab freigeschaltet (win.html, flappy.html): hier gleich nachführen
