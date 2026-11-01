@@ -667,12 +667,10 @@
        Die Seiten baut script.js ("Labubuech"): Vorwort, alte Einträge, zuletzt die leere Seite zum Schreiben. -->
     <dialog class="book-dialog" data-book-dialog aria-label="Labubuech">
       <form method="dialog" class="book-dialog__close">
-        <button
-          class="close-x"
-          type="submit"
-          aria-label="Labubuech schliessen"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        <button class="close-x" type="submit" aria-label="Labubuech schliessen">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
         </button>
       </form>
       <div class="open-book">
@@ -746,7 +744,9 @@
             class="achievements-dialog__close close-x"
             aria-label="Achievements schliessen"
           >
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
           </button>
         </form>
       </header>
@@ -755,6 +755,28 @@
         <span data-achievements-progress></span>
       </div>
       <ul class="achievement-list" data-achievements-list></ul>
+
+      <!-- Erscheint erst, wenn alle gefunden sind. Zurücksetzen mit kurzer Bestätigung. -->
+      <div class="achievements-reset" data-achievements-reset hidden>
+        <button
+          class="achievements-reset__start"
+          type="button"
+          data-reset-start
+        >
+          Achievements nochmal neu suchen
+        </button>
+        <div class="achievements-reset__confirm" data-reset-confirm-box hidden>
+          <p>Alle Achievements werden zurückgesetzt. Wosch ds würk Spatz?</p>
+          <div class="achievements-reset__buttons">
+            <button class="btn btn--primary" type="button" data-reset-confirm>
+              Ja, neu suchen
+            </button>
+            <button class="btn btn--secondary" type="button" data-reset-cancel>
+              Abbrechen
+            </button>
+          </div>
+        </div>
+      </div>
     </dialog>
 
     <!-- Geheimfoto (Easter Egg: 5x auf den Vogel klicken) -->

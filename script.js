@@ -794,7 +794,42 @@ function renderAchievements() {
     achievementsDialog.querySelector("[data-achievements-progress]"),
     unlocked.size / achievementsTotal
   );
+  // "Nochmal neu suchen" nur zeigen, wenn alle gefunden sind
+  resetBox.hidden = unlocked.size < achievementsTotal;
+  showResetStep(false);
 }
+
+/* ---------- Alle gefunden: nochmal neu suchen ---------- */
+
+const resetBox = achievementsDialog.querySelector("[data-achievements-reset]");
+const resetStart = resetBox.querySelector("[data-reset-start]");
+const resetConfirmBox = resetBox.querySelector("[data-reset-confirm-box]");
+
+// false: nur der Link, true: Frage "Wirklich?" mit Ja/Abbrechen
+function showResetStep(confirming) {
+  resetStart.hidden = confirming;
+  resetConfirmBox.hidden = !confirming;
+}
+
+resetStart.addEventListener("click", () => {
+  showResetStep(true);
+  resetBox.querySelector("[data-reset-confirm]").focus();
+});
+resetBox.querySelector("[data-reset-cancel]").addEventListener("click", () => {
+  showResetStep(false);
+  resetStart.focus();
+});
+resetBox.querySelector("[data-reset-confirm]").addEventListener("click", () => {
+  unlocked.clear();
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    /* privates Fenster */
+  }
+  footerArmed = false; // "Ganz unten" nicht sofort wieder auslösen, falls man gerade unten ist
+  updateCounter(); // Zähler 0/6 und Liste neu
+  toast("Zurückgesetzt", "Viel Spass beim Suchen!");
+});
 
 document
   .querySelector("[data-achievements-open]")
@@ -897,11 +932,14 @@ legacyTrigger.addEventListener("click", () => {
 
 /* ---------- Achievement: bis ganz unten gescrollt ---------- */
 
-new IntersectionObserver((entries, observer) => {
-  if (entries.some((e) => e.isIntersecting)) {
-    unlock("ende");
-    observer.disconnect();
-  }
+// Bleibt aktiv, damit "Ganz unten" nach dem Zurücksetzen wieder gefunden werden kann.
+// Nach dem Zurücksetzen zählt es erst, wenn man den Footer verlassen hat und wieder hinkommt.
+let footerArmed = true;
+new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) footerArmed = true;
+    else if (footerArmed) unlock("ende");
+  });
 }).observe(document.querySelector(".site-footer"));
 
 /* =========================================================

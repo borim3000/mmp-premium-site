@@ -20,7 +20,7 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | ------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | Hero                      | Bergbild, Content Portfolio, zugeklapptes Labubuech                          | Parallax, Vogel wechselt zum Flugbild und fliegt ein Stück weg                                |
 | Featured                  | Cuschinar Difficil, 6 Folgen auf YouTube                                     | Pinker Vorhang geht auf, dann gepinnt: Folgen fahren seitwärts, Video stoppt beim Wegscrollen |
-| 01 L.I.F.T                | _Inhalt_                                                                     | Instagram-Reel, lädt im Hintergrund vor; Text und Reel fliegen ein                               |
+| 01 L.I.F.T                | _Inhalt_                                                                     | Instagram-Reel, lädt im Hintergrund vor; Text und Reel fliegen ein                            |
 | 02 Berlin                 | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                                              |
 | 03 Multimedia Awards 2025 | _Inhalt_                                                                     | Pokal, Text und Bilder fliegen beim Hineinscrollen ein                                        |
 | 04 Rotterdam              | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                                              |
@@ -30,15 +30,15 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 
 ## Technologien
 
-| Technologie                                                  | Wofür                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------ |
-| HTML, CSS, JavaScript                                        | ganze Seite                                            |
-| [GSAP](https://gsap.com) und ScrollTrigger                   | Scrollytelling                                         |
-| YouTube-Einbettung (youtube-nocookie)                        | Featured, Awards und Digezz                            |
-| Instagram-Einbettung (embed.js)                              | L.I.F.T-Reel, lädt nach dem Seitenaufruf im Hintergrund                     |
-| [canvas-confetti](https://github.com/catdad/canvas-confetti) | Konfetti auf der Gewinnseite                           |
-| localStorage                                                 | Achievements (vorläufig, nur im eigenen Browser)       |
-| PHP (PDO) und MySQL                                          | Labubuech: Einträge laden und speichern, Regeln prüfen |
+| Technologie                                                  | Wofür                                                   |
+| ------------------------------------------------------------ | ------------------------------------------------------- |
+| HTML, CSS, JavaScript                                        | ganze Seite                                             |
+| [GSAP](https://gsap.com) und ScrollTrigger                   | Scrollytelling                                          |
+| YouTube-Einbettung (youtube-nocookie)                        | Featured, Awards und Digezz                             |
+| Instagram-Einbettung (embed.js)                              | L.I.F.T-Reel, lädt nach dem Seitenaufruf im Hintergrund |
+| [canvas-confetti](https://github.com/catdad/canvas-confetti) | Konfetti auf der Gewinnseite                            |
+| localStorage                                                 | Achievements (vorläufig, nur im eigenen Browser)        |
+| PHP (PDO) und MySQL                                          | Labubuech: Einträge laden und speichern, Regeln prüfen  |
 
 ## Ordnerstruktur
 
@@ -78,7 +78,7 @@ Zum Testen nochmals schreiben: im Browser die Cookies der Seite löschen, dann g
 
 ## Easter Eggs (Liste für die Dozierenden)
 
-Ein Klick auf den Zähler oben rechts (Stern) öffnet die Übersicht aller Achievements: gefundene mit Beschreibung, offene mit einem Tipp. Gespeichert wird im Browser (localStorage).
+Ein Klick auf den Zähler oben rechts (Stern) öffnet die Übersicht aller Achievements: gefundene mit Beschreibung, offene mit einem Tipp. Gespeichert wird im Browser (localStorage). Sind alle gefunden, kann man sie dort mit «Achievements nochmal neu suchen» (mit Bestätigung) zurücksetzen.
 
 | Easter Egg     | Wo                     | Auslöser                                                                 | Achievement |
 | -------------- | ---------------------- | ------------------------------------------------------------------------ | ----------- |
