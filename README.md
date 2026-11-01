@@ -16,31 +16,31 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 
 ## Aufbau der Seite
 
-| Abschnitt                 | Inhalt                                                                       | Scrollytelling                                                                                |
-| ------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Hero                      | Bergbild, Content Portfolio, zugeklapptes Labubuech                          | Parallax, Vogel wechselt zum Flugbild und fliegt ein Stück weg                                |
-| Featured                  | Cuschinar Difficil, 6 Folgen auf YouTube                                     | Pinker Vorhang geht auf, dann gepinnt: Folgen fahren seitwärts, Video stoppt beim Wegscrollen |
-| 01 L.I.F.T                | _Inhalt_                                                                     | Instagram-Reel, lädt im Hintergrund vor; Text und Reel fliegen ein                            |
-| 02 Berlin                 | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                                              |
-| 03 Multimedia Awards 2025 | _Inhalt_                                                                     | Pokal, Text und Bilder fliegen beim Hineinscrollen ein                                        |
-| 04 Rotterdam              | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                                              |
-| 05 Digezz                 | Cuschinar Difficil, ISEMAA                                                   | Gepinnt, Projekte wechseln beim Scrollen, Videos über YouTube                                 |
-| Stay tuned                | Ausblick                                                                     | Satz fährt beim Scrollen durchs Bild                                                          |
-| Labubuech                 | Gästebuch als Buch-Pop-up: mit Pfeilen blättern, 2 Minuten pro Tag schreiben | Lesezeichen öffnet das Buch, Seiten klappen beim Blättern um                                  |
-| Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord, Ton aus (Knopf oder Taste M) |
+| Abschnitt                  | Inhalt                                                                       | Scrollytelling                                                                                |
+| -------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Hero                       | Bergbild, Content Portfolio, zugeklapptes Labubuech                          | Parallax, Vogel wechselt zum Flugbild und fliegt ein Stück weg                                |
+| Featured                   | Cuschinar Difficil, 6 Folgen auf YouTube                                     | Pinker Vorhang geht auf, dann gepinnt: Folgen fahren seitwärts, Video stoppt beim Wegscrollen |
+| 01 L.I.F.T                 | _Inhalt_                                                                     | Instagram-Reel, lädt im Hintergrund vor; Text und Reel fliegen ein                            |
+| 02 Berlin                  | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                                              |
+| 03 Multimedia Awards 2025  | _Inhalt_                                                                     | Pokal, Text und Bilder fliegen beim Hineinscrollen ein                                        |
+| 04 Rotterdam               | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                                              |
+| 05 Digezz                  | Cuschinar Difficil, ISEMAA                                                   | Gepinnt, Projekte wechseln beim Scrollen, Videos über YouTube                                 |
+| Stay tuned                 | Ausblick                                                                     | Satz fährt beim Scrollen durchs Bild                                                          |
+| Labubuech                  | Gästebuch als Buch-Pop-up: mit Pfeilen blättern, 2 Minuten pro Tag schreiben | Lesezeichen öffnet das Buch, Seiten klappen beim Blättern um                                  |
+| Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite                                     | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord                 |
 
 ## Technologien
 
-| Technologie                                                  | Wofür                                                   |
-| ------------------------------------------------------------ | ------------------------------------------------------- |
-| HTML, CSS, JavaScript                                        | ganze Seite                                             |
-| [GSAP](https://gsap.com) und ScrollTrigger                   | Scrollytelling                                          |
-| YouTube-Einbettung (youtube-nocookie)                        | Featured, Awards und Digezz                             |
-| Instagram-Einbettung (embed.js)                              | L.I.F.T-Reel, lädt nach dem Seitenaufruf im Hintergrund |
-| [canvas-confetti](https://github.com/catdad/canvas-confetti) | Konfetti auf der Gewinnseite                            |
-| Canvas 2D und Web Audio API                                  | Spiel Flappy Spatz (flappy.js), Ton für Punkte          |
+| Technologie                                                  | Wofür                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------- |
+| HTML, CSS, JavaScript                                        | ganze Seite                                                   |
+| [GSAP](https://gsap.com) und ScrollTrigger                   | Scrollytelling                                                |
+| YouTube-Einbettung (youtube-nocookie)                        | Featured, Awards und Digezz                                   |
+| Instagram-Einbettung (embed.js)                              | L.I.F.T-Reel, lädt nach dem Seitenaufruf im Hintergrund       |
+| [canvas-confetti](https://github.com/catdad/canvas-confetti) | Konfetti auf der Gewinnseite                                  |
+| Canvas 2D und Web Audio API                                  | Spiel Flappy Spatz (flappy.js), Ton für Punkte                |
 | localStorage                                                 | Achievements und Flappy-Spatz-Rekord (nur im eigenen Browser) |
-| PHP (PDO) und MySQL                                          | Labubuech: Einträge laden und speichern, Regeln prüfen  |
+| PHP (PDO) und MySQL                                          | Labubuech: Einträge laden und speichern, Regeln prüfen        |
 
 ## Ordnerstruktur
 
@@ -85,20 +85,20 @@ Zum Testen nochmals schreiben: im Browser die Cookies der Seite löschen, dann g
 
 Ein Klick auf den Zähler oben rechts (Stern) öffnet die Übersicht aller Achievements: gefundene mit Beschreibung, offene mit einem Tipp. Gespeichert wird im Browser (localStorage). Sind alle gefunden, kann man sie dort mit «Achievements nochmal neu suchen» (mit Bestätigung) zurücksetzen. Beim Finden erscheint unten links eine Meldung und es spielt `sound/achievement.mp3`.
 
-| Easter Egg     | Wo                     | Auslöser                                                                 | Achievement |
-| -------------- | ---------------------- | ------------------------------------------------------------------------ | ----------- |
-| Faahhhh-Button | Footer                 | Gelben Knopf «Nicht drücken» drücken                                     | FAAHHHH     |
-| Piep           | Jeder goldene Vogel    | Anklicken, jedes Piepen ist etwas anders hoch                            | –           |
-| Geheimfoto     | Jeder goldene Vogel    | Innerhalb von 1,5 Sekunden fünfmal anklicken                             | Geheimfoto  |
-| Inside Joke    | Bildunterschriften     | Gepunktet unterstrichenes Wort antippen oder darüberfahren               | Insider     |
-| Ganz unten     | Ende der Seite         | Bis zum Footer scrollen                                                  | Ganz unten  |
-| Legacy         | Footer                 | Dreimal auf den Schriftzug «MMP PREMIUM» klicken, öffnet einen neuen Tab | Legacy      |
-| Jackpot        | legacy.html            | «Gewinnspiel hier drücken», Gewinnchance 1 %                             | Jackpot     |
-| Buttadawg      | legacy.html            | Bild rechts: darüberfahren und anklicken                                 | –           |
-| Labubuech      | Hero links und am Ende | Am pinken Lesezeichen ziehen (Klick auf den Deckel lässt es wackeln)     | –           |
-| Flappy Spatz   | Pinker Spatz bei Rotterdam | Innerhalb von 1,5 Sekunden fünfmal anklicken, führt zum Spiel           | Flappy Spatz |
-| Vielflieger    | flappy.html            | 10 Punkte schaffen                                                       | Vielflieger |
-| _weitere_      |                        |                                                                          |             |
+| Easter Egg     | Wo                         | Auslöser                                                                 | Achievement  |
+| -------------- | -------------------------- | ------------------------------------------------------------------------ | ------------ |
+| Faahhhh-Button | Footer                     | Gelben Knopf «Nicht drücken» drücken                                     | FAAHHHH      |
+| Piep           | Jeder goldene Vogel        | Anklicken, jedes Piepen ist etwas anders hoch                            | –            |
+| Geheimfoto     | Jeder goldene Vogel        | Innerhalb von 1,5 Sekunden fünfmal anklicken                             | Geheimfoto   |
+| Inside Joke    | Bildunterschriften         | Gepunktet unterstrichenes Wort antippen oder darüberfahren               | Insider      |
+| Ganz unten     | Ende der Seite             | Bis zum Footer scrollen                                                  | Ganz unten   |
+| Legacy         | Footer                     | Dreimal auf den Schriftzug «MMP PREMIUM» klicken, öffnet einen neuen Tab | Legacy       |
+| Jackpot        | legacy.html                | «Gewinnspiel hier drücken», Gewinnchance 1 %                             | Jackpot      |
+| Buttadawg      | legacy.html                | Bild rechts: darüberfahren und anklicken                                 | –            |
+| Labubuech      | Hero links und am Ende     | Am pinken Lesezeichen ziehen (Klick auf den Deckel lässt es wackeln)     | –            |
+| Flappy Spatz   | Pinker Spatz bei Rotterdam | Innerhalb von 1,5 Sekunden fünfmal anklicken, führt zum Spiel            | Flappy Spatz |
+| Vielflieger    | flappy.html                | 10 Punkte schaffen                                                       | Vielflieger  |
+| _weitere_      |                            |                                                                          |              |
 
 ## Learnings
 

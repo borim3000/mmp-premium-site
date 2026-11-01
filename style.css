@@ -1809,44 +1809,6 @@ h2,
   background: var(--pink-soft);
   box-shadow: 0 24px 60px rgba(33, 33, 33, 0.18);
 }
-.flappy__mute {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(33, 33, 33, 0.55);
-  color: var(--white);
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-.flappy__mute:hover {
-  background: rgba(33, 33, 33, 0.8);
-}
-.flappy__mute svg {
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-}
-.flappy__mute .fill {
-  fill: currentColor;
-  stroke: none;
-}
-.flappy__mute-off,
-.flappy__mute[aria-pressed="true"] .flappy__mute-on {
-  display: none;
-}
-.flappy__mute[aria-pressed="true"] .flappy__mute-off {
-  display: block;
-}
 .flappy__canvas {
   display: block;
   width: 100%;

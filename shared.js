@@ -102,12 +102,10 @@ function unlock(key) {
   toast("Achievement gefunden", ACHIEVEMENTS[key].name, "achievement");
 }
 
-// Ton beim Finden. Flappy Spatz schaltet ihn mit "Ton aus" stumm (soundsMuted).
-let soundsMuted = false;
+// Ton beim Finden
 const achievementSound = new Audio("sound/achievement.mp3");
 achievementSound.preload = "auto";
 function playAchievementSound() {
-  if (soundsMuted) return;
   const sound = achievementSound.cloneNode(); // mehrere kurz nacheinander dürfen sich überlagern
   sound.volume = 0.7;
   sound.play().catch(() => {}); // Browser blockiert Ton ohne vorherigen Klick: dann eben still
@@ -221,7 +219,9 @@ resetBox.querySelector("[data-reset-confirm]").addEventListener("click", () => {
 });
 
 // Liste unten ausblenden, solange man noch weiterscrollen kann
-const achievementList = achievementsDialog.querySelector("[data-achievements-list]");
+const achievementList = achievementsDialog.querySelector(
+  "[data-achievements-list]"
+);
 function updateListFade() {
   achievementList.classList.toggle(
     "has-more",

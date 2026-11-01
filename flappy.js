@@ -67,35 +67,7 @@ mountains.addEventListener("load", () => {
 
 const peep = new Audio("sound/peep.mp3");
 const faah = new Audio("sound/faahhhh.mp3");
-// Ton an/aus, wird im Browser gemerkt. Gilt auch für den Achievement-Ton (shared.js).
-const MUTE_KEY = "mmp_flappy_muted";
-const muteButton = document.querySelector("[data-flappy-mute]");
-let muted = false;
-try {
-  muted = localStorage.getItem(MUTE_KEY) === "1";
-} catch {
-  /* privates Fenster */
-}
-
-function setMuted(value) {
-  muted = value;
-  soundsMuted = value; // shared.js: Achievement-Ton
-  muteButton.setAttribute("aria-pressed", String(value));
-  muteButton.setAttribute("aria-label", value ? "Ton an" : "Ton aus");
-  muteButton.title = value ? "Ton an (M)" : "Ton aus (M)";
-  try {
-    localStorage.setItem(MUTE_KEY, value ? "1" : "0");
-  } catch {
-    /* privates Fenster */
-  }
-}
-setMuted(muted);
-// Mit der Maus geklickt: Knopf nicht fokussieren, sonst würde die Leertaste danach ihn drücken statt zu flattern
-muteButton.addEventListener("mousedown", (event) => event.preventDefault());
-muteButton.addEventListener("click", () => setMuted(!muted));
-
 function playSound(audio, { volume = 1, rate = 1 } = {}) {
-  if (muted) return;
   const sound = audio.cloneNode();
   sound.volume = volume;
   sound.preservesPitch = false;
@@ -106,9 +78,9 @@ function playSound(audio, { volume = 1, rate = 1 } = {}) {
 // Kurzer "Ding" für einen Punkt, mit der Web Audio API erzeugt
 let audioCtx = null;
 function ding() {
-  if (muted) return;
   try {
-    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    audioCtx =
+      audioCtx || new (window.AudioContext || window.webkitAudioContext)();
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     const t = audioCtx.currentTime;
@@ -162,7 +134,13 @@ function addPillar(x) {
   pillars.push({ x, gapY: min + Math.random() * (max - min), scored: false });
 }
 
+// Wer den pinken Spatz schnell anklickt, klickt oft noch weiter, während die Seite schon lädt.
+// Darum startet das Spiel erst, wenn die Seite kurz offen ist.
+const START_DELAY = 500; // ms nach dem Laden
+const pageOpened = performance.now();
+
 function flap() {
+  if (state === "ready" && performance.now() - pageOpened < START_DELAY) return;
   if (state === "over") {
     if (time - overAt < 0.6) return; // kurz warten, damit man nicht aus Versehen neu startet
     reset();
@@ -180,7 +158,7 @@ function crash() {
   state = "over";
   overAt = time;
   shake = reduceMotion ? 0 : 0.35;
-  playSound(faah, { volume: 0.8 });
+  playSound(faah, { volume: 0.075 }); // bewusst leise, sonst erschrickt man bei jedem Absturz
   if (score > best) {
     best = score;
     newBest = true;
@@ -375,7 +353,7 @@ function drawOverlay() {
     text(String(score), W / 2, 74, `500 64px ${DISPLAY}`, "#ffffff");
     ctx.restore();
   }
-  if (state === "ready") {
+  if (state === "ready" && performance.now() - pageOpened >= START_DELAY) {
     pill("Tippen oder Leertaste zum Starten", H - GROUND - 70);
   }
   if (state === "paused") {
@@ -401,14 +379,18 @@ function drawOverlay() {
     text(String(best), W / 2 + 58, y + 122, `500 40px ${DISPLAY}`, "#212121");
     if (newBest)
       text("Neuer Rekord!", W / 2, y + 166, `600 14px ${BODY}`, "#dbab32");
-    if (time - overAt > 0.6) pill("Nochmal: Tippen oder Leertaste", y + cardH + 44);
+    if (time - overAt > 0.6)
+      pill("Nochmal: Tippen oder Leertaste", y + cardH + 44);
   }
 }
 
 function draw() {
   ctx.save();
   if (shake > 0) {
-    ctx.translate((Math.random() - 0.5) * 10 * shake * 3, (Math.random() - 0.5) * 10 * shake * 3);
+    ctx.translate(
+      (Math.random() - 0.5) * 10 * shake * 3,
+      (Math.random() - 0.5) * 10 * shake * 3
+    );
   }
   drawBackground();
   pillars.forEach((p) => {
@@ -457,10 +439,6 @@ new ResizeObserver(resize).observe(stage);
 const dialogOpen = () => document.querySelector("dialog[open]");
 
 window.addEventListener("keydown", (event) => {
-  if (event.code === "KeyM" && !dialogOpen() && !event.repeat) {
-    setMuted(!muted);
-    return;
-  }
   if (!["Space", "ArrowUp", "KeyW"].includes(event.code)) return;
   const onControl =
     event.target instanceof Element &&
