@@ -42,7 +42,7 @@
               d="M12 2.5l2.9 6.2 6.8.7-5.1 4.6 1.4 6.7L12 17.3l-6 3.4 1.4-6.7-5.1-4.6 6.8-.7z"
             />
           </svg>
-          <span data-achievement-count>0/6</span>
+          <span data-achievement-count>0/8</span>
         </button>
       </div>
       <div class="scroll-progress" aria-hidden="true">
@@ -461,11 +461,12 @@
               </li>
               <li class="post post--bird">
                 <div class="media media--wide" data-label="Video 16:9"></div>
+                <!-- Easter Egg: der pinke Spatz führt zum Spiel Flappy Spatz -->
                 <img
                   class="bird bird--sit"
                   data-bird
-                  data-egg="img/geheimfoto-platzhalter.svg"
-                  src="img/vogel.png"
+                  data-flappy="flappy.html"
+                  src="img/vogel-pink.png"
                   alt=""
                   width="110"
                   height="134"
@@ -792,6 +793,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="shared.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

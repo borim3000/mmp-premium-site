@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flappy Spatz – MMP Premium</title>
+    <link rel="icon" href="img/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="img/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png" />
+    <meta
+      name="description"
+      content="Flappy Spatz: das Minigame von MMP Premium. Flieg mit unserem Spatz durch die pinken Säulen."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Hanken+Grotesk:wght@400;500;600&family=Monoton&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="page-flappy">
+    <!-- ============ KOPFZEILE (gleich wie im Portfolio, ohne Scroll-Fortschritt) ============ -->
+    <header class="site-header is-solid">
+      <a class="brand" href="index.html" aria-label="MMP Premium, zurück zum Portfolio">
+        <img src="img/vogel.png" alt="" width="36" height="44" />
+        <span>MMP PREMIUM</span>
+      </a>
+      <div class="site-header__actions">
+        <button
+          class="achievements"
+          type="button"
+          data-achievements-open
+          aria-haspopup="dialog"
+          aria-label="Achievements anzeigen"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 2.5l2.9 6.2 6.8.7-5.1 4.6 1.4 6.7L12 17.3l-6 3.4 1.4-6.7-5.1-4.6 6.8-.7z"
+            />
+          </svg>
+          <span data-achievement-count>0/8</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ============ FLAPPY SPATZ ============ -->
+    <!-- Das Spiel zeichnet flappy.js in das <canvas>. -->
+    <main class="flappy">
+      <div class="flappy__intro">
+        <a class="flappy__back" href="index.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+          Zurück zum Portfolio
+        </a>
+        <h1>Flappy Spatz</h1>
+        <p>
+          Flieg mit unserem Spatz durch die pinken Säulen. Jede geschaffte
+          Säule gibt einen Punkt.
+        </p>
+        <p class="flappy__keys">
+          <kbd>Leertaste</kbd>, Klick oder Tippen: flattern
+        </p>
+        <dl class="flappy__stats">
+          <div>
+            <dt>Rekord</dt>
+            <dd data-flappy-best>0</dd>
+          </div>
+          <div>
+            <dt>Ziel</dt>
+            <dd><span data-flappy-goal>10</span> Punkte</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="flappy__stage">
+        <canvas
+          class="flappy__canvas"
+          data-flappy-canvas
+          role="img"
+          aria-label="Spiel Flappy Spatz. Mit Leertaste, Klick oder Tippen flattert der Spatz."
+        ></canvas>
+        <p class="visually-hidden" data-flappy-status aria-live="polite"></p>
+      </div>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+      <p class="site-footer__brand">MMP PREMIUM</p>
+      <ul class="site-footer__links">
+        <li>
+          <a
+            href="https://www.instagram.com/mmp_premium"
+            target="_blank"
+            rel="noopener"
+            >Instagram @mmp_premium</a
+          >
+        </li>
+        <li><a href="index.html">Zurück zum Portfolio</a></li>
+      </ul>
+      <p class="site-footer__credits">
+        Naim de Amri und Robin Uliten. Interaktive Medien 5, FH Graubünden,
+        HS26.
+      </p>
+    </footer>
+
+    <!-- Achievements-Übersicht (Klick auf den Zähler oben rechts). Die Liste baut script.js. -->
+    <dialog
+      class="achievements-dialog"
+      data-achievements-dialog
+      aria-labelledby="achievements-title"
+    >
+      <header class="achievements-dialog__head">
+        <h2 id="achievements-title">Achievements</h2>
+        <form method="dialog">
+          <button
+            class="achievements-dialog__close close-x"
+            aria-label="Achievements schliessen"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
+        </form>
+      </header>
+      <p class="achievements-dialog__count" data-achievements-summary></p>
+      <div class="progress progress--gold">
+        <span data-achievements-progress></span>
+      </div>
+      <ul class="achievement-list" data-achievements-list></ul>
+
+      <!-- Erscheint erst, wenn alle gefunden sind. Zurücksetzen mit kurzer Bestätigung. -->
+      <div class="achievements-reset" data-achievements-reset hidden>
+        <button
+          class="achievements-reset__start"
+          type="button"
+          data-reset-start
+        >
+          Achievements nochmal neu suchen
+        </button>
+        <div class="achievements-reset__confirm" data-reset-confirm-box hidden>
+          <p>Alle Achievements werden zurückgesetzt. Wosch ds würk Spatz?</p>
+          <div class="achievements-reset__buttons">
+            <button class="btn btn--primary" type="button" data-reset-confirm>
+              Ja, neu suchen
+            </button>
+            <button class="btn btn--secondary" type="button" data-reset-cancel>
+              Abbrechen
+            </button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Meldungen, z. B. "Achievement gefunden" -->
+    <div class="toasts" data-toasts aria-live="polite"></div>
+
+    <script src="shared.js"></script>
+    <script src="flappy.js"></script>
+  </body>
+</html>

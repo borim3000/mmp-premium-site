@@ -27,6 +27,7 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | 05 Digezz                 | Cuschinar Difficil, ISEMAA                                                   | Gepinnt, Projekte wechseln beim Scrollen, Videos über YouTube                                 |
 | Stay tuned                | Ausblick                                                                     | Satz fährt beim Scrollen durchs Bild                                                          |
 | Labubuech                 | Gästebuch als Buch-Pop-up: mit Pfeilen blättern, 2 Minuten pro Tag schreiben | Lesezeichen öffnet das Buch, Seiten klappen beim Blättern um                                  |
+| Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord |
 
 ## Technologien
 
@@ -37,7 +38,8 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | YouTube-Einbettung (youtube-nocookie)                        | Featured, Awards und Digezz                             |
 | Instagram-Einbettung (embed.js)                              | L.I.F.T-Reel, lädt nach dem Seitenaufruf im Hintergrund |
 | [canvas-confetti](https://github.com/catdad/canvas-confetti) | Konfetti auf der Gewinnseite                            |
-| localStorage                                                 | Achievements (vorläufig, nur im eigenen Browser)        |
+| Canvas 2D und Web Audio API                                  | Spiel Flappy Spatz (flappy.js), Ton für Punkte          |
+| localStorage                                                 | Achievements und Flappy-Spatz-Rekord (nur im eigenen Browser) |
 | PHP (PDO) und MySQL                                          | Labubuech: Einträge laden und speichern, Regeln prüfen  |
 
 ## Ordnerstruktur
@@ -46,8 +48,11 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 index.html      Portfolio
 legacy.html     Altes Gewinnspiel (Easter Egg)
 win.html        Gewinnseite (Easter Egg)
+flappy.html     Minigame Flappy Spatz (Easter Egg)
 style.css       Gestaltung
-script.js       Scrollytelling, Easter Eggs, Achievements
+script.js       Scrollytelling und Easter Eggs des Portfolios
+shared.js       Achievements, Meldungen und Hilfen für alle Seiten
+flappy.js       Spiel Flappy Spatz
 img/            Bilder
 video/          Videos und Poster-Bilder
 sound/          Sounds
@@ -91,6 +96,8 @@ Ein Klick auf den Zähler oben rechts (Stern) öffnet die Übersicht aller Achie
 | Jackpot        | legacy.html            | «Gewinnspiel hier drücken», Gewinnchance 1 %                             | Jackpot     |
 | Buttadawg      | legacy.html            | Bild rechts: darüberfahren und anklicken                                 | –           |
 | Labubuech      | Hero links und am Ende | Am pinken Lesezeichen ziehen (Klick auf den Deckel lässt es wackeln)     | –           |
+| Flappy Spatz   | Pinker Spatz bei Rotterdam | Anklicken, führt zum Spiel                                              | Flappy Spatz |
+| Vielflieger    | flappy.html            | 10 Punkte schaffen                                                       | Vielflieger |
 | _weitere_      |                        |                                                                          |             |
 
 ## Learnings

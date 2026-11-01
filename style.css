@@ -1614,6 +1614,110 @@ h2,
   font-variation-settings: "opsz" var(--display-opsz);
 }
 
+/* ---------- Flappy Spatz (flappy.html) ---------- */
+
+.page-flappy {
+  background: var(--paper);
+}
+.page-flappy .site-footer__brand {
+  cursor: default; /* hier kein Easter Egg */
+}
+.flappy {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) auto;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(32px, 6vw, 96px);
+  min-height: 100svh;
+  padding: calc(var(--header-h) + 32px) var(--gutter) 56px;
+}
+.flappy__intro {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+}
+.flappy__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--pink-strong);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+}
+.flappy__back:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.flappy__back svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.flappy h1 {
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  letter-spacing: -0.02em;
+}
+.flappy__intro p {
+  font-size: 1.125rem;
+}
+.flappy__keys {
+  color: var(--ink-soft);
+}
+.flappy__keys kbd {
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--grey);
+  border-bottom-width: 3px;
+  background: var(--white);
+  font: 600 0.875rem/1.4 var(--font-body);
+}
+.flappy__stats {
+  display: flex;
+  gap: 12px;
+  margin: 6px 0 0;
+}
+.flappy__stats div {
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: var(--white);
+}
+.flappy__stats dt {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.flappy__stats dd {
+  margin: 0;
+  font: 500 1.75rem/1.2 var(--font-display);
+}
+.flappy__stats dd span {
+  font: inherit;
+}
+.flappy__stage {
+  position: relative;
+  /* Hochformat 9:16, so gross wie es der Bildschirm erlaubt */
+  width: min(420px, calc((100svh - var(--header-h) - 96px) * 9 / 16));
+  aspect-ratio: 9 / 16;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--pink-soft);
+  box-shadow: 0 24px 60px rgba(33, 33, 33, 0.18);
+}
+.flappy__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  touch-action: none; /* Tippen flattert, ohne die Seite zu scrollen oder zu zoomen */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 /* ---------- Mobil ---------- */
 
 @media (max-width: 899px) {
@@ -1756,6 +1860,21 @@ h2,
 
   .site-footer {
     grid-template-columns: 1fr;
+  }
+
+  /* Flappy Spatz: Spiel zuerst, Text darunter */
+  .flappy {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 28px;
+    padding-top: calc(var(--header-h) + 20px);
+  }
+  .flappy__stage {
+    width: min(100%, calc((100svh - var(--header-h) - 40px) * 9 / 16));
+    order: -1;
+  }
+  .flappy__intro {
+    width: 100%;
   }
 }
 

@@ -1,6 +1,7 @@
 /* =========================================================
    MMP Premium – Content Portfolio
    Scrollytelling mit GSAP ScrollTrigger + Easter Eggs
+   Achievements, Meldungen und Hilfen (setBar, closeOnBackdrop, toast) stehen in shared.js
    ========================================================= */
 
 const reduceMotion = window.matchMedia(
@@ -13,26 +14,6 @@ if (hasGsap) {
   gsap.registerPlugin(ScrollTrigger);
   // Handy: Ein- und Ausblenden der Adressleiste soll nicht alles neu berechnen (ruckelt sonst)
   ScrollTrigger.config({ ignoreMobileResize: true });
-}
-
-// Fortschrittsbalken über transform statt width: der Browser muss dafür nichts neu anordnen
-function setBar(el, progress) {
-  if (el) el.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
-}
-
-// Klick neben ein Pop-up schliesst es. Geprüft wird die Klickposition: Ein Klick auf den
-// Innenrand des Pop-ups trifft technisch auch das Pop-up selbst und soll es nicht schliessen.
-function closeOnBackdrop(dialog) {
-  dialog.addEventListener("click", (event) => {
-    if (event.target !== dialog) return;
-    const r = dialog.getBoundingClientRect();
-    const inside =
-      event.clientX >= r.left &&
-      event.clientX <= r.right &&
-      event.clientY >= r.top &&
-      event.clientY <= r.bottom;
-    if (!inside) dialog.close();
-  });
 }
 
 /* ---------- Kopfzeile und Fortschritt ----------
@@ -679,172 +660,6 @@ document.querySelectorAll("[data-gallery]").forEach((pin) => {
   );
 });
 
-/* =========================================================
-   Achievements (vorerst im Browser gespeichert)
-   Später: in unlock() zusätzlich an PHP schicken (Accounts).
-   ========================================================= */
-
-// name: Titel, done: steht da, wenn gefunden, hint: Tipp, solange noch nicht gefunden
-const ACHIEVEMENTS = {
-  faahhhh: {
-    name: "FAAHHHH",
-    done: "Den Knopf gedrückt, den man nicht drücken soll.",
-    hint: "Manche Knöpfe sollte man besser nicht drücken.",
-  },
-  geheimfoto: {
-    name: "Geheimfoto",
-    done: "Den Vogel so lange genervt, bis er etwas zeigt.",
-    hint: "Der goldene Vogel mag Aufmerksamkeit.",
-  },
-  insidejoke: {
-    name: "Insider",
-    done: "Einen Inside Joke entdeckt.",
-    hint: "Nicht jedes unterstrichene Wort ist harmlos.",
-  },
-  ende: {
-    name: "Ganz unten",
-    done: "Bis ans Ende gescrollt.",
-    hint: "Durchhalten lohnt sich.",
-  },
-  legacy: {
-    name: "Legacy",
-    done: "Das alte Gewinnspiel gefunden.",
-    hint: "Unser Name hat eine Vergangenheit.",
-  },
-  jackpot: {
-    name: "Jackpot",
-    done: "Mit einem Prozent Chance gewonnen.",
-    hint: "Dafür braucht es Glück. Viel Glück.",
-  }, // wird in win.html freigeschaltet
-};
-const STORAGE_KEY = "mmp_achievements";
-
-function loadUnlocked() {
-  try {
-    return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY)) || []);
-  } catch {
-    return new Set();
-  }
-}
-const unlocked = loadUnlocked();
-const achievementsTotal = Object.keys(ACHIEVEMENTS).length;
-
-function updateCounter() {
-  document.querySelector(
-    "[data-achievement-count]"
-  ).textContent = `${unlocked.size}/${achievementsTotal}`;
-  renderAchievements();
-}
-
-function unlock(key) {
-  if (!ACHIEVEMENTS[key] || unlocked.has(key)) return;
-  unlocked.add(key);
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...unlocked]));
-  } catch {
-    /* privates Fenster */
-  }
-  updateCounter();
-  toast("Achievement gefunden", ACHIEVEMENTS[key].name);
-}
-
-function toast(title, text) {
-  const box = document.createElement("div");
-  box.className = "toast";
-  const strong = document.createElement("strong");
-  strong.textContent = title;
-  const span = document.createElement("span");
-  span.textContent = text;
-  box.append(strong, span);
-  document.querySelector("[data-toasts]").append(box);
-  setTimeout(() => box.remove(), 4500);
-}
-
-/* ---------- Achievements-Übersicht (Pop-up) ---------- */
-
-const achievementsDialog = document.querySelector("[data-achievements-dialog]");
-
-function renderAchievements() {
-  const list = achievementsDialog.querySelector("[data-achievements-list]");
-  const items = Object.entries(ACHIEVEMENTS).map(([key, a]) => {
-    const found = unlocked.has(key);
-    const li = document.createElement("li");
-    li.className = `achievement${found ? " is-found" : ""}`;
-    const icon = document.createElement("span");
-    icon.className = "achievement__icon";
-    icon.setAttribute("aria-hidden", "true");
-    const title = document.createElement("strong");
-    title.textContent = found ? a.name : "???";
-    const status = document.createElement("span");
-    status.className = "visually-hidden";
-    status.textContent = found ? "gefunden" : "noch nicht gefunden";
-    const text = document.createElement("span");
-    text.className = "achievement__text";
-    text.textContent = found ? a.done : `Tipp: ${a.hint}`;
-    title.append(" ", status);
-    li.append(icon, title, text);
-    return li;
-  });
-  list.replaceChildren(...items);
-  achievementsDialog.querySelector("[data-achievements-summary]").textContent =
-    unlocked.size === achievementsTotal
-      ? "Alle gefunden. Respekt!"
-      : `${unlocked.size} von ${achievementsTotal} gefunden`;
-  setBar(
-    achievementsDialog.querySelector("[data-achievements-progress]"),
-    unlocked.size / achievementsTotal
-  );
-  // "Nochmal neu suchen" nur zeigen, wenn alle gefunden sind
-  resetBox.hidden = unlocked.size < achievementsTotal;
-  showResetStep(false);
-}
-
-/* ---------- Alle gefunden: nochmal neu suchen ---------- */
-
-const resetBox = achievementsDialog.querySelector("[data-achievements-reset]");
-const resetStart = resetBox.querySelector("[data-reset-start]");
-const resetConfirmBox = resetBox.querySelector("[data-reset-confirm-box]");
-
-// false: nur der Link, true: Frage "Wirklich?" mit Ja/Abbrechen
-function showResetStep(confirming) {
-  resetStart.hidden = confirming;
-  resetConfirmBox.hidden = !confirming;
-}
-
-resetStart.addEventListener("click", () => {
-  showResetStep(true);
-  resetBox.querySelector("[data-reset-confirm]").focus();
-});
-resetBox.querySelector("[data-reset-cancel]").addEventListener("click", () => {
-  showResetStep(false);
-  resetStart.focus();
-});
-resetBox.querySelector("[data-reset-confirm]").addEventListener("click", () => {
-  unlocked.clear();
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    /* privates Fenster */
-  }
-  footerArmed = false; // "Ganz unten" nicht sofort wieder auslösen, falls man gerade unten ist
-  updateCounter(); // Zähler 0/6 und Liste neu
-  toast("Zurückgesetzt", "Viel Spass beim Suchen!");
-});
-
-document
-  .querySelector("[data-achievements-open]")
-  .addEventListener("click", () => achievementsDialog.showModal());
-closeOnBackdrop(achievementsDialog);
-
-// Jackpot wird in win.html (anderer Tab) freigeschaltet: hier gleich nachführen
-window.addEventListener("storage", (event) => {
-  if (event.key !== STORAGE_KEY) return;
-  loadUnlocked().forEach((key) => unlocked.add(key));
-  updateCounter();
-});
-
-updateCounter();
-
 /* ---------- Easter Egg: Faahhhh-Button ---------- */
 
 const faah = new Audio("sound/faahhhh.mp3"); // Dateiname an euren Sound anpassen
@@ -861,7 +676,7 @@ document.querySelector("[data-faah]").addEventListener("click", () => {
   unlock("faahhhh");
 });
 
-/* ---------- Easter Egg: 5x auf den Vogel = Geheimfoto ---------- */
+/* ---------- Easter Egg: 5x auf den Vogel = Geheimfoto, pinker Spatz = Spiel ---------- */
 
 // Piepen bei jedem Klick auf einen Vogel. Jedes Piepen ist etwas anders hoch.
 // Eigenen Sound verwenden: sound/peep.mp3 ersetzen.
@@ -881,6 +696,11 @@ document.querySelectorAll("[data-bird]").forEach((bird) => {
   let timer;
   bird.addEventListener("click", () => {
     playPeep();
+    // Pinker Spatz: ein Klick führt zum Spiel (kurz warten, damit man das Piepen hört)
+    if (bird.dataset.flappy) {
+      setTimeout(() => (window.location.href = bird.dataset.flappy), 250);
+      return;
+    }
     clicks += 1;
     clearTimeout(timer);
     timer = setTimeout(() => {
@@ -935,6 +755,10 @@ legacyTrigger.addEventListener("click", () => {
 // Bleibt aktiv, damit "Ganz unten" nach dem Zurücksetzen wieder gefunden werden kann.
 // Nach dem Zurücksetzen zählt es erst, wenn man den Footer verlassen hat und wieder hinkommt.
 let footerArmed = true;
+// Nach dem Zurücksetzen (shared.js) nicht sofort wieder auslösen, falls man gerade unten ist
+window.addEventListener("achievements-reset", () => {
+  footerArmed = false;
+});
 new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (!entry.isIntersecting) footerArmed = true;
