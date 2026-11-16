@@ -1129,6 +1129,21 @@ a {
 .post:nth-child(odd) .post__sticker {
   --r: 7deg;
 }
+/* Ecken: oben rechts / unten auf dem Video (nicht über dem Text darunter) */
+.post__sticker--tr {
+  left: auto;
+  right: -18px;
+}
+.post__sticker--bl,
+.post__sticker--br {
+  top: calc(var(--card-w) * 9 / 16);
+  translate: 0 -96%;
+  transform-origin: 50% 100%;
+}
+.post__sticker--br {
+  left: auto;
+  right: -18px;
+}
 .has-stickers .post__sticker:not(.is-in) {
   opacity: 0;
   transform: translateY(24px) rotate(calc(var(--r) - 25deg)) scale(0.4);
@@ -2359,6 +2374,15 @@ h2,
   .post__sticker {
     left: -8px;
     top: -26px;
+  }
+  .post__sticker--tr,
+  .post__sticker--br {
+    left: auto;
+    right: -8px;
+  }
+  .post__sticker--bl,
+  .post__sticker--br {
+    top: calc(var(--card-w) * 9 / 16);
   }
   .chapter__link {
     flex-basis: 100%;

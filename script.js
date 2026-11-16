@@ -553,7 +553,7 @@ if (hasGsap && !reduceMotion) {
           anticipatePin: 1,
           start: "top top",
           end: () => `+=${total * STEP * window.innerHeight}`,
-          scrub: 0.6,
+          scrub: 0.25, // Karten folgen dem Scrollen fast ohne Verzögerung
           invalidateOnRefresh: true,
           refreshPriority: order(pin),
           // Einrasten: Bleibt man zwischen zwei Folgen stehen, gleitet es zur nächsten ganzen Folge.
@@ -566,9 +566,9 @@ if (hasGsap && !reduceMotion) {
               return (wait + Math.round(t)) / total;
             },
             inertia: false, // von dort aus, wo man stehen bleibt, nicht vom Schwung hochgerechnet
-            duration: { min: 0.25, max: 0.6 },
-            delay: 0.12,
-            ease: "power2.inOut",
+            duration: { min: 0.12, max: 0.3 }, // wie schnell es zur Folge gleitet
+            delay: 0.03, // wie lange es nach dem Stehenbleiben wartet
+            ease: "power3.out", // zieht sofort an, bremst am Schluss weich ab
           },
           onUpdate: (self) => {
             const t = Math.min(
@@ -764,23 +764,25 @@ document.querySelectorAll("[data-gallery]").forEach((pin) => {
 });
 
 /* ---------- Cuschinar Difficil: Illustrationen springen auf die Karten ----------
-   Kommt eine Folge ins Bild, springt ihre Illustration drauf; verlässt sie das Bild,
-   geht sie wieder weg (und springt beim nächsten Mal wieder). Ohne Animation: einfach da. */
+   Ist eine Folge zu 70 % im Bild, springt ihre Illustration drauf; verlässt die
+   Folge das Bild, geht sie wieder weg (und springt beim nächsten Mal wieder).
+   Ohne Animation: einfach da. */
 
 if (!reduceMotion && "IntersectionObserver" in window) {
   const stickers = document.querySelectorAll("[data-sticker]");
   const stickerObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.intersectionRatio >= 0.6) entry.target.classList.add("is-in");
-        else if (!entry.isIntersecting) entry.target.classList.remove("is-in");
+        const sticker = entry.target.querySelector("[data-sticker]");
+        if (entry.intersectionRatio >= 0.7) sticker.classList.add("is-in");
+        else if (!entry.isIntersecting) sticker.classList.remove("is-in");
       });
     },
-    { threshold: [0, 0.6] }
+    { threshold: [0, 0.7] }
   );
   stickers.forEach((sticker) => {
     sticker.closest(".gallery").classList.add("has-stickers");
-    stickerObserver.observe(sticker);
+    stickerObserver.observe(sticker.closest(".post")); // die ganze Karte zählt, nicht nur die Ecke
   });
 }
 
