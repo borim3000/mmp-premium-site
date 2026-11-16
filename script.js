@@ -774,11 +774,11 @@ if (!reduceMotion && "IntersectionObserver" in window) {
     (entries) => {
       entries.forEach((entry) => {
         const sticker = entry.target.querySelector("[data-sticker]");
-        if (entry.intersectionRatio >= 0.7) sticker.classList.add("is-in");
+        if (entry.intersectionRatio >= 0.8) sticker.classList.add("is-in");
         else if (!entry.isIntersecting) sticker.classList.remove("is-in");
       });
     },
-    { threshold: [0, 0.7] }
+    { threshold: [0.4, 0.9] }
   );
   stickers.forEach((sticker) => {
     sticker.closest(".gallery").classList.add("has-stickers");
