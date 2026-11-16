@@ -460,16 +460,27 @@ if (hasGsap && !reduceMotion) {
       const count = pin.querySelector("[data-gallery-count]");
       const posts = track.querySelectorAll(".post:not(.post--text)").length; // Textkarten zählen nicht
       const bird = pin.querySelector(".bird--fly");
-      const distance = () =>
-        Math.max(0, track.scrollWidth - gallery.clientWidth + 40);
+      // So weit fahren, bis die letzte Karte ganz drin ist und rechts mit dem Rand der Seite abschliesst
+      const distance = () => {
+        const style = getComputedStyle(gallery);
+        const inner =
+          gallery.clientWidth -
+          parseFloat(style.paddingLeft) -
+          parseFloat(style.paddingRight);
+        return Math.max(0, track.scrollWidth - inner);
+      };
+      // Am Schluss stehen bleiben, damit man die letzte Karte in Ruhe anschauen kann
+      const HOLD = 0.4; // in Bildschirmhöhen
+      const holdLength = () => HOLD * window.innerHeight;
       // Mit Vorhang (Featured): die Galerie wartet, bis der Vorhang ganz offen ist
       const withCurtain = curtain && pin.contains(curtain);
       const curtainLength = () =>
         withCurtain
           ? Math.max(0, CURTAIN.length - CURTAIN.early) * window.innerHeight
           : 0; // Teil des Vorhangs, der erst nach dem Anhalten aufgeht
-      const curtainShare =
-        curtainLength() / Math.max(1, curtainLength() + distance());
+      const totalLength = () => curtainLength() + distance() + holdLength();
+      const curtainShare = curtainLength() / Math.max(1, totalLength());
+      const moveShare = distance() / Math.max(1, totalLength());
 
       pin.classList.add("is-pinned");
       const tl = gsap.timeline({
@@ -478,7 +489,7 @@ if (hasGsap && !reduceMotion) {
           pin: true,
           anticipatePin: 1,
           start: "top top",
-          end: () => `+=${curtainLength() + distance()}`,
+          end: () => `+=${totalLength()}`,
           scrub: 0.5,
           invalidateOnRefresh: true,
           refreshPriority: order(pin),
@@ -486,7 +497,7 @@ if (hasGsap && !reduceMotion) {
             // Fortschritt nur für den Galerie-Teil
             const progress = Math.min(
               1,
-              Math.max(0, (self.progress - curtainShare) / (1 - curtainShare))
+              Math.max(0, (self.progress - curtainShare) / moveShare)
             );
             setBar(bar, progress);
             count.textContent = `${Math.min(
@@ -505,8 +516,9 @@ if (hasGsap && !reduceMotion) {
       tl.to(track, {
         x: () => -distance(),
         ease: "none",
-        duration: 1 - curtainShare,
+        duration: moveShare,
       });
+      tl.to({}, { duration: 1 - curtainShare - moveShare }); // stehen bleiben
       return () => pin.classList.remove("is-pinned");
     });
   });
