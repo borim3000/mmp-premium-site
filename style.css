@@ -274,7 +274,7 @@ a {
   z-index: 1;
   text-align: center;
   color: var(--white);
-  font: 800 clamp(0.875rem, 1.5vw, 1.3rem) / 1 var(--font-accent);
+  font: 800 clamp(1rem, 1.85vw, 1.625rem) / 1 var(--font-accent);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   text-shadow: 0 2px 14px rgba(33, 33, 33, 0.25);
@@ -599,11 +599,7 @@ a {
   z-index: 3;
   margin: 0;
   /* so hoch wie möglich, ohne dass das Video aus dem Bildschirm ragt */
-  width: clamp(
-    280px,
-    calc((100svh - var(--header-h) - 120px) * 9 / 16),
-    440px
-  );
+  width: clamp(280px, calc((100svh - var(--header-h) - 120px) * 9 / 16), 440px);
 }
 .lift-post .bird--peek {
   width: 130px;
@@ -681,8 +677,10 @@ a {
   width: 34px;
   height: 34px;
   background: var(--white);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4.5v15l13-7.5z'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4.5v15l13-7.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4.5v15l13-7.5z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4.5v15l13-7.5z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
   transform: translate(-42%, -50%);
   transition: opacity 0.2s;
 }
@@ -1126,9 +1124,7 @@ a {
   filter: drop-shadow(0 8px 12px rgba(33, 33, 33, 0.18));
   transform: rotate(var(--r));
   transform-origin: 40% 80%;
-  transition:
-    transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1),
-    opacity 0.3s;
+  transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
 }
 .post:nth-child(odd) .post__sticker {
   --r: 7deg;
@@ -1807,26 +1803,17 @@ a {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow:
-    0 6px 0 #a3004f,
-    0 14px 30px rgba(255, 0, 123, 0.35);
-  transition:
-    transform 0.12s,
-    box-shadow 0.12s,
-    background 0.2s;
+  box-shadow: 0 6px 0 #a3004f, 0 14px 30px rgba(255, 0, 123, 0.35);
+  transition: transform 0.12s, box-shadow 0.12s, background 0.2s;
 }
 .faah:hover {
   background: var(--pink);
   transform: translateY(-2px);
-  box-shadow:
-    0 8px 0 #a3004f,
-    0 20px 36px rgba(255, 0, 123, 0.45);
+  box-shadow: 0 8px 0 #a3004f, 0 20px 36px rgba(255, 0, 123, 0.45);
 }
 .faah:active {
   transform: translateY(5px);
-  box-shadow:
-    0 1px 0 #a3004f,
-    0 4px 12px rgba(255, 0, 123, 0.3);
+  box-shadow: 0 1px 0 #a3004f, 0 4px 12px rgba(255, 0, 123, 0.3);
 }
 .faah:focus-visible {
   outline: 3px solid var(--white);
@@ -2271,8 +2258,8 @@ h2,
   }
   .hero__subtitle {
     top: calc(38% + clamp(2.5rem, 12.5vw, 4rem) + 18px);
-    font-size: 0.75rem;
-    letter-spacing: 0.18em;
+    font-size: 0.875rem;
+    letter-spacing: 0.16em;
   }
   .bird--hero {
     width: 92px;

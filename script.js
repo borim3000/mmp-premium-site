@@ -90,7 +90,9 @@ document.querySelectorAll("[data-player]").forEach((player) => {
     const ratio = video.duration ? video.currentTime / video.duration : 0;
     seek.value = Math.round(ratio * 1000);
     seek.style.setProperty("--p", `${ratio * 100}%`);
-    time.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+    time.textContent = `${formatTime(video.currentTime)} / ${formatTime(
+      video.duration
+    )}`;
   };
   const showState = () => {
     const playing = !video.paused && !video.ended;
@@ -370,29 +372,27 @@ if (hasGsap && !reduceMotion) {
       scrub: true,
     },
   });
-  // Hero: Maus-Parallaxe. Der Titel folgt der Maus und kippt leicht, das Bergbild
+  // Hero: Maus-Parallaxe. Titel und Untertitel folgen der Maus verschieden stark, das Bergbild
   // weicht in die Gegenrichtung aus. So wirkt der Titel, als schwebe er vor den Bergen.
+  // Nur Verschieben, kein Kippen: Die Schrift bleibt immer gleich gross.
   // Nur mit Maus (nicht auf dem Handy). Stärke über MOUSE_PARALLAX einstellen.
   const MOUSE_PARALLAX = {
     title: 36, // Verschiebung des Titels in px
-    tilt: 8, // Kippen des Titels in Grad
-    subtitle: 18, // "Content Portfolio" in px (nur seitlich)
-    background: 22, // Bergbild in px, gegenläufig
+    subtitle: 9, // "Content Portfolio" in px seitlich (in der Höhe wie der Titel, damit der Abstand bleibt)
+    background: 11, // Bergbild in px, gegenläufig
   };
   if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
     const heroTitle = document.querySelector(".hero__title");
     const heroMedia = document.querySelector("[data-hero-media]");
     const heroSubtitle = document.querySelector(".hero__subtitle");
-    gsap.set(heroTitle, { transformPerspective: 900 });
     gsap.set(heroMedia, { scale: 1.06 }); // etwas grösser, damit beim Verschieben kein Rand sichtbar wird
     const follow = (el, prop) =>
       gsap.quickTo(el, prop, { duration: 0.9, ease: "power3.out" });
     const move = {
       titleX: follow(heroTitle, "x"),
       titleY: follow(heroTitle, "y"),
-      titleRotY: follow(heroTitle, "rotationY"),
-      titleRotX: follow(heroTitle, "rotationX"),
       subtitleX: follow(heroSubtitle, "x"),
+      subtitleY: follow(heroSubtitle, "yPercent"), // y braucht schon das Ausblenden beim Scrollen
       mediaX: follow(heroMedia, "x"),
       mediaY: follow(heroMedia, "y"),
     };
@@ -400,9 +400,10 @@ if (hasGsap && !reduceMotion) {
       // nx, ny: Mausposition von -0.5 (links/oben) bis 0.5 (rechts/unten)
       move.titleX(nx * MOUSE_PARALLAX.title);
       move.titleY(ny * MOUSE_PARALLAX.title * 0.6);
-      move.titleRotY(nx * MOUSE_PARALLAX.tilt);
-      move.titleRotX(-ny * MOUSE_PARALLAX.tilt * 0.75);
       move.subtitleX(nx * MOUSE_PARALLAX.subtitle);
+      move.subtitleY(
+        ((ny * MOUSE_PARALLAX.title * 0.6) / heroSubtitle.offsetHeight) * 100
+      );
       move.mediaX(-nx * MOUSE_PARALLAX.background);
       move.mediaY(-ny * MOUSE_PARALLAX.background * 0.6);
     };
@@ -556,10 +557,15 @@ if (hasGsap && !reduceMotion) {
           invalidateOnRefresh: true,
           refreshPriority: order(pin),
           onUpdate: (self) => {
-            const t = Math.min(steps, Math.max(0, self.progress * total - wait));
+            const t = Math.min(
+              steps,
+              Math.max(0, self.progress * total - wait)
+            );
             const index = Math.round(t); // ab der Hälfte zählt die neue Folge
             setActive(index);
-            navs.forEach((nav, i) => nav.classList.toggle("is-active", i === index));
+            navs.forEach((nav, i) =>
+              nav.classList.toggle("is-active", i === index)
+            );
             setBar(bar, steps ? t / steps : 1);
             count.textContent = `${index + 1} / ${cards.length}`;
           },
@@ -574,7 +580,11 @@ if (hasGsap && !reduceMotion) {
           const depth = k - j;
           tl.to(
             cards[j],
-            { scale: 1 - depth * 0.06, yPercent: -depth * 7, "--dim": Math.min(0.6, depth * 0.3) },
+            {
+              scale: 1 - depth * 0.06,
+              yPercent: -depth * 7,
+              "--dim": Math.min(0.6, depth * 0.3),
+            },
             at
           );
         }
@@ -586,7 +596,10 @@ if (hasGsap && !reduceMotion) {
         nav.addEventListener("click", () => {
           const st = tl.scrollTrigger;
           const perUnit = (st.end - st.start) / total;
-          window.scrollTo({ top: st.start + (wait + i) * perUnit + 2, behavior: "smooth" });
+          window.scrollTo({
+            top: st.start + (wait + i) * perUnit + 2,
+            behavior: "smooth",
+          });
         })
       );
 
@@ -605,7 +618,11 @@ if (hasGsap && !reduceMotion) {
         opacity: 0,
         duration: 0.8,
         ease: "power2.out",
-        scrollTrigger: { trigger: card, start: "top 88%", refreshPriority: order(card) },
+        scrollTrigger: {
+          trigger: card,
+          start: "top 88%",
+          refreshPriority: order(card),
+        },
       });
     });
   });
