@@ -24,7 +24,7 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | 02 Berlin                  | Blockwoche, unser Videoprojekt, Spatzenlingo und die Berlin Recaps           | Gepinnt, Galerie fährt seitwärts                                                              |
 | 03 Multimedia Awards 2025  | _Inhalt_                                                                     | Pokal, Text und Bilder fliegen beim Hineinscrollen ein                                        |
 | 04 Rotterdam               | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                                              |
-| 05 Digezz                  | Cuschinar Difficil, 6 Folgen auf YouTube                                     | Gepinnt, Folgen fahren seitwärts, Video stoppt beim Wegscrollen                               |
+| 05 Digezz                  | Cuschinar Difficil, 6 Folgen auf YouTube, mit Illustration pro Gericht       | Gepinnt, Folgen fahren seitwärts, Illustrationen springen auf die Karten, Video stoppt beim Wegscrollen |
 | Stay tuned                 | Ausblick                                                                     | Satz fährt beim Scrollen durchs Bild                                                          |
 | Labubuech                  | Gästebuch als Buch-Pop-up: mit Pfeilen blättern, 2 Minuten pro Tag schreiben | Lesezeichen öffnet das Buch, Seiten klappen beim Blättern um                                  |
 | Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite                                     | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord                 |

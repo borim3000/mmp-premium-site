@@ -732,6 +732,27 @@ document.querySelectorAll("[data-gallery]").forEach((pin) => {
   );
 });
 
+/* ---------- Cuschinar Difficil: Illustrationen springen auf die Karten ----------
+   Kommt eine Folge ins Bild, springt ihre Illustration drauf; verlässt sie das Bild,
+   geht sie wieder weg (und springt beim nächsten Mal wieder). Ohne Animation: einfach da. */
+
+if (!reduceMotion && "IntersectionObserver" in window) {
+  const stickers = document.querySelectorAll("[data-sticker]");
+  const stickerObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.intersectionRatio >= 0.6) entry.target.classList.add("is-in");
+        else if (!entry.isIntersecting) entry.target.classList.remove("is-in");
+      });
+    },
+    { threshold: [0, 0.6] }
+  );
+  stickers.forEach((sticker) => {
+    sticker.closest(".gallery").classList.add("has-stickers");
+    stickerObserver.observe(sticker);
+  });
+}
+
 /* ---------- Easter Egg: Faahhhh-Button ---------- */
 
 const faah = new Audio("sound/faahhhh.mp3"); // Dateiname an euren Sound anpassen
