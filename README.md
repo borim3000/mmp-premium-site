@@ -20,7 +20,7 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | -------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | Hero                       | Bergbild, Content Portfolio, zugeklapptes Labubuech                          | Parallax, Vogel wechselt zum Flugbild und fliegt ein Stück weg                                |
 | Featured                   | ISE MAA, unser neues Format in 3 Folgen auf YouTube                          | Pinker Vorhang geht auf, dann gepinnt: Folgen legen sich als Kartenstapel übereinander, Folgen-Navigation links |
-| 01 L.I.F.T                 | _Inhalt_                                                                     | Instagram-Reel, lädt im Hintergrund vor; Text und Reel fliegen ein                            |
+| 01 L.I.F.T                 | Hopecore-Edit als eigenes MP4                                                | Eigener Player in Pink (Play, Zeitleiste, Ton, Vollbild); stoppt beim Wegscrollen             |
 | 02 Berlin                  | Blockwoche, unser Videoprojekt, Spatzenlingo und die Berlin Recaps           | Gepinnt, Galerie fährt seitwärts                                                              |
 | 03 Multimedia Awards 2025  | _Inhalt_                                                                     | Pokal, Text und Bilder fliegen beim Hineinscrollen ein                                        |
 | 04 Rotterdam               | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                                              |
@@ -36,7 +36,7 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | HTML, CSS, JavaScript                                        | ganze Seite                                                   |
 | [GSAP](https://gsap.com) und ScrollTrigger                   | Scrollytelling                                                |
 | YouTube-Einbettung (youtube-nocookie)                        | Featured, Berlin, Awards und Digezz                           |
-| Instagram-Einbettung (embed.js)                              | L.I.F.T-Reel, lädt nach dem Seitenaufruf im Hintergrund       |
+| Instagram-Einbettung (embed.js)                              | Bereit für weitere Beiträge, im Moment nicht im Einsatz       |
 | [canvas-confetti](https://github.com/catdad/canvas-confetti) | Konfetti auf der Gewinnseite                                  |
 | Canvas 2D und Web Audio API                                  | Spiel Flappy Spatz (flappy.js), Ton für Punkte                |
 | localStorage                                                 | Achievements und Flappy-Spatz-Rekord (nur im eigenen Browser) |
@@ -87,7 +87,7 @@ Ein Klick auf den Zähler oben rechts (Stern) öffnet die Übersicht aller Achie
 
 | Easter Egg     | Wo                         | Auslöser                                                                 | Achievement  |
 | -------------- | -------------------------- | ------------------------------------------------------------------------ | ------------ |
-| Faahhhh-Button | Footer                     | Gelben Knopf «Nicht drücken» drücken                                     | FAAHHHH      |
+| Faahhhh-Button | Footer                     | Pinken Knopf «Nicht drücken» drücken                                     | FAAHHHH      |
 | Piep           | Jeder goldene Vogel        | Anklicken, jedes Piepen ist etwas anders hoch                            | –            |
 | Geheimfoto     | Jeder goldene Vogel        | Innerhalb von 1,5 Sekunden fünfmal anklicken                             | Geheimfoto   |
 | Inside Joke    | Bildunterschriften         | Gepunktet unterstrichenes Wort antippen oder darüberfahren               | Insider      |

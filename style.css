@@ -19,6 +19,7 @@
   --font-display: "Bodoni Moda", Georgia, serif;
   --font-neon: "Monoton", "Bodoni Moda", serif;
   --font-body: "Hanken Grotesk", system-ui, sans-serif;
+  --font-accent: "Unbounded", "Hanken Grotesk", system-ui, sans-serif; /* Untertitel im Hero, Knopf «Nicht drücken» */
   --display-weight: 300; /* Stärke der grossen Bodoni-Schrift, 400 = ganz dünn */
   --display-opsz: 30; /* Kontrast der grossen Bodoni-Schrift: kleiner = kräftigere Haarlinien, 96 = Original */
 
@@ -273,9 +274,10 @@ a {
   z-index: 1;
   text-align: center;
   color: var(--white);
-  font: 700 clamp(0.9375rem, 1.6vw, 1.375rem) / 1 var(--font-body);
-  letter-spacing: 0.32em;
+  font: 800 clamp(0.875rem, 1.5vw, 1.3rem) / 1 var(--font-accent);
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+  text-shadow: 0 2px 14px rgba(33, 33, 33, 0.25);
 }
 
 /* ---------- Fogel ---------- */
@@ -576,16 +578,14 @@ a {
   vector-effect: non-scaling-stroke;
 }
 
-/* ---------- 01 L.I.F.T (Instagram-Reel) ---------- */
+/* ---------- 01 L.I.F.T (eigenes Video mit eigenem Player) ---------- */
 
+/* Text links, Video in der Mitte, kurzer Text rechts */
 .chapter--lift .chapter__pin {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1.1fr) auto minmax(0, 0.9fr);
   align-items: center;
-  column-gap: clamp(32px, 8vw, 140px);
-  padding-right: calc(
-    var(--gutter) + 110px
-  ); /* Platz für den Vogel hinter dem Reel */
+  column-gap: clamp(32px, 4vw, 72px);
 }
 .acronym {
   font: 400 clamp(1.75rem, 3.4vw, 3rem) / 1.12 var(--font-display);
@@ -597,25 +597,13 @@ a {
 .lift-post {
   position: relative;
   z-index: 3;
-  display: grid;
-  gap: 12px;
+  margin: 0;
+  /* so hoch wie möglich, ohne dass das Video aus dem Bildschirm ragt */
   width: clamp(
-    328px,
-    26vw,
-    380px
-  ); /* Instagram braucht mindestens 326px Breite */
-}
-.lift-post figcaption {
-  font-size: 0.875rem;
-  color: var(--ink-soft);
-}
-.lift-post figcaption a {
-  color: var(--pink-strong);
-  font-weight: 600;
-  text-underline-offset: 3px;
-}
-.lift-post figcaption a:hover {
-  color: var(--ink);
+    280px,
+    calc((100svh - var(--header-h) - 120px) * 9 / 16),
+    440px
+  );
 }
 .lift-post .bird--peek {
   width: 130px;
@@ -623,6 +611,235 @@ a {
   top: 24px;
   z-index: -1;
   rotate: -8deg;
+}
+
+.lift-note {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+  max-width: 300px;
+}
+.lift-note__kicker {
+  color: var(--pink-strong);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.lift-note .chapter__link {
+  margin-left: 0;
+}
+.lift-note__quote {
+  margin: 0;
+  font: italic 400 clamp(1.375rem, 2vw, 1.875rem) / 1.2 var(--font-display);
+}
+
+/* Player: Klick aufs Bild = Play/Pause, unten eine Leiste in Pink */
+.player {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--ink);
+  box-shadow: 0 24px 60px rgba(33, 33, 33, 0.18);
+}
+.player__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.player:fullscreen .player__video {
+  object-fit: contain;
+}
+.player__big {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.player__big::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: var(--pink-strong);
+  box-shadow: 0 10px 30px rgba(255, 0, 123, 0.45);
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s, opacity 0.2s;
+}
+.player__big::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  background: var(--white);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4.5v15l13-7.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4.5v15l13-7.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  transform: translate(-42%, -50%);
+  transition: opacity 0.2s;
+}
+.player__big:hover::before {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+.player.is-playing .player__big::before,
+.player.is-playing .player__big::after {
+  opacity: 0;
+}
+.player__big:focus-visible {
+  outline: 3px solid var(--pink);
+  outline-offset: -3px;
+}
+
+.player__bar {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 6px 6px;
+  border-radius: 999px;
+  background: rgba(33, 33, 33, 0.6);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--white);
+  transition: opacity 0.25s, transform 0.25s;
+}
+/* Während das Video läuft, nur bei Maus über dem Video oder mit Tastatur sichtbar */
+@media (hover: hover) {
+  .player.is-playing:not(:hover):not(:has(:focus-visible)) .player__bar {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.player__btn {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+}
+.player__btn::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  background: var(--white);
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+.player__btn:hover,
+.player__btn:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+}
+.player__btn:focus-visible {
+  outline: 2px solid var(--pink);
+}
+.player__btn--play {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4.5v15l13-7.5z'/%3E%3C/svg%3E");
+  background: var(--pink-strong);
+}
+.player__btn--play:hover,
+.player__btn--play:focus-visible {
+  background: var(--pink);
+}
+.player.is-playing .player__btn--play {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 4h4.5v16H6zM13.5 4H18v16h-4.5z'/%3E%3C/svg%3E");
+}
+.player__btn--sound {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 9v6h4l5 4.5V4.5L7 9z'/%3E%3Cpath d='M15.5 8.2a5 5 0 0 1 0 7.6M18.2 5.5a9 9 0 0 1 0 13' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.player.is-muted .player__btn--sound {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 9v6h4l5 4.5V4.5L7 9z'/%3E%3Cpath d='M16 9l6 6M22 9l-6 6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.player__btn--full {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.player__time {
+  flex: none;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+/* Zeitleiste: pinker Teil = schon gespielt (--p setzt script.js) */
+.player__seek {
+  flex: 1;
+  min-width: 0;
+  height: 18px;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  --p: 0%;
+}
+.player__seek::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--pink) var(--p),
+    rgba(255, 255, 255, 0.35) var(--p)
+  );
+}
+.player__seek::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--pink) var(--p),
+    rgba(255, 255, 255, 0.35) var(--p)
+  );
+}
+.player__seek::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--white);
+}
+.player__seek::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--white);
+}
+.player__seek:focus-visible {
+  outline: 2px solid var(--pink);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Schmale Laptops: kurzer Text unter den Titel, Video rechts */
+@media (min-width: 900px) and (max-width: 1100px) {
+  .chapter--lift .chapter__pin {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-content: center;
+    row-gap: 32px;
+    padding-right: calc(var(--gutter) + 70px); /* Platz für den Vogel */
+  }
+  .lift-post {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  .lift-note {
+    grid-column: 1;
+    align-self: start;
+  }
 }
 
 /* ---------- 02/03 Galerien ---------- */
@@ -1536,28 +1753,42 @@ a {
   font-size: 0.875rem;
 }
 
+/* Knopf «Nicht drücken»: pinker Knopf, der beim Drücken einsinkt */
 .faah {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0;
+  justify-self: start;
+  padding: 16px 30px 15px;
   border: 0;
-  background: none;
-  color: var(--grey);
-  font: inherit;
-  font-size: 0.875rem;
+  border-radius: 999px;
+  background: var(--pink-strong);
+  color: var(--white);
+  font: 800 0.875rem / 1 var(--font-accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   cursor: pointer;
+  box-shadow:
+    0 6px 0 #a3004f,
+    0 14px 30px rgba(255, 0, 123, 0.35);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.2s;
 }
-.faah__knob {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--gold);
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  transition: transform 0.1s;
+.faah:hover {
+  background: var(--pink);
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 0 #a3004f,
+    0 20px 36px rgba(255, 0, 123, 0.45);
 }
-.faah:active .faah__knob {
-  transform: scale(0.9);
+.faah:active {
+  transform: translateY(5px);
+  box-shadow:
+    0 1px 0 #a3004f,
+    0 4px 12px rgba(255, 0, 123, 0.3);
+}
+.faah:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: 5px;
 }
 
 /* ---------- Achievements-Übersicht (Pop-up unter dem Zähler) ---------- */
@@ -1995,8 +2226,8 @@ h2,
   }
   .hero__subtitle {
     top: calc(38% + clamp(2.5rem, 12.5vw, 4rem) + 18px);
-    font-size: 0.8125rem;
-    letter-spacing: 0.28em;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
   }
   .bird--hero {
     width: 92px;
@@ -2019,15 +2250,18 @@ h2,
     grid-template-columns: 1fr;
     row-gap: 28px;
     align-content: start;
-    padding-right: var(--gutter);
   }
   .acronym {
     font-size: 1.375rem;
   }
   .lift-post {
-    justify-self: start;
-    width: min(100%, 326px);
-    margin-top: 60px; /* Platz für den Vogel */
+    justify-self: center;
+    width: min(100%, 360px);
+    margin-top: 48px; /* Platz für den Vogel */
+  }
+  .lift-note {
+    max-width: none;
+    gap: 12px;
   }
   /* Vogel sitzt auf dem Reel statt dahinter, sonst ragt er aus dem Bildschirm */
   .lift-post .bird--peek {

@@ -69,48 +69,78 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
   });
 });
 
-/* ---------- Video-Scrub-Hilfe ----------
-   Steuert ein <video> über den Scroll-Fortschritt (0 bis 1).
-   Ist (noch) kein Video da, läuft nur der Fortschrittsbalken. */
+/* ---------- Video-Player (L.I.F.T) ----------
+   <div class="player" data-player> mit <video>, Play-Knöpfen, Zeitleiste, Ton und Vollbild.
+   Läuft nur, wenn man es startet, und hält an, sobald es aus dem Bild gescrollt wird. */
 
-// Neue Position erst setzen, wenn der Browser mit der letzten fertig ist.
-// Sonst stauen sich die Sprünge, vor allem in Firefox, und das Video hängt hinterher.
-function seekVideo(video, time) {
-  video.scrubSent = time; // zuletzt verlangte Stelle
-  video.currentTime = time;
+function formatTime(seconds) {
+  const s = Math.max(0, Math.floor(seconds || 0));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
-function scrubVideo(container, progress) {
-  const video = container && container.querySelector("video");
-  if (!video || !video.duration) return;
-  video.scrubTarget = Math.min(
-    video.duration - 0.05,
-    progress * video.duration
+document.querySelectorAll("[data-player]").forEach((player) => {
+  const video = player.querySelector("video");
+  const toggles = player.querySelectorAll("[data-player-toggle]");
+  const seek = player.querySelector("[data-player-seek]");
+  const time = player.querySelector("[data-player-time]");
+  const mute = player.querySelector("[data-player-mute]");
+  const full = player.querySelector("[data-player-full]");
+
+  const showTime = () => {
+    const ratio = video.duration ? video.currentTime / video.duration : 0;
+    seek.value = Math.round(ratio * 1000);
+    seek.style.setProperty("--p", `${ratio * 100}%`);
+    time.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+  };
+  const showState = () => {
+    const playing = !video.paused && !video.ended;
+    player.classList.toggle("is-playing", playing);
+    toggles.forEach((button) =>
+      button.setAttribute("aria-label", playing ? "Pause" : "Abspielen")
+    );
+  };
+  const showSound = () => {
+    player.classList.toggle("is-muted", video.muted);
+    mute.setAttribute("aria-label", video.muted ? "Ton an" : "Ton aus");
+  };
+
+  toggles.forEach((button) =>
+    button.addEventListener("click", () => {
+      if (video.paused || video.ended) video.play().catch(() => {});
+      else video.pause();
+    })
   );
-  if (video.seeking) return; // wird nach "seeked" nachgeholt
-  // Kleine Änderungen (unter einem Bild) gar nicht erst verlangen
-  if (
-    video.scrubSent != null &&
-    Math.abs(video.scrubSent - video.scrubTarget) < 1 / 30
-  )
-    return;
-  seekVideo(video, video.scrubTarget);
-}
-
-function prepareVideos(root) {
-  root.querySelectorAll("video").forEach((video) => {
-    // Ist während des Springens weitergescrollt worden, jetzt die neuste Stelle holen
-    video.addEventListener("seeked", () => {
-      if (video.scrubTarget != null && video.scrubTarget !== video.scrubSent)
-        seekVideo(video, video.scrubTarget);
-    });
-    video.muted = true;
-    video.playsInline = true;
-    video.preload = "auto";
-    video.pause();
-    if (reduceMotion) video.controls = true; // ohne Animation: normal abspielbar
+  seek.addEventListener("input", () => {
+    if (!video.duration) return;
+    video.currentTime = (seek.value / 1000) * video.duration;
+    showTime();
   });
-}
+  mute.addEventListener("click", () => {
+    video.muted = !video.muted;
+  });
+  full.addEventListener("click", () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (player.requestFullscreen) player.requestFullscreen();
+    else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen(); // iPhone
+  });
+
+  video.addEventListener("loadedmetadata", showTime);
+  video.addEventListener("timeupdate", showTime);
+  video.addEventListener("play", showState);
+  video.addEventListener("pause", showState);
+  video.addEventListener("ended", showState);
+  video.addEventListener("volumechange", showSound);
+  showTime();
+  showState();
+  showSound();
+
+  // Aus dem Bild gescrollt: anhalten
+  new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting && !document.fullscreenElement) video.pause();
+    });
+  }).observe(player);
+});
 
 /* ---------- YouTube ----------
    <div class="media" data-youtube="VIDEO_ID" data-title="Titel"></div>
@@ -677,8 +707,6 @@ if (hasGsap && !reduceMotion) {
     measureHeader();
     updateHeader();
   });
-} else {
-  prepareVideos(document);
 }
 
 // Handy oder ohne Animation: Galerien werden gewischt, Balken und Zähler laufen mit

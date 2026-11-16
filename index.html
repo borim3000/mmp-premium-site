@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Hanken+Grotesk:wght@400;500;600;700&family=Monoton&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Hanken+Grotesk:wght@400;500;600;700&family=Unbounded:wght@800&family=Monoton&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
@@ -214,10 +214,8 @@
       </section>
 
       <!-- ============ 01 L.I.F.T ============ -->
-      <!-- Das Reel kommt von Instagram und lädt im Hintergrund, bis dahin steht das Vorschaubild.
-         data-instagram      = der Teil nach /p/ oder /reel/ im Instagram-Link
-         data-instagram-type = "reel" bei Reels, sonst weglassen (Beiträge und Carousels)
-         data-poster         = eigenes Vorschaubild (Instagram liefert ohne Login keins) -->
+      <!-- Eigenes MP4 mit eigenen Steuerelementen (Play, Zeitleiste, Ton, Vollbild).
+         Video und Vorschaubild liegen im Ordner video/. -->
       <section
         class="chapter chapter--lift"
         id="lift"
@@ -245,23 +243,68 @@
               width="140"
               height="170"
             />
-            <div
-              class="media media--reel"
-              data-instagram="DGOKaPTRu8j"
-              data-instagram-type="reel"
-              data-poster="video/lift-poster.jpg"
-              data-title="L.I.F.T, Hopecore-Edit"
-              data-label="Instagram-Reel"
-            ></div>
-            <figcaption>
-              <a
-                href="https://www.instagram.com/p/DGOKaPTRu8j/"
-                target="_blank"
-                rel="noopener"
-                >Hopecore-Edit auf Instagram ansehen</a
-              >
-            </figcaption>
+            <div class="player" data-player>
+              <video
+                class="player__video"
+                src="video/lift.mp4"
+                poster="video/lift-poster.jpg"
+                preload="metadata"
+                playsinline
+                aria-label="L.I.F.T, Hopecore-Edit"
+              ></video>
+              <button
+                class="player__big"
+                type="button"
+                data-player-toggle
+                aria-label="Video abspielen"
+              ></button>
+              <div class="player__bar">
+                <button
+                  class="player__btn player__btn--play"
+                  type="button"
+                  data-player-toggle
+                  aria-label="Abspielen"
+                ></button>
+                <input
+                  class="player__seek"
+                  type="range"
+                  min="0"
+                  max="1000"
+                  step="1"
+                  value="0"
+                  data-player-seek
+                  aria-label="Zeitleiste"
+                />
+                <output class="player__time" data-player-time>0:00</output>
+                <button
+                  class="player__btn player__btn--sound"
+                  type="button"
+                  data-player-mute
+                  aria-label="Ton aus"
+                ></button>
+                <button
+                  class="player__btn player__btn--full"
+                  type="button"
+                  data-player-full
+                  aria-label="Vollbild"
+                ></button>
+              </div>
+            </div>
           </figure>
+
+          <aside class="lift-note" data-reveal>
+            <p class="lift-note__kicker">Reel · Hopecore-Edit</p>
+            <blockquote class="lift-note__quote">
+              «mer dörfed vorstelle: de dr. ismael rehabilitation.»
+            </blockquote>
+            <a
+              class="chapter__link"
+              href="https://www.instagram.com/p/DGOKaPTRu8j/"
+              target="_blank"
+              rel="noopener"
+              >Auf Instagram ansehen</a
+            >
+          </aside>
         </div>
       </section>
 
@@ -738,10 +781,7 @@
         </li>
         <li><a href="#labubuech">Labubuech</a></li>
       </ul>
-      <button class="faah" type="button" data-faah>
-        <span class="faah__knob" aria-hidden="true"></span>
-        Nicht drücken
-      </button>
+      <button class="faah" type="button" data-faah>Nicht drücken</button>
       <p class="site-footer__credits">
         Naim de Amri und Robin Uliten. Interaktive Medien 5, FH Graubünden,
         HS26.
