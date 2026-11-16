@@ -556,6 +556,20 @@ if (hasGsap && !reduceMotion) {
           scrub: 0.6,
           invalidateOnRefresh: true,
           refreshPriority: order(pin),
+          // Einrasten: Bleibt man zwischen zwei Folgen stehen, gleitet es zur nächsten ganzen Folge.
+          // Zu weit gescrollt? Dann geht es zurück zur Folge, die näher ist.
+          // Während der Vorhang aufgeht und nach der letzten Folge rastet nichts ein.
+          snap: {
+            snapTo: (progress) => {
+              const t = progress * total - wait; // 0 = Folge 1, 1 = Folge 2 ...
+              if (t <= 0 || t >= steps) return progress;
+              return (wait + Math.round(t)) / total;
+            },
+            inertia: false, // von dort aus, wo man stehen bleibt, nicht vom Schwung hochgerechnet
+            duration: { min: 0.25, max: 0.6 },
+            delay: 0.12,
+            ease: "power2.inOut",
+          },
           onUpdate: (self) => {
             const t = Math.min(
               steps,
