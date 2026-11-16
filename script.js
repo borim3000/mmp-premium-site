@@ -427,7 +427,7 @@ if (hasGsap && !reduceMotion) {
       const track = pin.querySelector(".gallery__track");
       const bar = pin.querySelector("[data-gallery-progress]");
       const count = pin.querySelector("[data-gallery-count]");
-      const posts = track.children.length;
+      const posts = track.querySelectorAll(".post:not(.post--text)").length; // Textkarten zählen nicht
       const bird = pin.querySelector(".bird--fly");
       const distance = () =>
         Math.max(0, track.scrollWidth - gallery.clientWidth + 40);
@@ -480,6 +480,106 @@ if (hasGsap && !reduceMotion) {
     });
   });
 
+  // Featured: Kartenstapel. Gepinnt; pro Folge schiebt sich die nächste Karte von unten
+  // über die vorherige, die alten rutschen etwas nach hinten (kleiner, dunkler).
+  mm.add("(min-width: 900px)", () => {
+    document.querySelectorAll("[data-episodes]").forEach((section) => {
+      const pin = section.querySelector(".chapter__pin");
+      const stack = section.querySelector(".episodes__stack");
+      const cards = [...section.querySelectorAll("[data-episode]")];
+      const navs = [...section.querySelectorAll("[data-episode-nav]")];
+      const bar = section.querySelector("[data-episodes-progress]");
+      const count = section.querySelector("[data-episodes-count]");
+      const steps = cards.length - 1;
+      const STEP = 0.85; // Scrollweg pro Folge, in Bildschirmhöhen
+      const HOLD = 0.4; // am Schluss kurz stehen bleiben, bevor es weitergeht
+      // Wie bei den Galerien: warten, bis der Vorhang ganz offen ist
+      const withCurtain = curtain && pin.contains(curtain);
+      const wait = withCurtain
+        ? Math.max(0, CURTAIN.length - CURTAIN.early) / STEP
+        : 0; // in "Folgen"
+      const total = wait + steps + HOLD;
+      let active = 0;
+
+      stack.classList.add("is-stacked");
+      cards.forEach((card, i) => card.classList.toggle("is-front", i === 0));
+      gsap.set(cards.slice(1), { yPercent: 115, rotation: 2.5 });
+
+      const setActive = (index) => {
+        if (index === active) return;
+        cards.forEach((card, i) => {
+          card.classList.toggle("is-front", i === index);
+          if (i !== index) stopYouTube(card.querySelector("[data-youtube]")); // nichts läuft hinter dem Stapel weiter
+        });
+        active = index;
+      };
+
+      const tl = gsap.timeline({
+        defaults: { ease: "power2.inOut", duration: 1 },
+        scrollTrigger: {
+          trigger: pin,
+          pin: true,
+          anticipatePin: 1,
+          start: "top top",
+          end: () => `+=${total * STEP * window.innerHeight}`,
+          scrub: 0.6,
+          invalidateOnRefresh: true,
+          refreshPriority: order(pin),
+          onUpdate: (self) => {
+            const t = Math.min(steps, Math.max(0, self.progress * total - wait));
+            const index = Math.round(t); // ab der Hälfte zählt die neue Folge
+            setActive(index);
+            navs.forEach((nav, i) => nav.classList.toggle("is-active", i === index));
+            setBar(bar, steps ? t / steps : 1);
+            count.textContent = `${index + 1} / ${cards.length}`;
+          },
+        },
+      });
+      if (wait > 0) tl.to({}, { duration: wait }); // Vorhang
+      for (let k = 1; k <= steps; k++) {
+        const at = wait + k - 1;
+        tl.to(cards[k], { yPercent: 0, rotation: 0 }, at);
+        // die Karten darunter rutschen nach hinten
+        for (let j = 0; j < k; j++) {
+          const depth = k - j;
+          tl.to(
+            cards[j],
+            { scale: 1 - depth * 0.06, yPercent: -depth * 7, "--dim": Math.min(0.6, depth * 0.3) },
+            at
+          );
+        }
+      }
+      tl.to({}, { duration: HOLD });
+
+      // Klick auf eine Folge: zu ihr scrollen
+      navs.forEach((nav, i) =>
+        nav.addEventListener("click", () => {
+          const st = tl.scrollTrigger;
+          const perUnit = (st.end - st.start) / total;
+          window.scrollTo({ top: st.start + (wait + i) * perUnit + 2, behavior: "smooth" });
+        })
+      );
+
+      return () => {
+        stack.classList.remove("is-stacked");
+        cards.forEach((card) => card.classList.remove("is-front"));
+      };
+    });
+  });
+
+  // Featured auf dem Handy: Folgen untereinander, jede fliegt beim Hereinscrollen ein
+  mm.add("(max-width: 899px)", () => {
+    document.querySelectorAll("[data-episode]").forEach((card) => {
+      gsap.from(card, {
+        y: 60,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: { trigger: card, start: "top 88%", refreshPriority: order(card) },
+      });
+    });
+  });
+
   // Vorhang: beginnt CURTAIN.early Bildschirmhöhen vor dem Anhalten aufzugehen
   if (curtain) {
     const section = curtain.closest("section");
@@ -513,50 +613,6 @@ if (hasGsap && !reduceMotion) {
       end: () => `+=${(CURTAIN.length - CURTAIN.early) * window.innerHeight}`,
       invalidateOnRefresh: true,
       refreshPriority: order(pin),
-    });
-  });
-
-  // 04 Digezz: pro Projekt eine Bildschirmhöhe
-  document.querySelectorAll("[data-projects]").forEach((section) => {
-    const pin = section.querySelector(".chapter__pin");
-    const items = [...section.querySelectorAll("[data-project]")];
-    const medias = [...section.querySelectorAll("[data-project-media]")];
-    const bar = section.querySelector("[data-scrub-progress]");
-    let activeProject = 0;
-    prepareVideos(section);
-    const trigger = ScrollTrigger.create({
-      trigger: section,
-      pin,
-      anticipatePin: 1,
-      start: "top top",
-      end: `+=${items.length * 100}%`,
-      scrub: true,
-      refreshPriority: order(section),
-      onUpdate: (self) => {
-        const pos = self.progress * items.length;
-        const index = Math.min(items.length - 1, Math.floor(pos));
-        const local = Math.min(1, pos - index);
-        if (index !== activeProject) {
-          stopYouTube(medias[activeProject]); // verstecktes Video nicht weiterlaufen lassen
-          activeProject = index;
-        }
-        items.forEach((el, i) => el.classList.toggle("is-active", i === index));
-        medias.forEach((el, i) =>
-          el.classList.toggle("is-active", i === index)
-        );
-        setBar(bar, local);
-        scrubVideo(medias[index], local);
-      },
-    });
-    // Klick auf ein Projekt in der Liste scrollt zu diesem Projekt
-    items.forEach((item, i) => {
-      item.querySelector(".project__title").addEventListener("click", () => {
-        const step = (trigger.end - trigger.start) / items.length;
-        window.scrollTo({
-          top: trigger.start + step * i + 2,
-          behavior: "smooth",
-        });
-      });
     });
   });
 
@@ -623,18 +679,6 @@ if (hasGsap && !reduceMotion) {
   });
 } else {
   prepareVideos(document);
-  // Ohne Animation: Projekte per Klick wechseln
-  document.querySelectorAll("[data-projects]").forEach((section) => {
-    const items = [...section.querySelectorAll("[data-project]")];
-    const medias = [...section.querySelectorAll("[data-project-media]")];
-    items.forEach((item, i) => {
-      item.querySelector(".project__title").addEventListener("click", () => {
-        medias.forEach((m) => stopYouTube(m));
-        items.forEach((el, j) => el.classList.toggle("is-active", j === i));
-        medias.forEach((el, j) => el.classList.toggle("is-active", j === i));
-      });
-    });
-  });
 }
 
 // Handy oder ohne Animation: Galerien werden gewischt, Balken und Zähler laufen mit
@@ -642,7 +686,7 @@ document.querySelectorAll("[data-gallery]").forEach((pin) => {
   const gallery = pin.querySelector(".gallery");
   const bar = pin.querySelector("[data-gallery-progress]");
   const count = pin.querySelector("[data-gallery-count]");
-  const posts = pin.querySelector(".gallery__track").children.length;
+  const posts = pin.querySelectorAll(".post:not(.post--text)").length;
   gallery.addEventListener(
     "scroll",
     () => {

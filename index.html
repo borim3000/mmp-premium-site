@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Hanken+Grotesk:wght@400;500;600&family=Monoton&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Hanken+Grotesk:wght@400;500;600;700&family=Monoton&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
@@ -99,15 +99,16 @@
         </span>
       </section>
 
-      <!-- ============ FEATURED: CUSCHINAR DIFFICIL ============ -->
-      <!-- Unser Highlight zuerst. Gepinnt: Die sechs Folgen fahren beim Scrollen seitwärts.
-         Pro Folge bei data-youtube die Video-ID eintragen (Teil nach "v=" im YouTube-Link). -->
+      <!-- ============ FEATURED: ISE MAA ============ -->
+      <!-- Unser neustes Format zuerst. Gepinnt: Die Folgen legen sich beim Scrollen wie ein
+         Kartenstapel übereinander (script.js, "Featured: Kartenstapel"). Auf dem Handy untereinander. -->
       <section
-        class="chapter chapter--gallery chapter--featured"
+        class="chapter chapter--featured"
         id="featured"
+        data-episodes
         aria-labelledby="featured-title"
       >
-        <div class="chapter__pin" data-gallery>
+        <div class="chapter__pin">
           <!-- Vorhang: zwei pinke Bahnen, Form wird in script.js ("Vorhang") beim Scrollen berechnet -->
           <div class="curtain" data-curtain aria-hidden="true">
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -116,131 +117,98 @@
             </svg>
           </div>
 
-          <header class="chapter__head chapter__head--row">
-            <p class="kicker">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M12 2.5l2.9 6.2 6.8.7-5.1 4.6 1.4 6.7L12 17.3l-6 3.4 1.4-6.7-5.1-4.6 6.8-.7z"
-                />
-              </svg>
-              Featured
-            </p>
-            <h2 id="featured-title">Cuschinar Difficil</h2>
-            <p class="chapter__sub">Bündner Küche in sechs Folgen</p>
-            <a
-              class="chapter__link"
-              href="https://www.youtube.com/playlist?list=PLBDZt1fObJvuMvbIPOS-Mj3StlovrY8gO"
-              target="_blank"
-              rel="noopener"
-              >Ganze Playlist auf YouTube</a
-            >
-          </header>
+          <div class="episodes">
+            <header class="episodes__head">
+              <p class="kicker">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12 2.5l2.9 6.2 6.8.7-5.1 4.6 1.4 6.7L12 17.3l-6 3.4 1.4-6.7-5.1-4.6 6.8-.7z"
+                  />
+                </svg>
+                Featured
+              </p>
+              <h2 id="featured-title">ISE MAA</h2>
+              <p class="chapter__sub">Unser neues Format in drei Folgen</p>
+              <a
+                class="chapter__link"
+                href="https://www.youtube.com/watch?v=nD-E6d4Ihzo&amp;list=PLesKlhsKyJko"
+                target="_blank"
+                rel="noopener"
+                >Playlist auf YouTube</a
+              >
+              <!-- Folgen-Knöpfe: springen im Stapel zur Folge -->
+              <ol class="episodes__nav" aria-label="Folgen">
+                <li>
+                  <button class="is-active" type="button" data-episode-nav>
+                    <span>01</span> Folge 1
+                  </button>
+                </li>
+                <li>
+                  <button type="button" data-episode-nav>
+                    <span>02</span> Folge 2 <small>bald</small>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" data-episode-nav>
+                    <span>03</span> Folge 3 <small>bald</small>
+                  </button>
+                </li>
+              </ol>
+              <div class="episodes__progress">
+                <div class="progress"><span data-episodes-progress></span></div>
+                <output data-episodes-count>1 / 3</output>
+              </div>
+            </header>
 
-          <div
-            class="gallery"
-            tabindex="0"
-            aria-label="Cuschinar Difficil, sechs Folgen, horizontal scrollbar"
-          >
-            <ol class="gallery__track">
-              <li class="post">
+            <div class="episodes__stack">
+              <article class="episode" data-episode>
                 <div
                   class="media media--wide"
-                  data-youtube="06PWau5aRFM"
-                  data-title="Cuschinar Difficil, Folge 1: Die Steinbock-Suche"
+                  data-youtube="nD-E6d4Ihzo"
+                  data-title="ISE MAA, Folge 1"
                   data-label="Folge 1, YouTube"
                 ></div>
-                <h3>
-                  <span class="post__num">Folge 1</span> Die Steinbock-Suche
-                </h3>
-                <p class="post__meta">
-                  Spezialfolge: Wir reisen ins Bündnerland und suchen einen
-                  waschechten Steinbock.
-                </p>
-              </li>
-              <li class="post">
-                <div
-                  class="media media--wide"
-                  data-youtube="Pt7kSifEjAU"
-                  data-title="Cuschinar Difficil, Folge 2: Der Suppen-Klassiker"
-                  data-label="Folge 2, YouTube"
-                ></div>
-                <h3>
-                  <span class="post__num">Folge 2</span> Der Suppen-Klassiker
-                </h3>
-                <p class="post__meta">
-                  Bündner Gerstensuppe, der wärmende Klassiker nach einem Tag in
-                  den Bergen.
-                </p>
-              </li>
-              <li class="post">
-                <div
-                  class="media media--wide"
-                  data-youtube="TXHMsBrnnGU"
-                  data-title="Cuschinar Difficil, Folge 3: Prättigau? Was gibt’s im Prättigau?"
-                  data-label="Folge 3, YouTube"
-                ></div>
-                <h3>
-                  <span class="post__num">Folge 3</span> Prättigau? Was gibt’s
-                  im Prättigau?
-                </h3>
-                <p class="post__meta">
-                  Prättigauer Chnödli, mit einer Challenge, die das Kochen alles
-                  andere als leicht macht.
-                </p>
-              </li>
-              <li class="post">
-                <div
-                  class="media media--wide"
-                  data-youtube="fvF0bw2NnHQ"
-                  data-title="Cuschinar Difficil, Folge 4: Engadiana die Nusstorte"
-                  data-label="Folge 4, YouTube"
-                ></div>
-                <h3>
-                  <span class="post__num">Folge 4</span> Engadiana die Nusstorte
-                </h3>
-                <p class="post__meta">
-                  Es wird süss: eine echte Engadiner Nusstorte nach
-                  Familienrezept.
-                </p>
-              </li>
-              <li class="post">
-                <div
-                  class="media media--wide"
-                  data-youtube="Pc3zNJtcGsc"
-                  data-title="Cuschinar Difficil, Folge 5: Die absolute Königsdisziplin"
-                  data-label="Folge 5, YouTube"
-                ></div>
-                <h3>
-                  <span class="post__num">Folge 5</span> Die absolute
-                  Königsdisziplin
-                </h3>
-                <p class="post__meta">
-                  Capuns, Rücken an Rücken gekocht und von einem Bündner Profi
-                  getestet.
-                </p>
-              </li>
-              <li class="post">
-                <div
-                  class="media media--wide"
-                  data-youtube="xFhSaNw9Cjk"
-                  data-title="Cuschinar Difficil, Folge 6: Das grosse Finale in Rotterdam"
-                  data-label="Folge 6, YouTube"
-                ></div>
-                <h3>
-                  <span class="post__num">Folge 6</span> Das grosse Finale in
-                  Rotterdam
-                </h3>
-                <p class="post__meta">
-                  Spezialfolge: Zum Abschluss kochen wir in Rotterdam für unsere
-                  Spatzen.
-                </p>
-              </li>
-            </ol>
-          </div>
-
-          <div class="gallery__progress">
-            <div class="progress"><span data-gallery-progress></span></div>
-            <output data-gallery-count>1 / 6</output>
+                <div class="episode__text">
+                  <p class="post__num">Folge 1 · jetzt auf YouTube</p>
+                  <h3>Titel der Folge</h3>
+                  <p>Ein, zwei Sätze: Worum geht es in der ersten Folge?</p>
+                </div>
+              </article>
+              <article class="episode is-soon" data-episode>
+                <!-- Sobald Folge 2 online ist: dieses div ersetzen durch
+                   <div class="media media--wide" data-youtube="VIDEO_ID" data-title="ISE MAA, Folge 2" data-label="Folge 2, YouTube"></div>
+                   und bei <article> die Klasse "is-soon" entfernen. -->
+                <div class="media media--wide media--soon">
+                  <span class="soon">
+                    <img src="img/vogel-fliegt.png" alt="" width="90" height="87" />
+                    <strong>Folge 2</strong>
+                    <span>Bald auf YouTube</span>
+                  </span>
+                </div>
+                <div class="episode__text">
+                  <p class="post__num">Folge 2 · bald</p>
+                  <h3>Titel folgt</h3>
+                  <p>Die nächste Folge ist in Arbeit.</p>
+                </div>
+              </article>
+              <article class="episode is-soon" data-episode>
+                <!-- Sobald Folge 3 online ist: dieses div ersetzen durch
+                   <div class="media media--wide" data-youtube="VIDEO_ID" data-title="ISE MAA, Folge 3" data-label="Folge 3, YouTube"></div>
+                   und bei <article> die Klasse "is-soon" entfernen. -->
+                <div class="media media--wide media--soon">
+                  <span class="soon">
+                    <img src="img/vogel-fliegt.png" alt="" width="90" height="87" />
+                    <strong>Folge 3</strong>
+                    <span>Bald auf YouTube</span>
+                  </span>
+                </div>
+                <div class="episode__text">
+                  <p class="post__num">Folge 3 · bald</p>
+                  <h3>Titel folgt</h3>
+                  <p>Die nächste Folge ist in Arbeit.</p>
+                </div>
+              </article>
+            </div>
           </div>
         </div>
       </section>
@@ -308,7 +276,7 @@
           <header class="chapter__head chapter__head--row">
             <span class="chapter__num" aria-hidden="true">02</span>
             <h2 id="berlin-title">Berlin</h2>
-            <p class="chapter__sub">Recaps</p>
+            <p class="chapter__sub">Blockwoche und Recaps</p>
           </header>
 
           <img
@@ -324,10 +292,54 @@
           <div
             class="gallery"
             tabindex="0"
-            aria-label="Berlin Recaps, horizontal scrollbar"
+            aria-label="Berlin: Blockwoche und Recaps, horizontal scrollbar"
           >
             <ol class="gallery__track">
-              <!-- Ein Beitrag. Format: media--reel (9:16), media--photo (4:5), media--square (1:1), media--wide (16:9) -->
+              <!-- Geschichte zuerst: Textkarte -->
+              <li class="post post--text">
+                <p class="post__num">Wie alles anfing</p>
+                <h3>Eine Blockwoche, die alles verändert hat</h3>
+                <p>
+                  Eigentlich waren wir in Berlin, um für unser Studium ein
+                  Videoprojekt zu drehen. Daneben hatten wir mit der ganzen
+                  Klasse so viel Spass, dass wir angefangen haben, alles in den
+                  Berlin Recaps festzuhalten.
+                </p>
+                <p>
+                  Die Woche hat uns zusammengeschweisst und war der Durchbruch
+                  von MMP Premium.
+                </p>
+              </li>
+              <!-- Das eigentliche Projekt der Blockwoche -->
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="YZoyh-uAf_I"
+                  data-title="Unser Videoprojekt aus der Blockwoche"
+                  data-label="Projektvideo, YouTube"
+                ></div>
+                <h3>
+                  <span class="post__num">Das Projekt</span> Unser Video aus
+                  der Blockwoche
+                </h3>
+                <p class="post__meta">Das Resultat, fürs Studium gedreht</p>
+              </li>
+              <!-- Spatzenlingo: wie ein Wörterbucheintrag. Weitere Wörter einfach als <div> ergänzen. -->
+              <li class="post post--text post--lingo">
+                <p class="post__num">Spatzenlingo</p>
+                <h3>In Berlin entstand unser eigenes Lingo.</h3>
+                <dl class="lingo">
+                  <div>
+                    <dt>Spatz, der</dt>
+                    <dd>Liebevoll für Bro. Daraus wurde das ganze Spatzenlingo.</dd>
+                  </div>
+                  <div>
+                    <dt>Weitere Wörter</dt>
+                    <dd>folgen</dd>
+                  </div>
+                </dl>
+              </li>
+              <!-- Recaps. Format: media--reel (9:16), media--photo (4:5), media--square (1:1), media--wide (16:9) -->
               <li class="post">
                 <div class="media media--reel" data-label="Reel 9:16"></div>
                 <h3>Recap Berlin, Teil 1</h3>
@@ -367,7 +379,7 @@
 
           <div class="gallery__progress">
             <div class="progress"><span data-gallery-progress></span></div>
-            <output data-gallery-count>1 / 5</output>
+            <output data-gallery-count>1 / 6</output>
           </div>
         </div>
       </section>
@@ -489,37 +501,44 @@
         </div>
       </section>
 
-      <!-- ============ 05 DIGEZZ ============ -->
-      <!-- Gepinnt: Pro Projekt eine Bildschirmhöhe, danach wechselt das Projekt. -->
+      <!-- ============ 05 DIGEZZ: CUSCHINAR DIFFICIL ============ -->
+      <!-- Gepinnt: Die sechs Folgen fahren beim Scrollen seitwärts, vorne der Projekttext.
+         Pro Folge bei data-youtube die Video-ID eintragen (Teil nach "v=" im YouTube-Link). -->
       <section
-        class="chapter chapter--projects chapter--white"
+        class="chapter chapter--gallery chapter--series chapter--white"
         id="digezz"
-        data-projects
         aria-labelledby="digezz-title"
       >
-        <div class="chapter__pin">
+        <div class="chapter__pin" data-gallery>
           <header class="chapter__head chapter__head--row">
             <span class="chapter__num" aria-hidden="true">05</span>
             <h2 id="digezz-title">Digezz</h2>
-            <p class="chapter__sub">Projekte</p>
+            <p class="chapter__sub">Cuschinar Difficil</p>
+            <a
+              class="chapter__link"
+              href="https://www.youtube.com/playlist?list=PLBDZt1fObJvuMvbIPOS-Mj3StlovrY8gO"
+              target="_blank"
+              rel="noopener"
+              >Ganze Playlist auf YouTube</a
+            >
           </header>
 
-          <div class="projects">
-            <ol class="projects__list">
-              <li class="project is-active" data-project>
-                <h3>
-                  <button class="project__title" type="button">
-                    Cuschinar Difficil
-                  </button>
-                </h3>
-                <p class="project__meta">Juni 2026, mit Adriel Monostori</p>
-                <p class="project__text">
+          <div
+            class="gallery"
+            tabindex="0"
+            aria-label="Cuschinar Difficil, sechs Folgen, horizontal scrollbar"
+          >
+            <ol class="gallery__track">
+              <li class="post post--text">
+                <p class="post__num">Juni 2026, mit Adriel Monostori</p>
+                <h3>Bündner Küche in sechs Folgen</h3>
+                <p>
                   Wir studieren an der FH Graubünden, kennen das Bündnerland
-                  aber kaum. Also kochen wir uns in sechs Folgen durch die
-                  Bündner Küche, mit einer kleinen Challenge pro Folge und
-                  Reels, Bildposts und Stories auf Instagram.
+                  aber kaum. Also kochen wir uns durch die Bündner Küche, mit
+                  einer kleinen Challenge pro Folge und Reels, Bildposts und
+                  Stories auf Instagram.
                 </p>
-                <p class="project__text">
+                <p class="post__meta">
                   Robin: Moderation, Grafik, Rezepte und Skript. Naim:
                   Organisation, Action Cam, Rezepte und Skript.
                 </p>
@@ -531,49 +550,114 @@
                   >Auf Digezz ansehen</a
                 >
               </li>
-              <li class="project" data-project>
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="06PWau5aRFM"
+                  data-title="Cuschinar Difficil, Folge 1: Die Steinbock-Suche"
+                  data-label="Folge 1, YouTube"
+                ></div>
                 <h3>
-                  <button class="project__title" type="button">ISEMAA</button>
+                  <span class="post__num">Folge 1</span> Die Steinbock-Suche
                 </h3>
-                <p class="project__meta">Jahr, eure Rolle</p>
-                <p class="project__text">
-                  Zwei Sätze zum Projekt: worum es geht und was ihr gemacht
-                  habt.
+                <p class="post__meta">
+                  Spezialfolge: Wir reisen ins Bündnerland und suchen einen
+                  waschechten Steinbock.
                 </p>
-                <a class="project__link" href="#">Auf Digezz ansehen</a>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="Pt7kSifEjAU"
+                  data-title="Cuschinar Difficil, Folge 2: Der Suppen-Klassiker"
+                  data-label="Folge 2, YouTube"
+                ></div>
+                <h3>
+                  <span class="post__num">Folge 2</span> Der Suppen-Klassiker
+                </h3>
+                <p class="post__meta">
+                  Bündner Gerstensuppe, der wärmende Klassiker nach einem Tag in
+                  den Bergen.
+                </p>
+              </li>
+              <li class="post post--bird">
+                <img
+                  class="bird bird--sit"
+                  data-bird
+                  data-egg="img/geheimfoto-platzhalter.svg"
+                  src="img/vogel.png"
+                  alt=""
+                  width="110"
+                  height="134"
+                />
+                <div
+                  class="media media--wide"
+                  data-youtube="TXHMsBrnnGU"
+                  data-title="Cuschinar Difficil, Folge 3: Prättigau? Was gibt’s im Prättigau?"
+                  data-label="Folge 3, YouTube"
+                ></div>
+                <h3>
+                  <span class="post__num">Folge 3</span> Prättigau? Was gibt’s
+                  im Prättigau?
+                </h3>
+                <p class="post__meta">
+                  Prättigauer Chnödli, mit einer Challenge, die das Kochen alles
+                  andere als leicht macht.
+                </p>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="fvF0bw2NnHQ"
+                  data-title="Cuschinar Difficil, Folge 4: Engadiana die Nusstorte"
+                  data-label="Folge 4, YouTube"
+                ></div>
+                <h3>
+                  <span class="post__num">Folge 4</span> Engadiana die Nusstorte
+                </h3>
+                <p class="post__meta">
+                  Es wird süss: eine echte Engadiner Nusstorte nach
+                  Familienrezept.
+                </p>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="Pc3zNJtcGsc"
+                  data-title="Cuschinar Difficil, Folge 5: Die absolute Königsdisziplin"
+                  data-label="Folge 5, YouTube"
+                ></div>
+                <h3>
+                  <span class="post__num">Folge 5</span> Die absolute
+                  Königsdisziplin
+                </h3>
+                <p class="post__meta">
+                  Capuns, Rücken an Rücken gekocht und von einem Bündner Profi
+                  getestet.
+                </p>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="xFhSaNw9Cjk"
+                  data-title="Cuschinar Difficil, Folge 6: Das grosse Finale in Rotterdam"
+                  data-label="Folge 6, YouTube"
+                ></div>
+                <h3>
+                  <span class="post__num">Folge 6</span> Das grosse Finale in
+                  Rotterdam
+                </h3>
+                <p class="post__meta">
+                  Spezialfolge: Zum Abschluss kochen wir in Rotterdam für unsere
+                  Spatzen.
+                </p>
               </li>
             </ol>
+          </div>
 
-            <div class="projects__stage">
-              <img
-                class="bird bird--sit-video"
-                data-bird
-                data-egg="img/geheimfoto-platzhalter.svg"
-                src="img/vogel.png"
-                alt=""
-                width="110"
-                height="134"
-              />
-              <!-- Ein Medium pro Projekt, gleiche Reihenfolge wie die Liste.
-                 YouTube: bei data-youtube die Video-ID eintragen. Die ID ist der Teil nach "v=" im Link,
-                 z. B. https://www.youtube.com/watch?v=dQw4w9WgXcQ  ->  data-youtube="dQw4w9WgXcQ".
-                 Das Video lädt erst beim Klick (schneller und datenschutzfreundlicher). -->
-              <div
-                class="media media--wide is-active"
-                data-project-media
-                data-youtube="06PWau5aRFM"
-                data-title="Cuschinar Difficil, Folge 1: Die Steinbock-Suche"
-                data-label="Cuschinar Difficil, YouTube"
-              ></div>
-              <div
-                class="media media--wide"
-                data-project-media
-                data-youtube="VIDEO_ID"
-                data-title="ISEMAA"
-                data-label="ISEMAA, YouTube"
-              ></div>
-              <div class="progress"><span data-scrub-progress></span></div>
-            </div>
+          <div class="gallery__progress">
+            <div class="progress"><span data-gallery-progress></span></div>
+            <output data-gallery-count>1 / 6</output>
           </div>
         </div>
       </section>

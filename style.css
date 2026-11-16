@@ -273,7 +273,9 @@ a {
   z-index: 1;
   text-align: center;
   color: var(--white);
-  font: 400 clamp(1.25rem, 3vw, 2.75rem) / 1 var(--font-neon);
+  font: 700 clamp(0.9375rem, 1.6vw, 1.375rem) / 1 var(--font-body);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
 }
 
 /* ---------- Fogel ---------- */
@@ -696,56 +698,279 @@ a {
   text-align: right;
 }
 
-/* ---------- Featured (dunkel, grosse YouTube-Karten) ---------- */
+/* ---------- Featured: ISE MAA als Kartenstapel ---------- */
 
 .chapter--featured {
   background: var(--ink);
   color: var(--white);
+  /* Kartenbreite: so gross wie möglich, aber ganze Karte (Video + Text) passt in die Höhe */
+  --ep-w: min(780px, calc((100svh - var(--header-h) - 260px) * 16 / 9));
+}
+.chapter--featured .chapter__sub {
+  color: var(--grey);
+}
+.episodes {
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+  min-height: calc(100svh - var(--header-h) - 96px);
+}
+.episodes__head {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+.episodes__head .kicker {
+  align-self: start;
+}
+.chapter--featured h2 {
+  font-size: clamp(3rem, 5.2vw, 5.25rem);
+  white-space: nowrap; /* "ISE MAA" auf einer Zeile */
+}
+.chapter--featured .chapter__link {
+  margin: 0;
+}
+.episodes__nav {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  margin-top: 12px;
+}
+.episodes__nav button {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 0 10px 16px;
+  border: 0;
+  border-left: 3px solid rgba(255, 255, 255, 0.18);
+  background: none;
+  color: var(--grey);
+  font: 400 1.375rem/1.2 var(--font-display);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s;
+}
+.episodes__nav button span {
+  font: 600 0.8125rem/1 var(--font-body);
+  letter-spacing: 0.08em;
+}
+.episodes__nav button small {
+  margin-left: auto;
+  color: var(--ink-soft);
+  font: 600 0.75rem/1 var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.episodes__nav button:hover,
+.episodes__nav button.is-active {
+  color: var(--white);
+  border-left-color: var(--pink);
+}
+.episodes__nav button.is-active span {
+  color: var(--pink);
+}
+.episodes__progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+.episodes__progress .progress {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.2);
+}
+.episodes__progress output {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+/* Ohne Stapel (Handy, weniger Bewegung): Karten untereinander */
+.episodes__stack {
+  display: grid;
+  gap: 28px;
+  justify-items: center;
+}
+.episode {
+  position: relative;
+  width: min(100%, var(--ep-w));
+  padding: 12px;
+  border-radius: 24px;
+  background: #2b2b2b;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+.episode .media {
+  border-radius: 14px;
+}
+.episode__text {
+  display: grid;
+  gap: 6px;
+  padding: 16px 10px 8px;
+}
+.episode__text h3 {
+  font-size: 1.75rem;
+}
+.episode__text p:not(.post__num) {
+  color: var(--grey);
+  font-size: 0.9375rem;
+}
+.chapter--featured .yt__title {
+  display: none; /* Titel steht schon unter dem Video */
+}
+/* Abdunkeln der Karten hinten im Stapel, gesteuert über --dim (script.js) */
+.episode::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #000;
+  opacity: var(--dim, 0);
+  pointer-events: none;
+}
+
+/* Stapel (Desktop mit Animation): alle Karten liegen am gleichen Ort */
+.episodes__stack.is-stacked .episode {
+  grid-area: 1 / 1;
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+.episodes__stack.is-stacked .episode:not(.is-front) {
+  pointer-events: none; /* nur die vorderste Karte ist klickbar */
+}
+
+/* "Bald"-Karte statt Video */
+.media--soon {
+  display: grid;
+  place-items: center;
+  background: radial-gradient(
+      circle at 70% 30%,
+      rgba(255, 0, 123, 0.35),
+      transparent 55%
+    ),
+    linear-gradient(135deg, #1b1b1b, #3a0a24);
+}
+.soon {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.soon img {
+  width: clamp(56px, 8vw, 90px);
+  height: auto;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+}
+.soon strong {
+  font: 500 clamp(2rem, 4.5vw, 3.5rem) / 1 var(--font-display);
+  color: var(--pink);
+}
+.soon span {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--white);
+  font: 600 0.8125rem/1 var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- Serien-Galerie (Digezz: Cuschinar Difficil) ---------- */
+
+.chapter--series {
   --card-w: min(
     56vw,
     calc(46svh * 16 / 9),
     calc((100svh - 480px) * 16 / 9)
   ); /* letzter Wert: auf niedrigen Bildschirmen kleiner, damit alles Platz hat */
 }
-.chapter--featured h2 {
-  font-size: clamp(3rem, 6.5vw, 6rem);
-}
-.chapter--featured .chapter__sub,
-.chapter--featured .post__meta {
-  color: var(--grey);
-}
-.chapter--featured .post {
+.chapter--series .post:not(.post--text) {
   width: var(--card-w); /* lange Titel machen die Karte nicht breiter */
 }
-.chapter--featured .yt__title {
-  display: none; /* Titel steht schon unter dem Video */
+.chapter--series .post .media--wide {
+  width: var(--card-w);
+}
+.chapter--series .yt__title {
+  display: none;
 }
 .post__num {
   display: block;
   margin-bottom: 4px;
-  color: var(--pink);
+  color: var(--pink-strong);
   font: 600 0.8125rem/1 var(--font-body);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+.chapter--featured .post__num {
+  color: var(--pink);
+}
 .chapter__link {
   margin-left: auto;
   align-self: center;
-  color: var(--white);
+  color: var(--pink-strong);
   font-weight: 600;
   font-size: 0.9375rem;
   text-underline-offset: 4px;
 }
+.chapter--featured .chapter__link {
+  color: var(--white);
+}
 .chapter__link:hover {
   color: var(--pink);
 }
-.chapter--featured .post .media--wide {
-  width: var(--card-w);
-  background: #333333; /* Platzhalter sichtbar auf dunklem Grund */
+.project__link {
+  color: var(--pink-strong);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-underline-offset: 3px;
 }
-.chapter--featured .progress {
-  background: rgba(255, 255, 255, 0.2);
+
+/* Textkarte in einer Galerie (Geschichte, Projekt, Spatzenlingo) */
+.post--text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 12px;
+  align-self: stretch;
+  width: min(380px, 78vw);
+  padding: 28px;
+  border-radius: 22px;
+  background: var(--white);
+  font-size: 1rem;
 }
+.chapter--white .post--text {
+  background: var(--paper);
+}
+.post--text h3 {
+  margin: 0;
+  font-size: 1.75rem;
+  line-height: 1.15;
+}
+.post--lingo {
+  background: var(--pink);
+  color: var(--white);
+}
+.post--lingo .post__num {
+  color: var(--white);
+  opacity: 0.8;
+}
+.lingo {
+  display: grid;
+  gap: 14px;
+  margin: 6px 0 0;
+}
+.lingo div {
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+}
+.lingo dt {
+  font: italic 500 1.375rem/1.2 var(--font-display);
+}
+.lingo dd {
+  margin: 4px 0 0;
+  font-size: 0.9375rem;
+}
+
 .kicker {
   display: inline-flex;
   align-items: center;
@@ -855,79 +1080,6 @@ a {
 }
 .awards__photos .media {
   height: clamp(180px, 26vw, 320px);
-}
-
-/* ---------- 05 Digezz ---------- */
-
-.chapter--projects .chapter__pin {
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-}
-.projects {
-  display: grid;
-  grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
-  gap: clamp(32px, 6vw, 96px);
-  align-items: start;
-}
-.project {
-  padding: 18px 0 18px 20px;
-  border-left: 3px solid var(--grey);
-  color: var(--ink-soft);
-  transition: border-color 0.3s, color 0.3s;
-}
-.project h3 {
-  font-size: 1.75rem;
-}
-.project__title {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.project__meta {
-  font-size: 0.875rem;
-}
-.project__text,
-.project__link {
-  display: none;
-  margin-top: 10px;
-}
-.project.is-active {
-  border-color: var(--pink);
-  color: var(--ink);
-}
-.project.is-active .project__text,
-.project.is-active .project__link {
-  display: block;
-}
-.project__link {
-  color: var(--pink-strong);
-  font-weight: 600;
-  font-size: 0.9375rem;
-}
-
-.projects__stage {
-  position: relative;
-  display: grid;
-  gap: 14px;
-}
-.projects__stage .media {
-  grid-area: 1 / 1;
-  opacity: 0;
-  visibility: hidden; /* ausgeblendete Videos sind nicht klickbar */
-  transition: opacity 0.4s, visibility 0.4s;
-}
-.projects__stage .media.is-active {
-  z-index: 1;
-  opacity: 1;
-  visibility: visible;
-}
-.projects__stage .progress {
-  grid-area: 2 / 1;
 }
 
 /* ---------- Stay tuned ---------- */
@@ -1829,36 +1981,28 @@ h2,
     font-size: 1.125rem;
   }
 
-  /* Hero: Bild als Band oben, damit der Schriftzug ganz sichtbar bleibt */
+  /* Hero: auch auf dem Handy ganzer Bildschirm, Titel liegt als Text über den Bergen */
   .hero {
-    height: auto;
-    min-height: 0;
-    padding-bottom: 150px;
-    background: var(--paper);
-  }
-  .hero__media {
-    position: relative;
-    overflow: hidden;
+    min-height: 520px;
   }
   .hero__media img {
-    width: 140%;
-    max-width: none;
-    height: auto;
-    margin-left: -20%;
+    object-position: 58% 50%; /* Gipfel bleiben im Bild */
+  }
+  .hero__title {
+    top: 38%;
+    font-size: clamp(2.5rem, 12.5vw, 4rem);
+    letter-spacing: 0;
   }
   .hero__subtitle {
-    position: static;
-    margin-top: 8px;
-    color: var(--pink);
-  }
-  .hero__hint {
-    bottom: 24px;
+    top: calc(38% + clamp(2.5rem, 12.5vw, 4rem) + 18px);
+    font-size: 0.8125rem;
+    letter-spacing: 0.28em;
   }
   .bird--hero {
-    width: 86px;
+    width: 92px;
     right: 6%;
     top: auto;
-    bottom: 150px;
+    bottom: 14%;
   }
 
   .chapter__num {
@@ -1904,15 +2048,7 @@ h2,
     right: 20px;
   }
 
-  .projects {
-    grid-template-columns: 1fr;
-  }
-  .projects__stage {
-    order: -1;
-    margin-top: 64px;
-  }
   .bird--sit,
-  .bird--sit-video,
   .bird--guard {
     width: 80px;
     top: -86px;
@@ -1922,18 +2058,44 @@ h2,
     --book-w: 60px;
     left: var(--gutter);
     top: auto;
-    bottom: 64px;
+    bottom: calc(14% + 26px);
   }
 
-  .chapter--featured {
-    --card-w: 82vw;
+  /* Featured: Kopf oben, Folgen untereinander (kein Stapel) */
+  .episodes {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    min-height: 0;
+  }
+  .episodes__nav,
+  .episodes__progress {
+    display: none; /* auf dem Handy scrollt man einfach durch die Folgen */
   }
   .chapter--featured h2 {
-    font-size: 2.75rem;
+    font-size: 3.25rem;
+  }
+  .episode {
+    width: 100%;
+    padding: 8px;
+    border-radius: 18px;
+  }
+  .episode__text h3 {
+    font-size: 1.5rem;
+  }
+
+  .chapter--series {
+    --card-w: 82vw;
   }
   .chapter__link {
     flex-basis: 100%;
     margin: 8px 0 0;
+  }
+  .post--text {
+    width: 80vw;
+    padding: 22px;
+  }
+  .post--text h3 {
+    font-size: 1.5rem;
   }
 
   .awards {

@@ -2,7 +2,7 @@
 
 > Platzhalter: Diese README wird im Lauf des Projekts ausgefüllt. Alles in _kursiv_ ersetzen.
 
-Ein Scrollytelling-Portfolio für den Content von [MMP Premium](https://www.instagram.com/mmp_premium): Cuschinar Difficil, L.I.F.T, Berlin, Multimedia Awards 2025, Rotterdam und unsere Digezz-Projekte, mit versteckten Easter Eggs, Achievements und dem Labubuech.
+Ein Scrollytelling-Portfolio für den Content von [MMP Premium](https://www.instagram.com/mmp_premium): ISE MAA, L.I.F.T, Berlin, Multimedia Awards 2025, Rotterdam und unsere Digezz-Projekte, mit versteckten Easter Eggs, Achievements und dem Labubuech.
 
 **Team:** Naim de Amri, Robin Uliten
 **Modul:** Interaktive Medien 5, FH Graubünden, HS26
@@ -19,12 +19,12 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | Abschnitt                  | Inhalt                                                                       | Scrollytelling                                                                                |
 | -------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | Hero                       | Bergbild, Content Portfolio, zugeklapptes Labubuech                          | Parallax, Vogel wechselt zum Flugbild und fliegt ein Stück weg                                |
-| Featured                   | Cuschinar Difficil, 6 Folgen auf YouTube                                     | Pinker Vorhang geht auf, dann gepinnt: Folgen fahren seitwärts, Video stoppt beim Wegscrollen |
+| Featured                   | ISE MAA, unser neues Format in 3 Folgen auf YouTube                          | Pinker Vorhang geht auf, dann gepinnt: Folgen legen sich als Kartenstapel übereinander, Folgen-Navigation links |
 | 01 L.I.F.T                 | _Inhalt_                                                                     | Instagram-Reel, lädt im Hintergrund vor; Text und Reel fliegen ein                            |
-| 02 Berlin                  | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                                              |
+| 02 Berlin                  | Blockwoche, unser Videoprojekt, Spatzenlingo und die Berlin Recaps           | Gepinnt, Galerie fährt seitwärts                                                              |
 | 03 Multimedia Awards 2025  | _Inhalt_                                                                     | Pokal, Text und Bilder fliegen beim Hineinscrollen ein                                        |
 | 04 Rotterdam               | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                                              |
-| 05 Digezz                  | Cuschinar Difficil, ISEMAA                                                   | Gepinnt, Projekte wechseln beim Scrollen, Videos über YouTube                                 |
+| 05 Digezz                  | Cuschinar Difficil, 6 Folgen auf YouTube                                     | Gepinnt, Folgen fahren seitwärts, Video stoppt beim Wegscrollen                               |
 | Stay tuned                 | Ausblick                                                                     | Satz fährt beim Scrollen durchs Bild                                                          |
 | Labubuech                  | Gästebuch als Buch-Pop-up: mit Pfeilen blättern, 2 Minuten pro Tag schreiben | Lesezeichen öffnet das Buch, Seiten klappen beim Blättern um                                  |
 | Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite                                     | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord                 |
@@ -35,7 +35,7 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | ------------------------------------------------------------ | ------------------------------------------------------------- |
 | HTML, CSS, JavaScript                                        | ganze Seite                                                   |
 | [GSAP](https://gsap.com) und ScrollTrigger                   | Scrollytelling                                                |
-| YouTube-Einbettung (youtube-nocookie)                        | Featured, Awards und Digezz                                   |
+| YouTube-Einbettung (youtube-nocookie)                        | Featured, Berlin, Awards und Digezz                           |
 | Instagram-Einbettung (embed.js)                              | L.I.F.T-Reel, lädt nach dem Seitenaufruf im Hintergrund       |
 | [canvas-confetti](https://github.com/catdad/canvas-confetti) | Konfetti auf der Gewinnseite                                  |
 | Canvas 2D und Web Audio API                                  | Spiel Flappy Spatz (flappy.js), Ton für Punkte                |
