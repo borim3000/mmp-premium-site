@@ -1770,10 +1770,13 @@ html.no-swipe-back body {
 
 .open-book {
   position: relative;
-  padding: 14px;
-  border-radius: 14px;
-  background: var(--book-blue);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  /* padding: Schiebt den Textbereich nach innen. 
+     Werte anpassen, bis der Text exakt auf deinen Buchseiten liegt! (oben/unten, links/rechts) */
+  padding: 40px 30px; 
+  
+  /* Dein aufgeschlagenes Buch-Bild (Doppelseite) */
+  background: url("img/labubuech_1_open.webp") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 24px 60px rgba(0, 0, 0, 0.35));
 }
 .open-book__pages {
   display: grid;
@@ -1788,30 +1791,15 @@ html.no-swipe-back body {
   flex-direction: column;
   gap: 12px;
   min-height: 0;
-  padding: 48px 40px 76px;
+  /* Padding der einzelnen Seite (oben, rechts/links, unten) */
+  padding: 30px 40px 60px;
   overflow-y: auto;
-  background: var(--book-paper);
+  /* WICHTIG: Transparent, damit dein Buch-Bild durchscheint */
+  background: transparent;
   font: 400 1.1875rem/1.5 var(--font-display);
 }
 .book-page[hidden] {
   display: none;
-}
-/* linke und rechte Seite mit Schatten zum Buchrücken */
-.book-page:nth-child(odd) {
-  border-radius: 6px 0 0 6px;
-  background-image: linear-gradient(
-    to left,
-    rgba(33, 33, 33, 0.14),
-    rgba(33, 33, 33, 0) 9%
-  );
-}
-.book-page:nth-child(even) {
-  border-radius: 0 6px 6px 0;
-  background-image: linear-gradient(
-    to right,
-    rgba(33, 33, 33, 0.14),
-    rgba(33, 33, 33, 0) 9%
-  );
 }
 .book-page__num {
   position: absolute;
@@ -1860,7 +1848,7 @@ html.no-swipe-back body {
   }
 }
 
-/* Pfeile unten links und rechts, wie im Minecraft-Buch */
+/* Pfeile unten links und rechts */
 .open-book__arrow {
   position: absolute;
   bottom: 30px;
@@ -2648,10 +2636,12 @@ h2,
   }
 }
 
-/* Buch-Pop-up auf schmalen Bildschirmen: eine Seite statt Doppelseite (gleiche Grenze wie in script.js) */
+/* Buch-Pop-up auf schmalen Bildschirmen: eine Seite statt Doppelseite */
 @media (max-width: 759px) {
   .open-book {
-    padding: 10px;
+    /* Dein hochformatiges Bild (nur eine Seite) für Handys */
+    background: url("img/labubuech_1_open_mobile.png") center / 100% 100% no-repeat;
+    padding: 20px;
   }
   .open-book__pages {
     grid-template-columns: 1fr;
@@ -2659,9 +2649,10 @@ h2,
   }
   .book-page,
   .book-page:nth-child(n) {
-    padding: 44px 24px 72px;
+    /* Padding anpassen, damit der Text auf die mobile Einzelseite passt */
+    padding: 40px 24px 72px;
     border-radius: 6px;
-    background-image: none;
+    background: transparent;
   }
   .open-book__arrow--prev {
     left: 20px;
