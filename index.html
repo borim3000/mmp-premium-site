@@ -316,8 +316,8 @@
 
       <!-- ============ 02 BERLIN ============ -->
       <!-- Gepinnt: Die Galerie fährt beim Scrollen seitwärts. Auf dem Handy wischt man.
-         data-sideways: auch seitwärts scrollen (Trackpad) bewegt die Galerie.
-         Für Rotterdam oder Digezz einfach dort ebenfalls data-sideways ergänzen. -->
+         data-sideways: auch seitwärts scrollen (Trackpad) bewegt die Galerie
+         (gilt auch für Rotterdam und Digezz). -->
       <section
         class="chapter chapter--gallery"
         id="berlin"
@@ -899,6 +899,7 @@
       <section
         class="chapter chapter--gallery"
         id="rotterdam"
+        data-sideways
         aria-labelledby="rotterdam-title"
       >
         <div class="chapter__pin" data-gallery>
@@ -917,27 +918,46 @@
               <!-- Chronologisch wie auf Instagram. Aufbau wie bei Berlin:
                    Reels als Schlaufe (video/rotterdam/), Carousels zum Blättern (img/rotterdam/).
                    Formate: media--carousel (3:4), media--carousel-square (1:1), media--carousel-landscape (3:2). -->
-              <!-- Trailer: noch ohne Video. Sobald ihr die Datei habt, wie bei den Recaps
-                   <video> mit trailer-loop.mp4 / trailer.jpg einsetzen und loop--title,
-                   den span.loop__title und das Etikett anpassen. -->
+              <li class="post post--text">
+                <p class="post__num">Spatzi Rotti</p>
+                <h3>Nach Berlin ging es weiter nach Rotterdam</h3>
+                <p>
+                  Auch in Rotterdam haben wir alles in Recaps festgehalten, vom
+                  Ankommen bis zum Abschied. Dazwischen gab es zwei Beachdays
+                  mit de Spatze.
+                </p>
+                <p>
+                  Und einen Abend, an dem wir für zwanzig Spatzen gekocht haben.
+                  Daraus wurde auch das Finale von Cuschinar Difficil.
+                </p>
+              </li>
               <li class="post">
                 <a
-                  class="media media--reel loop loop--title"
+                  class="media media--reel loop"
                   href="https://www.instagram.com/p/DY6V1QQolPi/"
                   target="_blank"
                   rel="noopener"
-                  aria-label="Rotterdam Trailer: auf Instagram ansehen (neuer Tab)"
+                  data-loop
+                  aria-label="Rotterdam Trailer (0:27): auf Instagram ansehen (neuer Tab)"
                 >
-                  <span class="loop__badge">Trailer</span>
-                  <span class="loop__title" aria-hidden="true"
-                    >Spatzi<br /><em>Rotti</em></span
-                  >
+                  <video
+                    src="video/rotterdam/trailer-loop.mp4"
+                    poster="video/rotterdam/trailer.jpg"
+                    muted
+                    loop
+                    playsinline
+                    preload="none"
+                    aria-hidden="true"
+                  ></video>
+                  <span class="loop__badge">Trailer · 0:27</span>
                   <span class="loop__cta">Trailer auf Instagram</span>
                 </a>
                 <h3>
                   <span class="post__num">Rotterdam</span> Trailer
                 </h3>
-                <p class="post__meta">Der Trailer zu Rotterdam</p>
+                <p class="post__meta">
+                  nederlands isch zwar flach, aber mir gönd trotzdem STEIL
+                </p>
               </li>
               <li class="post">
                 <a
@@ -1256,6 +1276,7 @@
       <section
         class="chapter chapter--gallery chapter--series chapter--white"
         id="digezz"
+        data-sideways
         aria-labelledby="digezz-title"
       >
         <div class="chapter__pin" data-gallery>
