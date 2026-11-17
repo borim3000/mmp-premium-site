@@ -1638,7 +1638,7 @@
             width="110"
             height="134"
           />
-          <img class="book__image" src="img/labubuech_1_front.webp" alt="Labubuech" />
+          <img class="book__image" src="img/labubuech_2_front.webp" alt="Labubuech" />
           <button
             class="book__ribbon"
             type="button"
@@ -1672,8 +1672,9 @@
       </p>
     </footer>
 
-    <!-- Labubuech als aufgeschlagenes Buch.
-       Die Seiten baut script.js ("Labubuech"): Vorwort, alte Einträge, zuletzt die leere Seite zum Schreiben. -->
+    <!-- Labubuech als aufgeschlagenes Buch: Foto vom offenen Buch, Text und Formular liegen auf den Papierseiten.
+       Laptop: Doppelseite (labubuech_1_open), Handy: eine Seite (labubuech_1_open_mobile).
+       Die Seiten baut script.js ("Labubuech"): Einträge, dann Einleitung (links) und Schreibseite (rechts). -->
     <dialog class="book-dialog" data-book-dialog aria-label="Labubuech">
       <form method="dialog" class="book-dialog__close">
         <button class="close-x" type="submit" aria-label="Labubuech schliessen">
@@ -1683,6 +1684,21 @@
         </button>
       </form>
       <div class="open-book">
+        <picture>
+          <source
+            media="(max-width: 759px)"
+            srcset="img/labubuech_1_open_mobile.webp"
+            width="1100"
+            height="1505"
+          />
+          <img
+            class="open-book__photo"
+            src="img/labubuech_1_open.webp"
+            alt=""
+            width="2000"
+            height="1928"
+          />
+        </picture>
         <div class="open-book__pages" data-book-pages></div>
         <button
           class="open-book__arrow open-book__arrow--prev"
@@ -1693,6 +1709,9 @@
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M15 5l-7 7 7 7" />
           </svg>
+          <span class="open-book__label" data-book-prev-label
+            >Einträge durchstöbern</span
+          >
         </button>
         <button
           class="open-book__arrow open-book__arrow--next"

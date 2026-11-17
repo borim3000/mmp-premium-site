@@ -1270,7 +1270,9 @@ new IntersectionObserver((entries) => {
 /* =========================================================
    Labubuech
    Zugeklapptes Buch im Hero und am Ende. Das Lesezeichen öffnet es als Pop-up.
-   Seiten: Vorwort, alle Einträge, zuletzt die leere Seite zum Schreiben.
+   Seiten: alle Einträge (älteste zuerst), dann die Einleitung (links) und die Seite
+   zum Schreiben (rechts). Aufgeschlagen wird bei Einleitung + Schreibseite;
+   der Pfeil links ("Einträge durchstöbern") blättert zurück durch die Einträge.
    Pro Tag 2 Minuten, die Zeit läuft ab dem ersten Buchstaben.
 
    Einträge kommen aus der Datenbank über php/labubuech.php.
@@ -1285,13 +1287,16 @@ const bookDialog = document.querySelector("[data-book-dialog]");
 const bookPages = bookDialog.querySelector("[data-book-pages]");
 const bookPrev = bookDialog.querySelector("[data-book-prev]");
 const bookNext = bookDialog.querySelector("[data-book-next]");
+const bookPrevLabel = bookDialog.querySelector("[data-book-prev-label]");
 const writeTemplate = document.querySelector("#book-write-page");
 const twoPages = window.matchMedia("(min-width: 760px)"); // Doppelseite oder Einzelseite
 const dateFormat = new Intl.DateTimeFormat("de-CH", {
   day: "numeric",
   month: "long",
   year: "numeric",
-});
+  hour: "2-digit",
+  minute: "2-digit",
+}); // z. B. "17. November 2026 um 15:42"
 
 let entries = []; // Einträge aus der Datenbank
 let bookState = "open"; // "open" = schreiben möglich, "written" / "expired" = für heute zu, "offline" = Server nicht erreichbar
@@ -1393,45 +1398,44 @@ function buildPages() {
     message: oldForm.elements.message.value,
   };
 
-  const list = [];
+  // Einträge: Text als Zitat, unten "— Name, Datum um Zeit"
+  const entryPages = entries.map((entry, i) => {
+    const page = makePage("entry");
+    const num = document.createElement("p");
+    num.className = "book-page__num";
+    num.textContent = `Eintrag ${i + 1} von ${entries.length}`;
+    const quote = document.createElement("blockquote");
+    quote.className = "book-entry";
+    const text = document.createElement("p");
+    text.textContent = entry.text; // als Text, nie als HTML
+    const by = document.createElement("footer");
+    const time = document.createElement("time");
+    time.dateTime = entry.date;
+    time.textContent = dateFormat.format(new Date(entry.date));
+    by.append(`— ${entry.name}, `, time);
+    quote.append(text, by);
+    page.append(num, quote);
+    return page;
+  });
+
   const intro = makePage("intro");
   intro.innerHTML = `
     <h3>Labubuech</h3>
     <p>Unser Gästebuch. Pro Tag hast du zwei Minuten, um etwas hineinzuschreiben.</p>
-    <p>Mit den Pfeilen unten blätterst du durch die Einträge. Ganz hinten wartet deine Seite.</p>
-    <img src="img/vogel.png" alt="" width="90" height="110" />`;
-  list.push(intro);
+    <p>${
+      twoPages.matches
+        ? "Rechts ist deine Seite. Mit dem Pfeil unten links blätterst du durch die Einträge der anderen."
+        : "Mit dem Pfeil nach rechts kommst du zu deiner Seite, mit dem Pfeil nach links zu den Einträgen der anderen."
+    }</p>`;
 
-  entries.forEach((entry) => {
-    const page = makePage("entry");
-    const name = document.createElement("h3");
-    name.textContent = entry.name;
-    const time = document.createElement("time");
-    time.dateTime = entry.date;
-    time.textContent = dateFormat.format(new Date(entry.date));
-    const text = document.createElement("p");
-    text.textContent = entry.text; // als Text, nie als HTML
-    page.append(name, time, text);
-    list.push(page);
-  });
-
-  // Bei der Doppelseite soll die Schreibseite rechts liegen, sonst eine leere Seite einschieben
-  if (twoPages.matches && list.length % 2 === 0) {
+  const list = [...entryPages];
+  // Doppelseite: Einleitung muss links liegen. Bei ungerader Anzahl Einträge vorne eine leere Seite.
+  if (twoPages.matches && list.length % 2 === 1) {
     const blank = makePage("blank");
     blank.innerHTML = `<img src="img/vogel.png" alt="" width="90" height="110" />`;
-    list.push(blank);
+    list.unshift(blank);
   }
-  list.push(buildWritePage());
-
-  const numbered = list.filter(
-    (p) => !p.classList.contains("book-page--blank")
-  );
-  numbered.forEach((page, i) => {
-    const num = document.createElement("p");
-    num.className = "book-page__num";
-    num.textContent = `Seite ${i + 1} von ${numbered.length}`;
-    page.prepend(num);
-  });
+  list.push(intro, buildWritePage());
 
   pages = list;
   bookPages.replaceChildren(...pages);
@@ -1446,6 +1450,10 @@ function buildPages() {
 
 const perView = () => (twoPages.matches ? 2 : 1);
 const lastView = () => Math.max(0, pages.length - perView());
+// Aufschlagen: Doppelseite Einleitung + Schreibseite, auf dem Handy die Einleitung
+const introIndex = () =>
+  pages.findIndex((page) => page.classList.contains("book-page--intro"));
+const openView = () => (twoPages.matches ? lastView() : introIndex());
 
 function showView(index, direction = 0) {
   view = Math.max(0, Math.min(index, lastView()));
@@ -1461,6 +1469,13 @@ function showView(index, direction = 0) {
   }
   bookPrev.disabled = view === 0;
   bookNext.disabled = view >= lastView();
+  // "Einträge durchstöbern" nur bei der Einleitung, wenn es Einträge gibt
+  const atIntro = view <= introIndex() && introIndex() < view + perView();
+  bookPrevLabel.hidden = !(atIntro && view > 0);
+  bookPrev.setAttribute(
+    "aria-label",
+    bookPrevLabel.hidden ? "Zurückblättern" : "Einträge durchstöbern"
+  );
 }
 
 function showTime() {
@@ -1510,7 +1525,7 @@ function handleBookError(error) {
     stopTimer();
     bookState = error.status === 429 ? "written" : "expired";
     buildPages();
-    showView(lastView());
+    showView(openView());
   }
 }
 
@@ -1546,8 +1561,8 @@ async function finishEntry(timeUp) {
     bookState = message ? "written" : "expired";
     if (form) form.reset();
     buildPages();
-    // Doppelseite mit dem neusten Eintrag zeigen (Seite 0 ist das Vorwort)
-    const newest = entries.length;
+    // Seite mit dem neusten Eintrag zeigen (steht direkt vor der Einleitung)
+    const newest = message ? introIndex() - 1 : openView();
     showView(newest - (newest % perView()));
   } catch (error) {
     if (form) form.querySelector("button[type=submit]").disabled = false;
@@ -1560,7 +1575,7 @@ async function finishEntry(timeUp) {
 async function openBook() {
   await loadBook();
   buildPages();
-  showView(lastView()); // aufschlagen bei der Seite zum Schreiben
+  showView(openView()); // aufschlagen bei Einleitung + Schreibseite
   if (!bookDialog.open) bookDialog.showModal();
   if (bookState === "open" && deadline) startTicking(); // Zeit läuft schon seit vorhin
 }
@@ -1597,5 +1612,5 @@ closeOnBackdrop(bookDialog);
 twoPages.addEventListener("change", () => {
   if (!bookDialog.open) return;
   buildPages();
-  showView(lastView());
+  showView(openView());
 });

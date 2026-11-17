@@ -1989,11 +1989,7 @@ html.no-swipe-back body {
 }
 
 .book--hero {
-  --book-w: clamp(
-    80px,
-    8vw,
-    120px
-  ); /* Slightly wider to accommodate an image */
+  --book-w: clamp(96px, 9.6vw, 144px); /* 20 % grösser als vorher (80–120px) */
   left: 9%;
   top: 60%;
   z-index: 2;
@@ -2038,7 +2034,9 @@ html.no-swipe-back body {
 /* ---------- Labubuech: aufgeschlagenes Buch (Pop-up) ---------- */
 
 .book-dialog {
-  width: min(960px, calc(100vw - 32px));
+  /* so gross wie möglich, aber immer ganz im Bild (Foto ist fast quadratisch) */
+  width: min(1040px, calc(100vw - 32px), calc((100svh - 24px) * 1.037));
+  container-type: inline-size; /* Schrift im Buch richtet sich nach der Buchbreite (cqi) */
   max-width: none;
   max-height: none;
   padding: 0;
@@ -2049,10 +2047,12 @@ html.no-swipe-back body {
 .book-dialog::backdrop {
   background: rgba(33, 33, 33, 0.7);
 }
+/* X oben rechts über dem Foto (dort ist der Hintergrund frei) */
 .book-dialog__close {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 10px;
+  position: absolute;
+  z-index: 3;
+  top: 4px;
+  right: 4px;
 }
 .book-dialog__close button {
   width: 44px;
@@ -2079,64 +2079,57 @@ html.no-swipe-back body {
   stroke-linecap: round;
 }
 
+/* Foto vom offenen Buch; Text und Formular liegen genau auf den Papierseiten.
+   Die Prozentwerte sind im Foto ausgemessen (labubuech_1_open.webp). */
 .open-book {
   position: relative;
-  padding: 14px;
-  border-radius: 14px;
-  background: var(--book-blue);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  font-size: clamp(0.6875rem, 2cqi, 1.0625rem); /* wächst und schrumpft mit dem Buch */
+}
+.open-book__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.45));
 }
 .open-book__pages {
+  position: absolute;
+  left: 13%;
+  right: 9%;
+  top: 31.5%;
+  bottom: 10.5%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: min(600px, calc(100svh - 120px));
-  perspective: 1600px;
+  column-gap: 9.6%; /* Falz in der Mitte */
 }
 
 .book-page {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0.6em;
   min-height: 0;
-  padding: 48px 40px 76px;
+  padding: 1.5em 0.4em 2.9em; /* oben Platz für "Eintrag x von y", unten für die Pfeile */
   overflow-y: auto;
-  background: var(--book-paper);
-  font: 400 1.1875rem/1.5 var(--font-display);
+  color: var(--ink);
+  font: 400 1em/1.45 var(--font-display);
 }
 .book-page[hidden] {
   display: none;
 }
-/* linke und rechte Seite mit Schatten zum Buchrücken */
-.book-page:nth-child(odd) {
-  border-radius: 6px 0 0 6px;
-  background-image: linear-gradient(
-    to left,
-    rgba(33, 33, 33, 0.14),
-    rgba(33, 33, 33, 0) 9%
-  );
-}
-.book-page:nth-child(even) {
-  border-radius: 0 6px 6px 0;
-  background-image: linear-gradient(
-    to right,
-    rgba(33, 33, 33, 0.14),
-    rgba(33, 33, 33, 0) 9%
-  );
-}
 .book-page__num {
   position: absolute;
-  top: 18px;
-  right: 28px;
+  top: 0;
+  right: 0.4em;
   color: var(--ink-soft);
-  font: 400 0.8125rem/1 var(--font-body);
+  font: 400 0.75em/1 var(--font-body);
+}
+.book-page--intro,
+.book-page--write {
+  padding-top: 0.2em;
 }
 .book-page h3 {
-  font-size: 2rem;
-}
-.book-page time {
-  color: var(--ink-soft);
-  font: 400 0.875rem/1 var(--font-body);
+  font-size: 1.55em;
+  line-height: 1.1;
 }
 .book-page p {
   overflow-wrap: anywhere;
@@ -2146,64 +2139,93 @@ html.no-swipe-back body {
   opacity: 0.25;
 }
 .book-page--intro img {
-  width: 90px;
+  width: 4.5em;
+  height: auto;
   margin-top: auto;
   align-self: center;
 }
 
-/* Umblättern */
+/* Eintrag als Zitat: Text oben, unten "— Name, Datum um Zeit" */
+.book-entry {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin: 0;
+  font-size: 1.12em;
+}
+.book-entry footer {
+  margin-top: auto;
+  padding-top: 1em;
+  color: var(--ink-soft);
+  font: italic 400 0.82em/1.35 var(--font-display);
+  text-align: right;
+}
+
+/* Umblättern: die neue Seite gleitet sanft herein (das Papier im Foto bleibt) */
 .book-page.is-turning-next {
-  transform-origin: right center;
-  animation: page-turn-next 0.45s ease-out;
+  animation: page-turn-next 0.35s ease-out;
 }
 .book-page.is-turning-prev {
-  transform-origin: left center;
-  animation: page-turn-prev 0.45s ease-out;
+  animation: page-turn-prev 0.35s ease-out;
 }
 @keyframes page-turn-next {
   from {
-    transform: rotateY(80deg);
+    opacity: 0;
+    transform: translateX(14px);
   }
 }
 @keyframes page-turn-prev {
   from {
-    transform: rotateY(-80deg);
+    opacity: 0;
+    transform: translateX(-14px);
   }
 }
 
-/* Pfeile unten links und rechts, wie im Minecraft-Buch */
+/* Pfeile unten auf den Seiten, links mit Beschriftung "Einträge durchstöbern" */
 .open-book__arrow {
   position: absolute;
-  bottom: 30px;
+  bottom: 11%;
   z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 4px;
   border: 0;
-  border-radius: 50%;
+  border-radius: 999px;
   background: none;
   color: var(--pink-strong);
+  font: 700 0.85em/1 var(--font-body);
   cursor: pointer;
 }
 .open-book__arrow--prev {
-  left: 34px;
+  left: 12%;
+  padding-right: 12px;
 }
 .open-book__arrow--next {
-  right: 34px;
+  right: 8%;
+  justify-content: center;
 }
 .open-book__arrow svg {
-  width: 30px;
-  height: 30px;
+  flex: none;
+  width: 28px;
+  height: 28px;
   fill: none;
   stroke: currentColor;
   stroke-width: 2.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.open-book__arrow:hover {
+.open-book__label[hidden] {
+  display: none;
+}
+.open-book__arrow:hover,
+.open-book__arrow:focus-visible {
   background: var(--pink-soft);
+}
+.open-book__arrow:focus-visible {
+  outline: 2px solid var(--pink);
 }
 .open-book__arrow:disabled {
   visibility: hidden;
@@ -2213,7 +2235,7 @@ html.no-swipe-back body {
 .book-write {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 0.5em;
   flex: 1;
   min-height: 0;
 }
@@ -2223,12 +2245,12 @@ html.no-swipe-back body {
   gap: 10px;
 }
 .book-write__timer span {
-  font: 400 2.75rem/1 var(--font-display);
+  font: 400 1.8em/1 var(--font-display);
   color: var(--pink);
 }
 .book-write__timer small {
   color: var(--ink-soft);
-  font: 400 0.875rem/1 var(--font-body);
+  font: 400 0.8em/1 var(--font-body);
 }
 .book-field {
   display: grid;
@@ -2237,16 +2259,16 @@ html.no-swipe-back body {
 .book-field--grow {
   flex: 1;
   grid-template-rows: auto 1fr;
-  min-height: 120px;
+  min-height: 4.5em;
 }
 .book-field > span {
-  font: 600 0.8125rem/1.2 var(--font-body);
+  font: 600 0.75em/1.2 var(--font-body);
   color: var(--ink-soft);
 }
 .book-field input,
 .book-field textarea {
   width: 100%;
-  padding: 4px 2px;
+  padding: 0.2em 2px;
   border: 0;
   border-bottom: 1.5px solid #d8cdb2;
   background: transparent;
@@ -2256,11 +2278,11 @@ html.no-swipe-back body {
 /* liniertes Papier */
 .book-field textarea {
   resize: none;
-  line-height: 32px;
+  line-height: 1.75em;
   background: repeating-linear-gradient(
     to bottom,
-    transparent 0 31px,
-    #e3d8bd 31px 32px
+    transparent 0 calc(1.75em - 1px),
+    #d9d4c8 calc(1.75em - 1px) 1.75em
   );
   border-bottom: 0;
 }
@@ -2274,6 +2296,8 @@ html.no-swipe-back body {
 }
 .book-write .btn {
   align-self: flex-start;
+  padding: 0.6em 1.3em;
+  font-size: 0.92em;
 }
 
 /* ---------- Footer ---------- */
@@ -2848,7 +2872,7 @@ h2,
   }
 
   .book--hero {
-    --book-w: 60px;
+    --book-w: 72px;
     left: var(--gutter);
     top: auto;
     bottom: calc(14% + 26px);
@@ -2972,26 +2996,30 @@ h2,
   }
 }
 
-/* Buch-Pop-up auf schmalen Bildschirmen: eine Seite statt Doppelseite (gleiche Grenze wie in script.js) */
+/* Buch-Pop-up auf schmalen Bildschirmen: eine Seite statt Doppelseite (gleiche Grenze wie in script.js).
+   Foto labubuech_1_open_mobile.webp, Papierfläche dort ausgemessen. */
 @media (max-width: 759px) {
+  .book-dialog {
+    width: min(calc(100vw - 24px), calc((100svh - 24px) * 0.731));
+  }
   .open-book {
-    padding: 10px;
+    font-size: clamp(0.8125rem, 4cqi, 1rem);
   }
   .open-book__pages {
+    left: 16%;
+    right: 14%;
+    top: 9%;
+    bottom: 13%;
     grid-template-columns: 1fr;
-    height: min(620px, calc(100svh - 100px));
   }
-  .book-page,
-  .book-page:nth-child(n) {
-    padding: 44px 24px 72px;
-    border-radius: 6px;
-    background-image: none;
+  .open-book__arrow {
+    bottom: 13.5%;
   }
   .open-book__arrow--prev {
-    left: 20px;
+    left: 14%;
   }
   .open-book__arrow--next {
-    right: 20px;
+    right: 12%;
   }
 }
 
