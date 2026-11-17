@@ -826,7 +826,13 @@ if (hasGsap && !reduceMotion) {
 
     // Gemeinsamer Ablauf: Umschlag ist zu (mit Siegel), Satz erscheint, Klappe auf, Karte heraus
     const openEnvelope = (tl) => {
-      tl.from(q("[data-finale-line]"), { opacity: 0, y: 24, duration: 0.5 }, 0)
+      // fromTo mit festen Endwerten: bleibt auch nach einem Neuberechnen der Seite sichtbar
+      tl.fromTo(
+        q("[data-finale-line]"),
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.5 },
+        0
+      )
         .to(flap, { rotationX: 180, duration: 0.8, ease: "power1.inOut" }, 0.6)
         .to(q(".envelope__seal"), { opacity: 0, duration: 0.3 }, 0.6)
         .set(flap, { zIndex: 0 }, 1.0) // Klappe hinter die Karte, sobald sie offen ist
@@ -835,6 +841,14 @@ if (hasGsap && !reduceMotion) {
     };
 
     mm.add("(min-width: 900px)", () => {
+      const line = q("[data-finale-line]");
+      const infoItems = [...q("[data-finale-info]").children];
+      // Sicherheitsnetz: ab 70 % ist alles sicher sichtbar, egal was der Browser vorher gemacht hat
+      const ensureVisible = () =>
+        [line, ...infoItems].forEach((el) => {
+          if (+getComputedStyle(el).opacity < 0.99)
+            gsap.set(el, { opacity: 1, x: 0, y: 0 });
+        });
       const tl = gsap.timeline({
         defaults: { ease: "power1.out" },
         scrollTrigger: {
@@ -842,22 +856,29 @@ if (hasGsap && !reduceMotion) {
           pin: true,
           anticipatePin: 1,
           start: "top top",
-          end: () => `+=${window.innerHeight * 2.2}`,
+          end: () => `+=${window.innerHeight * 2.4}`,
           scrub: 0.5,
-          invalidateOnRefresh: true,
           refreshPriority: order(finale),
+          onUpdate: (self) => {
+            if (self.progress > 0.7) ensureVisible();
+          },
+          onLeave: ensureVisible,
         },
       });
+      // Zeitplan: Umschlag auf und Karte heraus (0–2.3), ab 1.3 kommen rechts Datum,
+      // Countdown und Daumen, ab 2.4 fällt der Umschlag weg. Danach bleibt es stehen (HOLD).
+      const HOLD = 1.2;
       openEnvelope(tl)
+        .fromTo(
+          infoItems,
+          { opacity: 0, x: 40 },
+          { opacity: 1, x: 0, duration: 0.5, stagger: 0.08 },
+          1.3
+        )
         // Umschlag fällt weg, die Karte bleibt gross stehen
         .to(envelopeParts, { yPercent: 40, opacity: 0, duration: 0.7 }, 2.4)
         .to(card, { yPercent: -30, scale: 1.06, duration: 0.7 }, 2.4)
-        .from(
-          q("[data-finale-info]").children,
-          { opacity: 0, x: 40, duration: 0.6, stagger: 0.08 },
-          2.5
-        )
-        .to({}, { duration: 0.5 }); // kurz stehen bleiben
+        .to({}, { duration: HOLD }); // stehen bleiben
     });
 
     mm.add("(max-width: 899px)", () => {
