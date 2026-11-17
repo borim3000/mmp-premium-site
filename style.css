@@ -1593,60 +1593,29 @@ a.loop__cta:focus-visible {
 
 /* ---------- Labubuech: zugeklapptes Buch ---------- */
 
-:root {
-  --book-blue: #1f47c2;
-  --book-blue-dark: #142f86;
-  --book-paper: #fbf6ea;
-}
-
 .book {
   position: absolute;
   width: var(--book-w, 80px);
-  aspect-ratio: 3 / 4;
+  /* The aspect ratio is now determined naturally by your image, 
+     but we can keep rotate to give it the tilted look */
   rotate: -6deg;
-}
-/* Seitenblock, schaut rechts und unten etwas hervor */
-.book::before {
-  content: "";
-  position: absolute;
-  inset: 4% -5% -3% 6%;
-  border-radius: 2px 6px 6px 2px;
-  background: repeating-linear-gradient(
-      to bottom,
-      var(--book-paper) 0 2px,
-      #e6dcc4 2px 3px
-    ),
-    var(--book-paper);
-  box-shadow: 0 10px 24px rgba(33, 33, 33, 0.28);
-}
-.book__cover {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  border-radius: 3px 8px 8px 3px;
-  background: linear-gradient(
-      90deg,
-      var(--book-blue-dark) 0 9%,
-      rgba(255, 255, 255, 0.18) 9% 10%,
-      transparent 10%
-    ),
-    var(--book-blue);
-  box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.15);
   cursor: pointer;
 }
-.book__title {
-  padding-left: 8%;
-  color: var(--gold);
-  font: italic 500 calc(var(--book-w, 80px) * 0.16) / 1 var(--font-display);
+
+.book__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Optional: Adds a soft shadow behind your image */
+  filter: drop-shadow(0 10px 20px rgba(33, 33, 33, 0.25));
 }
+
 /* Lesezeichen: hängt unten raus, ist der Knopf zum Öffnen */
 .book__ribbon {
   position: absolute;
-  z-index: 1;
+  z-index: -1; /* Goes BEHIND the book image so it hangs out the bottom */
   left: 64%;
-  top: 86%;
+  top: 90%; /* Adjust this if the ribbon hangs too low/high relative to your image */
   width: calc(var(--book-w, 80px) * 0.16);
   min-width: 12px;
   height: calc(14% + 34px);
@@ -1659,6 +1628,7 @@ a.loop__cta:focus-visible {
   transition: height 0.2s, background-color 0.2s;
   animation: ribbon-sway 3.2s ease-in-out infinite;
 }
+
 /* grössere Klickfläche als das schmale Band */
 .book__ribbon::before {
   content: "";
@@ -1702,7 +1672,7 @@ a.loop__cta:focus-visible {
 }
 
 .book--hero {
-  --book-w: clamp(64px, 6.5vw, 96px);
+  --book-w: clamp(80px, 8vw, 120px); /* Slightly wider to accommodate an image */
   left: 9%;
   top: 60%;
   z-index: 2;
