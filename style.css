@@ -900,12 +900,16 @@ a {
 /* Berlin: Instagram-Beiträge. Reels als Schlaufe ohne Ton, Klick öffnet Instagram.
    Carousels zum Durchblättern. Alle Karten gleich hoch. */
 /* Berlin: alle Videos und Carousels oben auf einer Linie, Text darunter verschieden lang */
-#berlin .gallery__track {
+#berlin .gallery__track,
+#rotterdam .gallery__track {
   align-items: flex-start;
 }
 /* Berlin: das Projektvideo (16:9) am Schluss gleich hoch wie Reels und Carousels */
 #berlin .post .media--wide {
-  width: min(calc(var(--post-h) * 16 / 9), 84vw); /* auf dem Handy höchstens Bildschirmbreite */
+  width: min(
+    calc(var(--post-h) * 16 / 9),
+    84vw
+  ); /* auf dem Handy höchstens Bildschirmbreite */
 }
 /* Text unter einer Karte bricht auf der Breite des Videos um */
 .chapter--gallery .post:not(.post--text) {
@@ -914,6 +918,10 @@ a {
 .post .media--carousel {
   width: calc(var(--post-h) * 3 / 4);
   aspect-ratio: 3 / 4;
+}
+.post .media--carousel-landscape {
+  width: calc(var(--post-h) * 3 / 2);
+  aspect-ratio: 3 / 2;
 }
 .post .media--carousel-square {
   width: var(--post-h);
@@ -970,6 +978,29 @@ a {
   text-decoration: none;
   box-shadow: 0 8px 20px rgba(255, 0, 123, 0.35);
   transition: transform 0.2s, background 0.2s;
+}
+/* Karte ohne Video (z. B. Trailer, solange die Datei fehlt): pinke Titelkarte */
+.loop--title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pink);
+}
+.loop__title {
+  color: var(--white);
+  font: 400 clamp(2rem, 3.4vw, 3rem) / 0.95 var(--font-display);
+  text-align: center;
+  transition: scale 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.loop__title em {
+  font-style: italic;
+}
+.loop--title:hover .loop__title {
+  scale: 1.06;
+}
+.loop--title .loop__cta {
+  background: var(--ink);
+  box-shadow: none;
 }
 .loop__cta::after {
   content: "↗";
@@ -2556,6 +2587,14 @@ h2,
 
   .chapter--series {
     --card-w: 82vw;
+  }
+  /* Rotterdam: Platz über den Karten für den pinken Spatz */
+  #rotterdam .gallery {
+    padding-top: 56px;
+  }
+  #rotterdam .bird--sit {
+    width: 64px;
+    top: -56px;
   }
   /* Platz über den Karten, damit die Illustrationen beim Wischen nicht abgeschnitten werden */
   .chapter--series .gallery {

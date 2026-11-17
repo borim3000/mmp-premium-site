@@ -911,21 +911,317 @@
           <div
             class="gallery"
             tabindex="0"
-            aria-label="Rotterdam Recaps, horizontal scrollbar"
+            aria-label="Rotterdam: Trailer, Recaps und Carousels, horizontal scrollbar"
           >
             <ol class="gallery__track">
+              <!-- Chronologisch wie auf Instagram. Aufbau wie bei Berlin:
+                   Reels als Schlaufe (video/rotterdam/), Carousels zum Blättern (img/rotterdam/).
+                   Formate: media--carousel (3:4), media--carousel-square (1:1), media--carousel-landscape (3:2). -->
+              <!-- Trailer: noch ohne Video. Sobald ihr die Datei habt, wie bei den Recaps
+                   <video> mit trailer-loop.mp4 / trailer.jpg einsetzen und loop--title,
+                   den span.loop__title und das Etikett anpassen. -->
               <li class="post">
-                <div class="media media--photo" data-label="Foto"></div>
-                <h3>Recap Rotterdam, Teil 1</h3>
-                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+                <a
+                  class="media media--reel loop loop--title"
+                  href="https://www.instagram.com/p/DY6V1QQolPi/"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Rotterdam Trailer: auf Instagram ansehen (neuer Tab)"
+                >
+                  <span class="loop__badge">Trailer</span>
+                  <span class="loop__title" aria-hidden="true"
+                    >Spatzi<br /><em>Rotti</em></span
+                  >
+                  <span class="loop__cta">Trailer auf Instagram</span>
+                </a>
+                <h3>
+                  <span class="post__num">Rotterdam</span> Trailer
+                </h3>
+                <p class="post__meta">Der Trailer zu Rotterdam</p>
               </li>
               <li class="post">
-                <div class="media media--reel" data-label="Reel 9:16"></div>
-                <h3>Recap Rotterdam, Teil 2</h3>
-                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+                <a
+                  class="media media--reel loop"
+                  href="https://www.instagram.com/p/DZBNnHDIG30/"
+                  target="_blank"
+                  rel="noopener"
+                  data-loop
+                  aria-label="Rotterdam Recap 1 (5:31): ganzes Reel auf Instagram ansehen (neuer Tab)"
+                >
+                  <video
+                    src="video/rotterdam/recap1-loop.mp4"
+                    poster="video/rotterdam/recap1.jpg"
+                    muted
+                    loop
+                    playsinline
+                    preload="none"
+                    aria-hidden="true"
+                  ></video>
+                  <span class="loop__badge">Reel · 5:31</span>
+                  <span class="loop__cta">Ganzes Reel auf Instagram</span>
+                </a>
+                <h3>
+                  <span class="post__num">Rotterdam</span> Recap 1
+                </h3>
+                <p class="post__meta">sinder guet acho in spatzi rotti 🐰</p>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--carousel media--carousel-landscape carousel"
+                  data-carousel
+                  role="group"
+                  aria-roledescription="Bildergalerie"
+                  aria-label="Beachday mit de Spatze, Volume eins"
+                >
+                  <div class="carousel__track" tabindex="0">
+                    <img
+                      src="img/rotterdam/beach1-1.webp"
+                      alt="Beachday mit de Spatze, Volume eins, Bild 1 von 5"
+                      width="1080"
+                      height="720"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/beach1-2.webp"
+                      alt="Beachday mit de Spatze, Volume eins, Bild 2 von 5"
+                      width="1080"
+                      height="720"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/beach1-3.webp"
+                      alt="Beachday mit de Spatze, Volume eins, Bild 3 von 5"
+                      width="1080"
+                      height="720"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/beach1-4.webp"
+                      alt="Beachday mit de Spatze, Volume eins, Bild 4 von 5"
+                      width="1080"
+                      height="720"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/beach1-5.webp"
+                      alt="Beachday mit de Spatze, Volume eins, Bild 5 von 5"
+                      width="1080"
+                      height="720"
+                      loading="lazy"
+                    />
+                  </div>
+                  <button
+                    class="carousel__btn carousel__btn--prev"
+                    type="button"
+                    data-carousel-prev
+                    aria-label="Vorheriges Bild"
+                  ></button>
+                  <button
+                    class="carousel__btn carousel__btn--next"
+                    type="button"
+                    data-carousel-next
+                    aria-label="Nächstes Bild"
+                  ></button>
+                  <span class="loop__badge">Carousel</span>
+                  <output class="carousel__count" data-carousel-count
+                    >1 / 5</output
+                  >
+                  <a
+                    class="loop__cta"
+                    href="https://www.instagram.com/p/DZMoKn2iK5D/"
+                    target="_blank"
+                    rel="noopener"
+                    >Ganzer Post auf Instagram</a
+                  >
+                </div>
+                <h3>
+                  <span class="post__num">Carousel</span> Beachday mit de Spatze
+                </h3>
+                <p class="post__meta">Volume eins 🌊, 5 Bilder</p>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--carousel carousel"
+                  data-carousel
+                  role="group"
+                  aria-roledescription="Bildergalerie"
+                  aria-label="Beachday mit de Spatze, Volume zwei"
+                >
+                  <div class="carousel__track" tabindex="0">
+                    <img
+                      src="img/rotterdam/beach2-1.webp"
+                      alt="Beachday mit de Spatze, Volume zwei, Bild 1 von 4"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/beach2-2.webp"
+                      alt="Beachday mit de Spatze, Volume zwei, Bild 2 von 4"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/beach2-3.webp"
+                      alt="Beachday mit de Spatze, Volume zwei, Bild 3 von 4"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/beach2-4.webp"
+                      alt="Beachday mit de Spatze, Volume zwei, Bild 4 von 4"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                  </div>
+                  <button
+                    class="carousel__btn carousel__btn--prev"
+                    type="button"
+                    data-carousel-prev
+                    aria-label="Vorheriges Bild"
+                  ></button>
+                  <button
+                    class="carousel__btn carousel__btn--next"
+                    type="button"
+                    data-carousel-next
+                    aria-label="Nächstes Bild"
+                  ></button>
+                  <span class="loop__badge">Carousel</span>
+                  <output class="carousel__count" data-carousel-count
+                    >1 / 4</output
+                  >
+                  <a
+                    class="loop__cta"
+                    href="https://www.instagram.com/p/DZNRna1CHy3/"
+                    target="_blank"
+                    rel="noopener"
+                    >Ganzer Post auf Instagram</a
+                  >
+                </div>
+                <h3>
+                  <span class="post__num">Carousel</span> Beachday mit de Spatze
+                </h3>
+                <p class="post__meta">Volume zwei 🌊, 4 Bilder</p>
+              </li>
+              <li class="post">
+                <div
+                  class="media media--carousel carousel"
+                  data-carousel
+                  role="group"
+                  aria-roledescription="Bildergalerie"
+                  aria-label="Für zwänzg Persone choche isch ja bubi eifach"
+                >
+                  <div class="carousel__track" tabindex="0">
+                    <img
+                      src="img/rotterdam/kochen-1.webp"
+                      alt="Für zwänzg Persone choche isch ja bubi eifach, Bild 1 von 8"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/kochen-2.webp"
+                      alt="Für zwänzg Persone choche isch ja bubi eifach, Bild 2 von 8"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/kochen-3.webp"
+                      alt="Für zwänzg Persone choche isch ja bubi eifach, Bild 3 von 8"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/kochen-4.webp"
+                      alt="Für zwänzg Persone choche isch ja bubi eifach, Bild 4 von 8"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/kochen-5.webp"
+                      alt="Für zwänzg Persone choche isch ja bubi eifach, Bild 5 von 8"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/kochen-6.webp"
+                      alt="Für zwänzg Persone choche isch ja bubi eifach, Bild 6 von 8"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/kochen-7.webp"
+                      alt="Für zwänzg Persone choche isch ja bubi eifach, Bild 7 von 8"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/rotterdam/kochen-8.webp"
+                      alt="Für zwänzg Persone choche isch ja bubi eifach, Bild 8 von 8"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                  </div>
+                  <button
+                    class="carousel__btn carousel__btn--prev"
+                    type="button"
+                    data-carousel-prev
+                    aria-label="Vorheriges Bild"
+                  ></button>
+                  <button
+                    class="carousel__btn carousel__btn--next"
+                    type="button"
+                    data-carousel-next
+                    aria-label="Nächstes Bild"
+                  ></button>
+                  <span class="loop__badge">Carousel</span>
+                  <output class="carousel__count" data-carousel-count
+                    >1 / 8</output
+                  >
+                  <a
+                    class="loop__cta"
+                    href="https://www.instagram.com/p/DZS0LZoiM44/"
+                    target="_blank"
+                    rel="noopener"
+                    >Ganzer Post auf Instagram</a
+                  >
+                </div>
+                <h3>
+                  <span class="post__num">Carousel</span> Für zwänzg Persone choche isch ja bubi eifach
+                </h3>
+                <p class="post__meta">🙄 Danke für alli Spatzis, wo debi gsi sind! 8 Bilder</p>
               </li>
               <li class="post post--bird">
-                <div class="media media--wide" data-label="Video 16:9"></div>
+                <a
+                  class="media media--reel loop"
+                  href="https://www.instagram.com/p/DZTKgcRxdR0/"
+                  target="_blank"
+                  rel="noopener"
+                  data-loop
+                  aria-label="Rotterdam Recap 2 (2:00): ganzes Reel auf Instagram ansehen (neuer Tab)"
+                >
+                  <video
+                    src="video/rotterdam/recap2-loop.mp4"
+                    poster="video/rotterdam/recap2.jpg"
+                    muted
+                    loop
+                    playsinline
+                    preload="none"
+                    aria-hidden="true"
+                  ></video>
+                  <span class="loop__badge">Reel · 2:00</span>
+                  <span class="loop__cta">Ganzes Reel auf Instagram</span>
+                </a>
                 <!-- Easter Egg: der pinke Spatz führt zum Spiel Flappy Spatz -->
                 <img
                   class="bird bird--sit"
@@ -936,20 +1232,17 @@
                   width="110"
                   height="134"
                 />
-                <h3>Recap Rotterdam, Teil 3</h3>
-                <p class="post__meta"><time datetime="">Datum folgt</time></p>
-              </li>
-              <li class="post">
-                <div class="media media--square" data-label="Carousel"></div>
-                <h3>Recap Rotterdam, Teil 4</h3>
-                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+                <h3>
+                  <span class="post__num">Rotterdam</span> Recap 2
+                </h3>
+                <p class="post__meta">DANKE EU FÜR DI GUETI ZIIT 🫶</p>
               </li>
             </ol>
           </div>
 
           <div class="gallery__progress">
             <div class="progress"><span data-gallery-progress></span></div>
-            <output data-gallery-count>1 / 4</output>
+            <output data-gallery-count>1 / 6</output>
           </div>
         </div>
       </section>
