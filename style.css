@@ -1016,6 +1016,12 @@ a.loop__cta:focus-visible {
   outline-offset: 2px;
 }
 
+/* In der Nähe einer Galerie mit Seitwärts-Scrollen: keine "Zurück"-Wischgeste (script.js) */
+html.no-swipe-back,
+html.no-swipe-back body {
+  overscroll-behavior-x: none;
+}
+
 .carousel__track {
   display: flex;
   height: 100%;
