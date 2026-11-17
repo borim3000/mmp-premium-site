@@ -361,14 +361,15 @@ if (hasGsap && !reduceMotion) {
       scrub: true,
     },
   });
+  // Untertitel gleitet beim Ausblenden leicht nach unten, weg vom Titel (nicht in ihn hinein)
   gsap.to(".hero__subtitle, .hero__hint", {
     opacity: 0,
-    y: -40,
+    y: 10,
     ease: "none",
     scrollTrigger: {
       trigger: ".hero",
       start: "top top",
-      end: "50% top",
+      end: "70% top",
       scrub: true,
     },
   });
@@ -546,7 +547,8 @@ if (hasGsap && !reduceMotion) {
         if (now - axisTime > 180) axis = null;
         axisTime = now;
         if (!axis) {
-          if (Math.abs(dx) > Math.abs(dy) * 0.6 && Math.abs(dx) > 0.5) axis = "x";
+          if (Math.abs(dx) > Math.abs(dy) * 0.6 && Math.abs(dx) > 0.5)
+            axis = "x";
           else if (Math.abs(dy) > 0.5) axis = "y";
         }
         if (axis !== "x" || !dx) return;
@@ -565,7 +567,10 @@ if (hasGsap && !reduceMotion) {
         if (!st) return;
         const y = window.scrollY;
         const near = window.innerHeight * NEAR;
-        pin.classList.toggle("is-near", y >= st.start - near && y <= st.end + near);
+        pin.classList.toggle(
+          "is-near",
+          y >= st.start - near && y <= st.end + near
+        );
         document.documentElement.classList.toggle(
           "no-swipe-back",
           !!document.querySelector("[data-sideways] .is-near")

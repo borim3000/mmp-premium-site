@@ -270,7 +270,7 @@ a {
   position: absolute;
   left: 0;
   right: 0;
-  top: 62%;
+  top: 62%; /* mit Abstand zum Titel, damit es beim Ausblenden nicht hineinläuft */
   z-index: 1;
   text-align: center;
   color: var(--white);
@@ -1678,7 +1678,11 @@ html.no-swipe-back body {
 }
 
 .book--hero {
-  --book-w: clamp(80px, 8vw, 120px); /* Slightly wider to accommodate an image */
+  --book-w: clamp(
+    80px,
+    8vw,
+    120px
+  ); /* Slightly wider to accommodate an image */
   left: 9%;
   top: 60%;
   z-index: 2;
@@ -2460,7 +2464,7 @@ h2,
     letter-spacing: 0;
   }
   .hero__subtitle {
-    top: calc(38% + clamp(2.5rem, 12.5vw, 4rem) + 18px);
+    top: calc(38% + clamp(2.5rem, 12.5vw, 4rem) + 34px);
     font-size: 0.875rem;
     letter-spacing: 0.16em;
   }
