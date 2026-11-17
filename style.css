@@ -903,6 +903,10 @@ a {
 #berlin .gallery__track {
   align-items: flex-start;
 }
+/* Berlin: das Projektvideo (16:9) am Schluss gleich hoch wie Reels und Carousels */
+#berlin .post .media--wide {
+  width: min(calc(var(--post-h) * 16 / 9), 84vw); /* auf dem Handy höchstens Bildschirmbreite */
+}
 /* Text unter einer Karte bricht auf der Breite des Videos um */
 .chapter--gallery .post:not(.post--text) {
   width: min-content;
