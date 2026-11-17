@@ -519,7 +519,33 @@ if (hasGsap && !reduceMotion) {
         duration: moveShare,
       });
       tl.to({}, { duration: 1 - curtainShare - moveShare }); // stehen bleiben
-      return () => pin.classList.remove("is-pinned");
+
+      // Seitwärts scrollen (Trackpad links/rechts, Shift + Mausrad) bewegt die Galerie mit.
+      // Nur in Sections mit data-sideways und nur, solange die Galerie gepinnt ist.
+      // Man bleibt dabei in der Section: am Anfang und Ende hält es an.
+      // Über einem Carousel blättert seitwärts weiterhin das Carousel.
+      const onWheel = (event) => {
+        const st = tl.scrollTrigger;
+        if (!st || !st.isActive) return;
+        if (event.target.closest(".carousel__track")) return;
+        const unit = event.deltaMode === 1 ? 16 : 1; // Zeilen statt Pixel (Firefox)
+        let dx = event.deltaX * unit;
+        if (!dx && event.shiftKey) dx = event.deltaY * unit; // Shift + Mausrad
+        else if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return; // normal hoch/runter
+        if (!dx) return;
+        event.preventDefault(); // verhindert auch "Zurück" per Wisch-Geste im Browser
+        window.scrollTo(
+          0,
+          Math.min(st.end - 1, Math.max(st.start + 1, window.scrollY + dx))
+        );
+      };
+      const sideways = pin.closest("[data-sideways]");
+      if (sideways) pin.addEventListener("wheel", onWheel, { passive: false });
+
+      return () => {
+        pin.classList.remove("is-pinned");
+        if (sideways) pin.removeEventListener("wheel", onWheel);
+      };
     });
   });
 
