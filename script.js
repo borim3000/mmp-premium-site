@@ -521,30 +521,68 @@ if (hasGsap && !reduceMotion) {
       tl.to({}, { duration: 1 - curtainShare - moveShare }); // stehen bleiben
 
       // Seitwärts scrollen (Trackpad links/rechts, Shift + Mausrad) bewegt die Galerie mit.
-      // Nur in Sections mit data-sideways und nur, solange die Galerie gepinnt ist.
-      // Man bleibt dabei in der Section: am Anfang und Ende hält es an.
-      // Über einem Carousel blättert seitwärts weiterhin das Carousel.
+      // Nur in Sections mit data-sideways. Es greift schon kurz bevor die Galerie fixiert ist,
+      // hält am Anfang und am Ende an und blockiert dort die "Zurück"-Wischgeste des Browsers.
+      // Auch über einem Carousel bewegt seitwärts immer die Galerie (Carousels: Pfeile/Wischen am Handy).
+      const sideways = pin.closest("[data-sideways]");
+      const NEAR = 0.5; // so viele Bildschirmhöhen vor/nach der Galerie reagiert es schon
+      let axis = null; // eine Wischbewegung bleibt seitwärts oder hoch/runter
+      let axisTime = 0;
+
       const onWheel = (event) => {
         const st = tl.scrollTrigger;
-        if (!st || !st.isActive) return;
-        if (event.target.closest(".carousel__track")) return;
+        if (!st) return;
+        const y = window.scrollY;
+        const near = window.innerHeight * NEAR;
+        if (y < st.start - near || y > st.end + near) return;
+
         const unit = event.deltaMode === 1 ? 16 : 1; // Zeilen statt Pixel (Firefox)
         let dx = event.deltaX * unit;
-        if (!dx && event.shiftKey) dx = event.deltaY * unit; // Shift + Mausrad
-        else if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return; // normal hoch/runter
-        if (!dx) return;
-        event.preventDefault(); // verhindert auch "Zurück" per Wisch-Geste im Browser
+        const dy = event.deltaY * unit;
+        if (!dx && event.shiftKey) dx = dy; // Shift + Mausrad
+
+        // Richtung einmal pro Wischbewegung festlegen, damit es nicht hin und her kippt
+        const now = performance.now();
+        if (now - axisTime > 180) axis = null;
+        axisTime = now;
+        if (!axis) {
+          if (Math.abs(dx) > Math.abs(dy) * 0.6 && Math.abs(dx) > 0.5) axis = "x";
+          else if (Math.abs(dy) > 0.5) axis = "y";
+        }
+        if (axis !== "x" || !dx) return;
+
+        event.preventDefault(); // auch keine "Zurück"-Geste des Browsers
+        if (dx < 0 && y <= st.start + 1) return; // schon ganz am Anfang
+        if (dx > 0 && y >= st.end - 1) return; // schon ganz am Ende
         window.scrollTo(
           0,
-          Math.min(st.end - 1, Math.max(st.start + 1, window.scrollY + dx))
+          dx > 0 ? Math.min(st.end - 1, y + dx) : Math.max(st.start + 1, y + dx)
         );
       };
-      const sideways = pin.closest("[data-sideways]");
-      if (sideways) pin.addEventListener("wheel", onWheel, { passive: false });
+      // Solange man in der Nähe der Galerie ist: "Zurück"-Wischgeste des Browsers aus
+      const onScroll = () => {
+        const st = tl.scrollTrigger;
+        if (!st) return;
+        const y = window.scrollY;
+        const near = window.innerHeight * NEAR;
+        pin.classList.toggle("is-near", y >= st.start - near && y <= st.end + near);
+        document.documentElement.classList.toggle(
+          "no-swipe-back",
+          !!document.querySelector("[data-sideways] .is-near")
+        );
+      };
+      if (sideways) {
+        window.addEventListener("wheel", onWheel, { passive: false });
+        window.addEventListener("scroll", onScroll, { passive: true });
+      }
 
       return () => {
-        pin.classList.remove("is-pinned");
-        if (sideways) pin.removeEventListener("wheel", onWheel);
+        pin.classList.remove("is-pinned", "is-near");
+        document.documentElement.classList.remove("no-swipe-back");
+        if (sideways) {
+          window.removeEventListener("wheel", onWheel);
+          window.removeEventListener("scroll", onScroll);
+        }
       };
     });
   });
