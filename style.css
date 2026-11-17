@@ -1989,9 +1989,9 @@ html.no-swipe-back body {
 }
 
 .book--hero {
-  --book-w: clamp(96px, 9.6vw, 144px); /* 20 % grösser als vorher (80–120px) */
-  left: 9%;
-  top: 60%;
+  --book-w: clamp(124px, 12.4vw, 188px);
+  left: 4%;
+  top: 64%;
   z-index: 2;
 }
 
@@ -2083,7 +2083,7 @@ html.no-swipe-back body {
    Die Prozentwerte sind im Foto ausgemessen (labubuech_1_open.webp). */
 .open-book {
   position: relative;
-  font-size: clamp(0.6875rem, 2cqi, 1.0625rem); /* wächst und schrumpft mit dem Buch */
+  font-size: clamp(0.75rem, 2.2cqi, 1.1875rem); /* wächst und schrumpft mit dem Buch */
 }
 .open-book__photo {
   display: block;
@@ -2110,8 +2110,8 @@ html.no-swipe-back body {
   min-height: 0;
   padding: 1.5em 0.4em 2.9em; /* oben Platz für "Eintrag x von y", unten für die Pfeile */
   overflow-y: auto;
-  color: var(--ink);
-  font: 400 1em/1.45 var(--font-display);
+  color: #1a1a1a;
+  font: 500 1em/1.45 var(--font-display); /* etwas kräftiger: liest sich auf dem Foto-Papier besser */
 }
 .book-page[hidden] {
   display: none;
@@ -2120,7 +2120,7 @@ html.no-swipe-back body {
   position: absolute;
   top: 0;
   right: 0.4em;
-  color: var(--ink-soft);
+  color: #4a4a4a;
   font: 400 0.75em/1 var(--font-body);
 }
 .book-page--intro,
@@ -2138,11 +2138,76 @@ html.no-swipe-back body {
   margin: auto;
   opacity: 0.25;
 }
-.book-page--intro img {
-  width: 4.5em;
+/* Einleitung */
+.book-page--intro {
+  gap: 0.55em;
+}
+.book-intro__bird {
+  position: absolute;
+  top: 0;
+  right: 0.2em;
+  width: 3.2em;
   height: auto;
+  rotate: 12deg;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+}
+.book-intro__kicker {
+  color: var(--pink-strong);
+  font: 800 0.62em/1 var(--font-accent);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.book-page--intro h3 {
+  font-size: 2.2em;
+  line-height: 1;
+}
+.book-intro__lead {
+  padding-bottom: 0.5em;
+  border-bottom: 2px solid var(--pink);
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.3;
+}
+.book-intro__rules {
+  display: grid;
+  gap: 0.6em;
+  margin: 0.2em 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: rule;
+}
+.book-intro__rules li {
+  display: grid;
+  grid-template-columns: 1.6em 1fr;
+  column-gap: 0.55em;
+  align-items: start;
+  counter-increment: rule;
+}
+.book-intro__rules li::before {
+  content: counter(rule);
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: 50%;
+  background: var(--pink-strong);
+  color: var(--white);
+  font: 800 0.8em/1 var(--font-accent);
+}
+.book-intro__rules strong {
+  font-weight: 600;
+  line-height: 1.2;
+}
+.book-intro__rules span {
+  color: #3d3d3d;
+  font: 400 0.78em/1.35 var(--font-body);
+}
+.book-intro__hint {
   margin-top: auto;
-  align-self: center;
+  align-self: flex-end;
+  color: var(--pink-strong);
+  font: italic 600 0.95em/1.2 var(--font-display);
 }
 
 /* Eintrag als Zitat: Text oben, unten "— Name, Datum um Zeit" */
@@ -2156,7 +2221,7 @@ html.no-swipe-back body {
 .book-entry footer {
   margin-top: auto;
   padding-top: 1em;
-  color: var(--ink-soft);
+  color: #3d3d3d;
   font: italic 400 0.82em/1.35 var(--font-display);
   text-align: right;
 }
@@ -2249,7 +2314,7 @@ html.no-swipe-back body {
   color: var(--pink);
 }
 .book-write__timer small {
-  color: var(--ink-soft);
+  color: #4a4a4a;
   font: 400 0.8em/1 var(--font-body);
 }
 .book-field {
@@ -2262,15 +2327,16 @@ html.no-swipe-back body {
   min-height: 4.5em;
 }
 .book-field > span {
-  font: 600 0.75em/1.2 var(--font-body);
-  color: var(--ink-soft);
+  font: 700 0.75em/1.2 var(--font-body);
+  color: #333333;
+  letter-spacing: 0.02em;
 }
 .book-field input,
 .book-field textarea {
   width: 100%;
   padding: 0.2em 2px;
   border: 0;
-  border-bottom: 1.5px solid #d8cdb2;
+  border-bottom: 1.5px solid #4d4d4d;
   background: transparent;
   color: var(--ink);
   font: inherit;
@@ -2281,10 +2347,15 @@ html.no-swipe-back body {
   line-height: 1.75em;
   background: repeating-linear-gradient(
     to bottom,
-    transparent 0 calc(1.75em - 1px),
-    #d9d4c8 calc(1.75em - 1px) 1.75em
+    transparent 0 calc(1.75em - 1.5px),
+    #5c5c5c calc(1.75em - 1.5px) 1.75em
   );
   border-bottom: 0;
+}
+.book-field input::placeholder,
+.book-field textarea::placeholder {
+  color: #6b6b6b;
+  opacity: 1;
 }
 .book-field input:focus,
 .book-field textarea:focus {
@@ -2872,7 +2943,7 @@ h2,
   }
 
   .book--hero {
-    --book-w: 72px;
+    --book-w: 92px;
     left: var(--gutter);
     top: auto;
     bottom: calc(14% + 26px);

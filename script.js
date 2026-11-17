@@ -1418,15 +1418,21 @@ function buildPages() {
     return page;
   });
 
+  // Einleitung: Titel, kurzer Satz, drei Regeln, Hinweis auf die Schreibseite
   const intro = makePage("intro");
   intro.innerHTML = `
+    <img class="book-intro__bird" src="img/vogel.png" alt="" width="140" height="170" />
+    <p class="book-intro__kicker">Gästebuch</p>
     <h3>Labubuech</h3>
-    <p>Unser Gästebuch. Pro Tag hast du zwei Minuten, um etwas hineinzuschreiben.</p>
-    <p>${
-      twoPages.matches
-        ? "Rechts ist deine Seite. Mit dem Pfeil unten links blätterst du durch die Einträge der anderen."
-        : "Mit dem Pfeil nach rechts kommst du zu deiner Seite, mit dem Pfeil nach links zu den Einträgen der anderen."
-    }</p>`;
+    <p class="book-intro__lead">Schreib uns etwas Liebes, Lustiges oder Spatziges.</p>
+    <ol class="book-intro__rules">
+      <li><strong>2 Minuten</strong><span>Die Zeit läuft ab dem ersten Buchstaben.</span></li>
+      <li><strong>Einmal pro Tag</strong><span>Morgen hast du wieder zwei Minuten.</span></li>
+      <li><strong>Für alle lesbar</strong><span>Dein Eintrag steht danach im Buch.</span></li>
+    </ol>
+    <p class="book-intro__hint">${
+      twoPages.matches ? "Deine Seite ist rechts" : "Zu deiner Seite: Pfeil nach rechts"
+    } <span aria-hidden="true">→</span></p>`;
 
   const list = [...entryPages];
   // Doppelseite: Einleitung muss links liegen. Bei ungerader Anzahl Einträge vorne eine leere Seite.
