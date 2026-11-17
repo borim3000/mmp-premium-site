@@ -6,7 +6,9 @@
    POST  -> { count, pressed }   einmal drücken (pro Browser nur einmal gezählt)
 
    Nutzt die gleiche config.php wie das Labubuech (db_host, db_name, db_user, db_pass, salt).
-   Tabellenname: 'table_daumen' in config.php, sonst "daumen". Tabelle anlegen: php/daumen.sql
+   Tabellenname: 'table_daumen' in config.php, sonst "daumen".
+   Die Tabelle wird beim ersten Aufruf automatisch angelegt (gleich wie php/daumen.sql).
+   Testen: php/daumen.php im Browser öffnen -> {"count":0,"pressed":false}
    Läuft mit PHP 7.3 oder neuer.
    ========================================================= */
 
@@ -25,7 +27,9 @@ function reply(int $status, array $data)
 
 $debug = false;
 set_exception_handler(function (Throwable $e) use (&$debug) {
-    $data = ['error' => $e instanceof PDOException ? 'Datenbank-Fehler. Gibt es die Tabelle (php/daumen.sql)?' : 'PHP-Fehler.'];
+    $data = ['error' => $e instanceof PDOException
+        ? 'Datenbank-Fehler. Stimmen die Zugangsdaten in config.php? Mit \'debug\' => true steht hier der genaue Grund.'
+        : 'PHP-Fehler.'];
     if ($debug) {
         $data['detail'] = $e->getMessage();
     }
@@ -56,6 +60,15 @@ $pdo = new PDO(
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ]
+);
+
+// Tabelle anlegen, falls es sie noch nicht gibt (dann braucht es php/daumen.sql nicht)
+$pdo->exec(
+    "CREATE TABLE IF NOT EXISTS `$table` (
+        `visitor` CHAR(64) NOT NULL,
+        `created_at` DATETIME NOT NULL,
+        PRIMARY KEY (`visitor`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
 );
 
 // ---------- Besucher erkennen (gleiches Cookie wie beim Labubuech) ----------

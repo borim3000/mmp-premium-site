@@ -1008,28 +1008,32 @@ if (daumen) {
   const showCount = (count) => {
     if (typeof count !== "number") return;
     countText.textContent =
-      count === 1
+      count === 0
+        ? "Sei die erste Person, die uns die Daumen drückt"
+        : count === 1
         ? "1 Person drückt uns die Daumen"
         : `${count} Personen drücken uns die Daumen`;
   };
-  const showPressed = () => {
-    btn.classList.add("is-pressed");
-    label.textContent = "Danke fürs Duume drücke!";
+  const showPressed = (on) => {
+    btn.classList.toggle("is-pressed", on);
+    label.textContent = on ? "Danke fürs Duume drücke!" : "Drück eus de Duume";
   };
+  // Ob dieser Browser schon gedrückt hat, entscheidet der Server.
+  // Nur wenn er nicht erreichbar ist (z. B. lokal ohne PHP), zählt die Erinnerung im Browser.
   let pressed = false;
+  let serverOk = false;
   try {
     pressed = localStorage.getItem(LOCAL_KEY) === "1";
   } catch {}
-  if (pressed) showPressed();
+  showPressed(pressed);
 
   fetch(API, { credentials: "same-origin" })
     .then((res) => (res.ok ? res.json() : Promise.reject()))
     .then((data) => {
+      serverOk = true;
       showCount(data.count);
-      if (data.pressed) {
-        pressed = true;
-        showPressed();
-      }
+      pressed = !!data.pressed;
+      showPressed(pressed);
     })
     .catch(() => {}); // kein PHP: Knopf geht trotzdem, nur ohne Zahl
 
@@ -1060,15 +1064,18 @@ if (daumen) {
   btn.addEventListener("click", () => {
     fly();
     unlock("daumen");
-    if (pressed) return; // pro Browser nur einmal zählen
+    if (pressed && serverOk) return; // schon gezählt (der Server zählt sowieso nur einmal)
     pressed = true;
-    showPressed();
+    showPressed(true);
     try {
       localStorage.setItem(LOCAL_KEY, "1");
     } catch {}
     fetch(API, { method: "POST", credentials: "same-origin" })
       .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((data) => showCount(data.count))
+      .then((data) => {
+        serverOk = true;
+        showCount(data.count);
+      })
       .catch(() => {});
   });
 }
