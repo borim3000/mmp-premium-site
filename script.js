@@ -858,6 +858,87 @@ document.querySelectorAll("[data-bird]").forEach((bird) => {
   });
 });
 
+/* ---------- Berlin: Reel-Schlaufen und Carousels ----------
+   Schlaufen laufen ohne Ton nur, solange die Karte im Bild ist (mit "weniger Bewegung":
+   nur das Standbild). Carousels: Pfeile, Wischen, Zähler; im Bild blättern sie langsam
+   von selbst weiter, ausser man ist mit der Maus drauf. */
+
+const loops = document.querySelectorAll("[data-loop] video");
+if (!reduceMotion && "IntersectionObserver" in window) {
+  const loopObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target;
+        if (entry.intersectionRatio >= 0.5) video.play().catch(() => {});
+        else video.pause();
+      });
+    },
+    { threshold: [0, 0.5] }
+  );
+  loops.forEach((video) => loopObserver.observe(video));
+}
+
+document.querySelectorAll("[data-carousel]").forEach((carousel) => {
+  const track = carousel.querySelector(".carousel__track");
+  const slides = track.querySelectorAll("img");
+  const prev = carousel.querySelector("[data-carousel-prev]");
+  const next = carousel.querySelector("[data-carousel-next]");
+  const count = carousel.querySelector("[data-carousel-count]");
+  const AUTO = 3500; // ms pro Bild beim automatischen Blättern
+  let index = 0;
+  let timer;
+  let visible = false;
+
+  const goTo = (i) => {
+    index = (i + slides.length) % slides.length;
+    track.scrollTo({
+      left: index * track.clientWidth,
+      behavior: reduceMotion ? "auto" : "smooth",
+    });
+  };
+  const show = () => {
+    index = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+    count.textContent = `${index + 1} / ${slides.length}`;
+    prev.disabled = index === 0;
+    next.disabled = index === slides.length - 1;
+  };
+  const stop = () => clearInterval(timer);
+  const start = () => {
+    stop();
+    if (reduceMotion || !visible) return;
+    timer = setInterval(() => goTo(index + 1), AUTO);
+  };
+
+  prev.addEventListener("click", () => goTo(index - 1));
+  next.addEventListener("click", () => goTo(index + 1));
+  track.addEventListener("scroll", () => requestAnimationFrame(show), {
+    passive: true,
+  });
+  track.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+    event.preventDefault();
+    goTo(index + (event.key === "ArrowRight" ? 1 : -1));
+  });
+  // Pause, solange man mit der Maus, dem Finger oder der Tastatur dran ist
+  ["pointerenter", "focusin", "touchstart"].forEach((type) =>
+    carousel.addEventListener(type, stop, { passive: true })
+  );
+  ["pointerleave", "focusout"].forEach((type) =>
+    carousel.addEventListener(type, start)
+  );
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.intersectionRatio >= 0.6;
+        if (visible) start();
+        else stop();
+      },
+      { threshold: [0, 0.6] }
+    ).observe(carousel);
+  }
+  show();
+});
+
 /* ---------- Easter Egg: Inside Jokes ---------- */
 
 document.querySelectorAll(".joke").forEach((joke) => {

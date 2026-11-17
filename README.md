@@ -16,18 +16,18 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 
 ## Aufbau der Seite
 
-| Abschnitt                  | Inhalt                                                                       | Scrollytelling                                                                                                  |
-| -------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Hero                       | Bergbild, Content Portfolio, zugeklapptes Labubuech                          | Parallax, Vogel wechselt zum Flugbild und fliegt ein Stück weg                                                  |
-| Featured                   | ISE MAA, unser neues Format in 3 Folgen auf YouTube                          | Pinker Vorhang geht auf, dann gepinnt: Folgen legen sich als Kartenstapel übereinander, Folgen-Navigation links |
-| 01 L.I.F.T                 | Hopecore-Edit als eigenes MP4                                                | Eigener Player in Pink (Play, Zeitleiste, Ton, Vollbild); stoppt beim Wegscrollen                               |
-| 02 Berlin                  | Blockwoche, unser Videoprojekt, Spatzenlingo und die Berlin Recaps           | Gepinnt, Galerie fährt seitwärts                                                                                |
-| 03 Multimedia Awards 2025  | _Inhalt_                                                                     | Pokal, Text und Bilder fliegen beim Hineinscrollen ein                                                          |
-| 04 Rotterdam               | _Inhalt_                                                                     | Gepinnt, Galerie fährt seitwärts                                                                                |
-| 05 Digezz                  | Cuschinar Difficil, 6 Folgen auf YouTube, mit Illustration pro Gericht       | Gepinnt, Folgen fahren seitwärts, Illustrationen springen auf die Karten, Video stoppt beim Wegscrollen         |
-| Stay tuned                 | Ausblick                                                                     | Satz fährt beim Scrollen durchs Bild                                                                            |
-| Labubuech                  | Gästebuch als Buch-Pop-up: mit Pfeilen blättern, 2 Minuten pro Tag schreiben | Lesezeichen öffnet das Buch, Seiten klappen beim Blättern um                                                    |
-| Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite                                     | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord                                   |
+| Abschnitt                  | Inhalt                                                                         | Scrollytelling                                                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Hero                       | Bergbild, Content Portfolio, zugeklapptes Labubuech                            | Parallax, Vogel wechselt zum Flugbild und fliegt ein Stück weg                                                  |
+| Featured                   | ISE MAA, unser neues Format in 3 Folgen auf YouTube                            | Pinker Vorhang geht auf, dann gepinnt: Folgen legen sich als Kartenstapel übereinander, Folgen-Navigation links |
+| 01 L.I.F.T                 | Hopecore-Edit als eigenes MP4                                                  | Eigener Player in Pink (Play, Zeitleiste, Ton, Vollbild); stoppt beim Wegscrollen                               |
+| 02 Berlin                  | Blockwoche, Recaps, Umfrage, Carousels, BTS, Spatzenlingo und das Projektvideo | Gepinnt, Galerie fährt seitwärts; Reels als Schlaufe (Klick öffnet Instagram), Carousels zum Blättern           |
+| 03 Multimedia Awards 2025  | _Inhalt_                                                                       | Pokal, Text und Bilder fliegen beim Hineinscrollen ein                                                          |
+| 04 Rotterdam               | _Inhalt_                                                                       | Gepinnt, Galerie fährt seitwärts                                                                                |
+| 05 Digezz                  | Cuschinar Difficil, 6 Folgen auf YouTube, mit Illustration pro Gericht         | Gepinnt, Folgen fahren seitwärts, Illustrationen springen auf die Karten, Video stoppt beim Wegscrollen         |
+| Stay tuned                 | Ausblick                                                                       | Satz fährt beim Scrollen durchs Bild                                                                            |
+| Labubuech                  | Gästebuch als Buch-Pop-up: mit Pfeilen blättern, 2 Minuten pro Tag schreiben   | Lesezeichen öffnet das Buch, Seiten klappen beim Blättern um                                                    |
+| Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite                                       | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord                                   |
 
 ## Technologien
 

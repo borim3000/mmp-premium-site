@@ -897,6 +897,183 @@ a {
   width: calc(var(--post-h) * 0.6 * 16 / 9);
 }
 
+/* Berlin: Instagram-Beiträge. Reels als Schlaufe ohne Ton, Klick öffnet Instagram.
+   Carousels zum Durchblättern. Alle Karten gleich hoch. */
+/* Berlin: alle Videos und Carousels oben auf einer Linie, Text darunter verschieden lang */
+#berlin .gallery__track {
+  align-items: flex-start;
+}
+/* Text unter einer Karte bricht auf der Breite des Videos um */
+.chapter--gallery .post:not(.post--text) {
+  width: min-content;
+}
+.post .media--carousel {
+  width: calc(var(--post-h) * 3 / 4);
+  aspect-ratio: 3 / 4;
+}
+.post .media--carousel-square {
+  width: var(--post-h);
+  aspect-ratio: 1 / 1;
+}
+.loop {
+  display: block;
+  color: var(--white);
+  text-decoration: none;
+}
+.loop video {
+  display: block;
+  transition: scale 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.loop:hover video {
+  scale: 1.04;
+}
+.loop:focus-visible {
+  outline: 3px solid var(--pink);
+  outline-offset: 4px;
+}
+.loop__badge {
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  top: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(33, 33, 33, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--white);
+  font: 700 0.6875rem / 1 var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.loop__cta {
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 14px;
+  border-radius: 999px;
+  background: var(--pink-strong);
+  color: var(--white);
+  font: 700 0.8125rem / 1.1 var(--font-body);
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(255, 0, 123, 0.35);
+  transition: transform 0.2s, background 0.2s;
+}
+.loop__cta::after {
+  content: "↗";
+}
+.loop:hover .loop__cta,
+a.loop__cta:hover,
+a.loop__cta:focus-visible {
+  background: var(--pink);
+  transform: translateY(-2px);
+}
+a.loop__cta:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: 2px;
+}
+
+.carousel__track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.carousel__track::-webkit-scrollbar {
+  display: none;
+}
+.carousel__track:focus-visible {
+  outline: 3px solid var(--pink);
+  outline-offset: -3px;
+}
+.carousel__track img {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scroll-snap-align: start;
+}
+.carousel__count {
+  position: absolute;
+  z-index: 2;
+  right: 12px;
+  top: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(33, 33, 33, 0.55);
+  color: var(--white);
+  font: 700 0.6875rem / 1 var(--font-body);
+  font-variant-numeric: tabular-nums;
+}
+.carousel__btn {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  width: 36px;
+  height: 36px;
+  margin-top: -18px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  transition: opacity 0.2s, background 0.2s;
+}
+.carousel__btn::after {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  border: solid var(--ink);
+  border-width: 0 2.5px 2.5px 0;
+  transform: translateX(-2px) rotate(-45deg);
+}
+.carousel__btn--prev {
+  left: 10px;
+}
+.carousel__btn--prev::after {
+  transform: translateX(2px) rotate(135deg);
+}
+.carousel__btn--next {
+  right: 10px;
+}
+.carousel__btn:hover,
+.carousel__btn:focus-visible {
+  background: var(--pink);
+}
+.carousel__btn:hover::after,
+.carousel__btn:focus-visible::after {
+  border-color: var(--white);
+}
+.carousel__btn:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: 2px;
+}
+.carousel__btn:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+/* Mit Maus: Pfeile erst beim Drüberfahren. Auf dem Handy wischt man. */
+@media (hover: hover) {
+  .carousel:not(:hover):not(:focus-within) .carousel__btn {
+    opacity: 0;
+  }
+}
+@media (hover: none) {
+  .carousel__btn {
+    display: none;
+  }
+}
+
 .gallery__progress {
   display: flex;
   align-items: center;
@@ -2322,10 +2499,19 @@ h2,
   .chapter--gallery {
     --post-h: min(46svh, 420px);
   }
+  .loop__cta {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    padding: 10px 8px;
+    font-size: 0.6875rem;
+    white-space: nowrap;
+  }
+  /* oben rechts neben dem Titel, damit er den Text unter den Karten nicht verdeckt */
   .bird--fly {
-    width: 72px;
-    top: auto;
-    bottom: 88px;
+    width: 64px;
+    top: calc(var(--header-h) + 22px);
+    bottom: auto;
     right: 20px;
   }
 

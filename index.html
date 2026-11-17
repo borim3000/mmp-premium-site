@@ -359,19 +359,172 @@
                   von MMP Premium.
                 </p>
               </li>
-              <!-- Das eigentliche Projekt der Blockwoche -->
+              <!-- Danach chronologisch, wie auf Instagram.
+                   Reels: Schlaufe ohne Ton (…-loop.mp4, 6 Sek.) + Standbild (….jpg) in video/berlin/,
+                   ein Klick öffnet das ganze Reel auf Instagram. Die Länge steht im Etikett.
+                   Carousels: alle Bilder in img/berlin/, blättern mit Pfeilen oder Wischen.
+                   Quadratische Bilder: Klasse media--carousel-square, sonst 3:4. -->
               <li class="post">
                 <div
-                  class="media media--wide"
-                  data-youtube="YZoyh-uAf_I"
-                  data-title="Unser Videoprojekt aus der Blockwoche"
-                  data-label="Projektvideo, YouTube"
-                ></div>
+                  class="media media--carousel media--carousel-square carousel"
+                  data-carousel
+                  role="group"
+                  aria-roledescription="Bildergalerie"
+                  aria-label="Berlin isch e Grossstadt"
+                >
+                  <div class="carousel__track" tabindex="0">
+                    <img
+                      src="img/berlin/grossstadt-1.webp"
+                      alt="Berlin isch e Grossstadt, Bild 1 von 9"
+                      width="900"
+                      height="900"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/grossstadt-2.webp"
+                      alt="Berlin isch e Grossstadt, Bild 2 von 9"
+                      width="900"
+                      height="900"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/grossstadt-3.webp"
+                      alt="Berlin isch e Grossstadt, Bild 3 von 9"
+                      width="900"
+                      height="900"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/grossstadt-4.webp"
+                      alt="Berlin isch e Grossstadt, Bild 4 von 9"
+                      width="900"
+                      height="900"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/grossstadt-5.webp"
+                      alt="Berlin isch e Grossstadt, Bild 5 von 9"
+                      width="900"
+                      height="900"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/grossstadt-6.webp"
+                      alt="Berlin isch e Grossstadt, Bild 6 von 9"
+                      width="900"
+                      height="900"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/grossstadt-7.webp"
+                      alt="Berlin isch e Grossstadt, Bild 7 von 9"
+                      width="900"
+                      height="900"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/grossstadt-8.webp"
+                      alt="Berlin isch e Grossstadt, Bild 8 von 9"
+                      width="900"
+                      height="900"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/grossstadt-9.webp"
+                      alt="Berlin isch e Grossstadt, Bild 9 von 9"
+                      width="900"
+                      height="900"
+                      loading="lazy"
+                    />
+                  </div>
+                  <button
+                    class="carousel__btn carousel__btn--prev"
+                    type="button"
+                    data-carousel-prev
+                    aria-label="Vorheriges Bild"
+                  ></button>
+                  <button
+                    class="carousel__btn carousel__btn--next"
+                    type="button"
+                    data-carousel-next
+                    aria-label="Nächstes Bild"
+                  ></button>
+                  <span class="loop__badge">Carousel</span>
+                  <output class="carousel__count" data-carousel-count
+                    >1 / 9</output
+                  >
+                  <a
+                    class="loop__cta"
+                    href="https://www.instagram.com/p/DQANgmxEfGl/"
+                    target="_blank"
+                    rel="noopener"
+                    >Ganzer Post auf Instagram</a
+                  >
+                </div>
                 <h3>
-                  <span class="post__num">Das Projekt</span> Unser Video aus der
-                  Blockwoche
+                  <span class="post__num">Carousel</span> Berlin isch e
+                  Grossstadt
                 </h3>
-                <p class="post__meta">Das Resultat, fürs Studium gedreht</p>
+                <p class="post__meta">9 Bilder aus der Grossstadt</p>
+              </li>
+              <li class="post">
+                <a
+                  class="media media--reel loop"
+                  href="https://www.instagram.com/p/DQAhrZ0EX8q/"
+                  target="_blank"
+                  rel="noopener"
+                  data-loop
+                  aria-label="Day 1 Recap (1:50): ganzes Reel auf Instagram ansehen (neuer Tab)"
+                >
+                  <video
+                    src="video/berlin/day1-loop.mp4"
+                    poster="video/berlin/day1.jpg"
+                    muted
+                    loop
+                    playsinline
+                    preload="none"
+                    aria-hidden="true"
+                  ></video>
+                  <span class="loop__badge">Reel · 1:50</span>
+                  <span class="loop__cta">Ganzes Reel auf Instagram</span>
+                </a>
+                <h3><span class="post__num">Tag 1</span> Day 1 Recap</h3>
+                <p class="post__meta">berlin big city, vill liebi</p>
+              </li>
+              <li class="post">
+                <a
+                  class="media media--reel loop"
+                  href="https://www.instagram.com/p/DQFuqVfkVwQ/"
+                  target="_blank"
+                  rel="noopener"
+                  data-loop
+                  aria-label="Days 2, 3 &amp;amp; 4 Recap (3:17): ganzes Reel auf Instagram ansehen (neuer Tab)"
+                >
+                  <video
+                    src="video/berlin/days234-loop.mp4"
+                    poster="video/berlin/days234.jpg"
+                    muted
+                    loop
+                    playsinline
+                    preload="none"
+                    aria-hidden="true"
+                  ></video>
+                  <span class="loop__badge">Reel · 3:17</span>
+                  <span class="loop__cta">Ganzes Reel auf Instagram</span>
+                </a>
+                <h3>
+                  <span class="post__num">Tag 2–4</span> Days 2, 3 &amp; 4 Recap
+                </h3>
+                <p class="post__meta">
+                  mir sind nie nöd am BÜGLE · mit
+                  <button
+                    class="joke"
+                    type="button"
+                    data-joke="Platzhalter: euer Inside Joke"
+                  >
+                    Inside Joke
+                  </button>
+                </p>
               </li>
               <!-- Spatzenlingo: wie ein Wörterbucheintrag. Weitere Wörter einfach als <div> ergänzen. -->
               <li class="post post--text post--lingo">
@@ -390,47 +543,293 @@
                   </div>
                 </dl>
               </li>
-              <!-- Recaps. Format: media--reel (9:16), media--photo (4:5), media--square (1:1), media--wide (16:9) -->
               <li class="post">
-                <div class="media media--reel" data-label="Reel 9:16"></div>
-                <h3>Recap Berlin, Teil 1</h3>
-                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+                <a
+                  class="media media--reel loop"
+                  href="https://www.instagram.com/p/DQMv0XGEVDE/"
+                  target="_blank"
+                  rel="noopener"
+                  data-loop
+                  aria-label="Days 5 &amp;amp; 6 Recap (3:17): ganzes Reel auf Instagram ansehen (neuer Tab)"
+                >
+                  <video
+                    src="video/berlin/days56-loop.mp4"
+                    poster="video/berlin/days56.jpg"
+                    muted
+                    loop
+                    playsinline
+                    preload="none"
+                    aria-hidden="true"
+                  ></video>
+                  <span class="loop__badge">Reel · 3:17</span>
+                  <span class="loop__cta">Ganzes Reel auf Instagram</span>
+                </a>
+                <h3>
+                  <span class="post__num">Tag 5–6</span> Days 5 &amp; 6 Recap
+                </h3>
+                <p class="post__meta">niedrigschlüssel scho tuff in berlin</p>
               </li>
               <li class="post">
-                <div class="media media--photo" data-label="Foto"></div>
-                <h3>Recap Berlin, Teil 2</h3>
-                <p class="post__meta"><time datetime="">Datum folgt</time></p>
-              </li>
-              <li class="post">
-                <div class="media media--square" data-label="Carousel"></div>
-                <h3>Recap Berlin, Teil 3</h3>
+                <a
+                  class="media media--reel loop"
+                  href="https://www.instagram.com/p/DQM8cesjOaA/"
+                  target="_blank"
+                  rel="noopener"
+                  data-loop
+                  aria-label="Was habt ihr in Berlin so erlebt? (2:33): ganzes Reel auf Instagram ansehen (neuer Tab)"
+                >
+                  <video
+                    src="video/berlin/umfrage-loop.mp4"
+                    poster="video/berlin/umfrage.jpg"
+                    muted
+                    loop
+                    playsinline
+                    preload="none"
+                    aria-hidden="true"
+                  ></video>
+                  <span class="loop__badge">Umfrage · 2:33</span>
+                  <span class="loop__cta">Ganzes Reel auf Instagram</span>
+                </a>
+                <h3>
+                  <span class="post__num">Strassenumfrage</span> Was habt ihr in
+                  Berlin so erlebt?
+                </h3>
                 <p class="post__meta">
-                  <time datetime="">Datum folgt</time>, mit
-                  <button
-                    class="joke"
-                    type="button"
-                    data-joke="Platzhalter: euer Inside Joke"
+                  Der Jahrgang 2024 hat’s uns erzählt, danke an
+                  <a
+                    href="https://www.instagram.com/mmp24_z/"
+                    target="_blank"
+                    rel="noopener"
+                    >@mmp24_z</a
                   >
-                    Inside Joke
-                  </button>
                 </p>
               </li>
               <li class="post">
-                <div class="media media--wide" data-label="Video 16:9"></div>
-                <h3>Recap Berlin, Teil 4</h3>
-                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+                <div
+                  class="media media--carousel carousel"
+                  data-carousel
+                  role="group"
+                  aria-roledescription="Bildergalerie"
+                  aria-label="Berlin Karussell"
+                >
+                  <div class="carousel__track" tabindex="0">
+                    <img
+                      src="img/berlin/karussell-1.webp"
+                      alt="Berlin Karussell, Bild 1 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-2.webp"
+                      alt="Berlin Karussell, Bild 2 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-3.webp"
+                      alt="Berlin Karussell, Bild 3 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-4.webp"
+                      alt="Berlin Karussell, Bild 4 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-5.webp"
+                      alt="Berlin Karussell, Bild 5 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-6.webp"
+                      alt="Berlin Karussell, Bild 6 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-7.webp"
+                      alt="Berlin Karussell, Bild 7 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-8.webp"
+                      alt="Berlin Karussell, Bild 8 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-9.webp"
+                      alt="Berlin Karussell, Bild 9 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-10.webp"
+                      alt="Berlin Karussell, Bild 10 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-11.webp"
+                      alt="Berlin Karussell, Bild 11 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-12.webp"
+                      alt="Berlin Karussell, Bild 12 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-13.webp"
+                      alt="Berlin Karussell, Bild 13 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-14.webp"
+                      alt="Berlin Karussell, Bild 14 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-15.webp"
+                      alt="Berlin Karussell, Bild 15 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                    <img
+                      src="img/berlin/karussell-16.webp"
+                      alt="Berlin Karussell, Bild 16 von 16"
+                      width="840"
+                      height="1120"
+                      loading="lazy"
+                    />
+                  </div>
+                  <button
+                    class="carousel__btn carousel__btn--prev"
+                    type="button"
+                    data-carousel-prev
+                    aria-label="Vorheriges Bild"
+                  ></button>
+                  <button
+                    class="carousel__btn carousel__btn--next"
+                    type="button"
+                    data-carousel-next
+                    aria-label="Nächstes Bild"
+                  ></button>
+                  <span class="loop__badge">Carousel</span>
+                  <output class="carousel__count" data-carousel-count
+                    >1 / 16</output
+                  >
+                  <a
+                    class="loop__cta"
+                    href="https://www.instagram.com/p/DQPH0mwCPmi/"
+                    target="_blank"
+                    rel="noopener"
+                    >Ganzer Post auf Instagram</a
+                  >
+                </div>
+                <h3>
+                  <span class="post__num">Carousel</span> Berlin Karussell
+                </h3>
+                <p class="post__meta">16 Bilder aus der ganzen Woche</p>
               </li>
               <li class="post">
-                <div class="media media--reel" data-label="Reel 9:16"></div>
-                <h3>Recap Berlin, Teil 5</h3>
-                <p class="post__meta"><time datetime="">Datum folgt</time></p>
+                <a
+                  class="media media--reel loop"
+                  href="https://www.instagram.com/p/DQPWVl0kUp1/"
+                  target="_blank"
+                  rel="noopener"
+                  data-loop
+                  aria-label="Last Day Recap (1:54): ganzes Reel auf Instagram ansehen (neuer Tab)"
+                >
+                  <video
+                    src="video/berlin/lastday-loop.mp4"
+                    poster="video/berlin/lastday.jpg"
+                    muted
+                    loop
+                    playsinline
+                    preload="none"
+                    aria-hidden="true"
+                  ></video>
+                  <span class="loop__badge">Reel · 1:54</span>
+                  <span class="loop__cta">Ganzes Reel auf Instagram</span>
+                </a>
+                <h3>
+                  <span class="post__num">Letzter Tag</span> Last Day Recap
+                </h3>
+                <p class="post__meta">recap uf de reimheise</p>
+              </li>
+              <li class="post">
+                <a
+                  class="media media--reel loop"
+                  href="https://www.instagram.com/p/DQT_847jJdu/"
+                  target="_blank"
+                  rel="noopener"
+                  data-loop
+                  aria-label="BTS-Recap (0:41): ganzes Reel auf Instagram ansehen (neuer Tab)"
+                >
+                  <video
+                    src="video/berlin/bts-loop.mp4"
+                    poster="video/berlin/bts.jpg"
+                    muted
+                    loop
+                    playsinline
+                    preload="none"
+                    aria-hidden="true"
+                  ></video>
+                  <span class="loop__badge">BTS · 0:41</span>
+                  <span class="loop__cta">Ganzes Reel auf Instagram</span>
+                </a>
+                <h3>
+                  <span class="post__num">Behind the Scenes</span> BTS-Recap
+                </h3>
+                <p class="post__meta">
+                  Abgedreht in Tempelhof: ein kurzes BTS-Recap vom Dreh mit den
+                  Spatzen
+                </p>
+              </li>
+              <!-- Zum Schluss: das eigentliche Projekt der Blockwoche (YouTube) -->
+              <li class="post">
+                <div
+                  class="media media--wide"
+                  data-youtube="YZoyh-uAf_I"
+                  data-title="Unser Videoprojekt aus der Blockwoche"
+                  data-label="Projektvideo, YouTube"
+                ></div>
+                <h3>
+                  <span class="post__num">Das Projekt</span> Unser Video aus der
+                  Blockwoche
+                </h3>
+                <p class="post__meta">Das Resultat, fürs Studium gedreht</p>
               </li>
             </ol>
           </div>
 
           <div class="gallery__progress">
             <div class="progress"><span data-gallery-progress></span></div>
-            <output data-gallery-count>1 / 6</output>
+            <output data-gallery-count>1 / 9</output>
           </div>
         </div>
       </section>
