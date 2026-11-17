@@ -258,6 +258,7 @@ a {
 
 .hero__title {
   position: absolute;
+  z-index: 3; /* vor dem Anhänger des Labubuechs */
   left: 0;
   right: 0;
   top: 46%;
@@ -1990,8 +1991,8 @@ html.no-swipe-back body {
 
 .book--hero {
   --book-w: clamp(124px, 12.4vw, 188px);
-  left: 4%;
-  top: 64%;
+  left: 16%; /* unter dem Anfang vom Titel, links vom Untertitel */
+  top: 58%;
   z-index: 2;
 }
 
@@ -2109,7 +2110,9 @@ html.no-swipe-back body {
   gap: 0.6em;
   min-height: 0;
   padding: 1.5em 0.4em 2.9em; /* oben Platz für "Eintrag x von y", unten für die Pfeile */
-  overflow-y: auto;
+  overflow-x: hidden; /* nie seitlich scrollen */
+  overflow-y: auto; /* nur im Notfall, zu lange Einträge werden vorher kleiner (fitEntries) */
+  scrollbar-width: thin;
   color: #1a1a1a;
   font: 500 1em/1.45 var(--font-display); /* etwas kräftiger: liest sich auf dem Foto-Papier besser */
 }
@@ -2219,11 +2222,22 @@ html.no-swipe-back body {
   font-size: 1.12em;
 }
 .book-entry footer {
+  display: grid;
+  justify-items: end;
+  gap: 0.15em;
   margin-top: auto;
   padding-top: 1em;
-  color: #3d3d3d;
-  font: italic 400 0.82em/1.35 var(--font-display);
   text-align: right;
+}
+/* Name gut lesbar: kräftig, nicht kursiv; Datum klein darunter */
+.book-entry__name {
+  color: #1a1a1a;
+  font: 700 0.86em/1.2 var(--font-body);
+  letter-spacing: 0.01em;
+}
+.book-entry footer time {
+  color: #4a4a4a;
+  font: 400 0.68em/1.2 var(--font-body);
 }
 
 /* Umblättern: die neue Seite gleitet sanft herein (das Papier im Foto bleibt) */
@@ -2325,6 +2339,20 @@ html.no-swipe-back body {
   flex: 1;
   grid-template-rows: auto 1fr;
   min-height: 4.5em;
+}
+.book-field__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5em;
+}
+.book-field__head small {
+  color: #4a4a4a;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.book-field__head small.is-near {
+  color: var(--pink-strong);
 }
 .book-field > span {
   font: 700 0.75em/1.2 var(--font-body);
@@ -2944,9 +2972,9 @@ h2,
 
   .book--hero {
     --book-w: 92px;
-    left: var(--gutter);
-    top: auto;
-    bottom: calc(14% + 26px);
+    left: 14%; /* unter dem Titel, nicht am Rand */
+    top: calc(38% + clamp(2.5rem, 12.5vw, 4rem) + 64px);
+    bottom: auto;
   }
 
   /* Featured: Kopf oben, Folgen untereinander (kein Stapel) */

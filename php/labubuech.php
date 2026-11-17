@@ -7,7 +7,7 @@
    POST action=save          -> name, text speichern -> { entry: {name, text, date} }
 
    Regeln, die hier (und nicht im Browser) geprüft werden:
-   - Name höchstens 24, Nachricht höchstens 400 Zeichen, Nachricht nicht leer
+   - Name höchstens 24, Nachricht höchstens 280 Zeichen, Nachricht nicht leer
    - pro Besucher ein Eintrag pro Tag (Schweizer Zeit)
    - gespeichert wird nur innerhalb von 2 Minuten ab dem ersten Buchstaben
 
@@ -32,7 +32,7 @@ header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 
 const NAME_MAX = 24;
-const TEXT_MAX = 400;
+const TEXT_MAX = 280; // gleich wie maxlength in index.html: so passt jeder Eintrag auf eine Seite
 const SECONDS = 120; // zwei Minuten
 const GRACE = 15; // Puffer für langsames Internet beim automatischen Speichern
 
@@ -242,8 +242,11 @@ if ($action === 'save') {
     if ($text === '') {
         reply(422, ['error' => 'Die Nachricht ist leer.']);
     }
-    if (length($name) > NAME_MAX || length($text) > TEXT_MAX) {
-        reply(422, ['error' => 'Name oder Nachricht ist zu lang.']);
+    if (length($name) > NAME_MAX) {
+        reply(422, ['error' => 'Der Name darf höchstens ' . NAME_MAX . ' Zeichen lang sein.']);
+    }
+    if (length($text) > TEXT_MAX) {
+        reply(422, ['error' => 'Die Nachricht darf höchstens ' . TEXT_MAX . ' Zeichen lang sein.']);
     }
 
     $start = ($_SESSION['lb_day'] ?? '') === $today ? (int) ($_SESSION['lb_start'] ?? 0) : 0;

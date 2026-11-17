@@ -75,7 +75,7 @@ Das Labubuech braucht einen Server mit PHP und MySQL. Auf GitHub Pages oder mit 
 
 Der Server prüft die Regeln, nicht der Browser:
 
-- Name höchstens 24, Nachricht höchstens 400 Zeichen, Nachricht nicht leer
+- Name höchstens 24, Nachricht höchstens 280 Zeichen (passt so immer auf eine Seite), Nachricht nicht leer
 - ein Eintrag pro Besucher und Tag (Schweizer Zeit). Besucher werden über ein Cookie erkannt, nicht über die IP-Adresse, weil sich im FH-WLAN alle eine IP teilen.
 - gespeichert wird nur innerhalb von 2 Minuten ab dem ersten Buchstaben (mit 15 Sekunden Puffer)
 

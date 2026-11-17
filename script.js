@@ -1379,6 +1379,16 @@ function buildWritePage() {
   page.append(writeTemplate.content.cloneNode(true));
   const form = page.querySelector("[data-book-form]");
   form.elements.message.addEventListener("input", startTimer);
+  // Zeichen zählen (Limite = maxlength in index.html, gleich wie TEXT_MAX in labubuech.php)
+  const count = form.querySelector("[data-book-count]");
+  const showCount = () => {
+    const max = form.elements.message.maxLength;
+    const used = form.elements.message.value.length;
+    count.textContent = `${used} / ${max}`;
+    count.classList.toggle("is-near", used >= max - 20);
+  };
+  form.elements.message.addEventListener("input", showCount);
+  form.addEventListener("reset", () => requestAnimationFrame(showCount));
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!form.elements.message.value.trim()) {
@@ -1408,11 +1418,15 @@ function buildPages() {
     quote.className = "book-entry";
     const text = document.createElement("p");
     text.textContent = entry.text; // als Text, nie als HTML
+    // Unterschrift: "— Name" gut lesbar, darunter Datum und Zeit
     const by = document.createElement("footer");
+    const name = document.createElement("strong");
+    name.className = "book-entry__name";
+    name.textContent = `— ${entry.name}`;
     const time = document.createElement("time");
     time.dateTime = entry.date;
     time.textContent = dateFormat.format(new Date(entry.date));
-    by.append(`— ${entry.name}, `, time);
+    by.append(name, time);
     quote.append(text, by);
     page.append(num, quote);
     return page;
@@ -1450,9 +1464,29 @@ function buildPages() {
   if (form && draft) {
     form.elements.name.value = draft.name;
     form.elements.message.value = draft.message;
+    form.elements.message.dispatchEvent(new Event("input")); // Zähler aktualisieren
   }
   showTime();
 }
+
+// Zu lange Einträge (z. B. alte mit 400 Zeichen oder auf sehr kleinen Bildschirmen)
+// werden etwas kleiner geschrieben, bis sie ohne Scrollbalken auf die Seite passen.
+function fitEntries() {
+  pages
+    .filter((page) => !page.hidden && page.classList.contains("book-page--entry"))
+    .forEach((page) => {
+      const quote = page.querySelector(".book-entry");
+      let size = 1.12; // gleich wie .book-entry in style.css
+      quote.style.fontSize = "";
+      while (page.scrollHeight > page.clientHeight + 1 && size > 0.72) {
+        size -= 0.04;
+        quote.style.fontSize = `${size}em`;
+      }
+    });
+}
+window.addEventListener("resize", () => {
+  if (bookDialog.open) fitEntries();
+});
 
 const perView = () => (twoPages.matches ? 2 : 1);
 const lastView = () => Math.max(0, pages.length - perView());
@@ -1473,6 +1507,7 @@ function showView(index, direction = 0) {
     void page.offsetWidth;
     page.classList.add(direction > 0 ? "is-turning-next" : "is-turning-prev");
   }
+  fitEntries();
   bookPrev.disabled = view === 0;
   bookNext.disabled = view >= lastView();
   // "Einträge durchstöbern" nur bei der Einleitung, wenn es Einträge gibt
