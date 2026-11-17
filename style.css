@@ -1928,40 +1928,49 @@ html.no-swipe-back body {
   filter: drop-shadow(0 10px 20px rgba(33, 33, 33, 0.25));
 }
 
-/* Lesezeichen: hängt unten raus, ist der Knopf zum Öffnen */
-.book__ribbon {
+/* Lesezeichen: hängt unten raus.
+   .book__band ist das sichtbare Band (hinter dem Buchbild).
+   .book__ribbon ist der Knopf: unsichtbar, grösser als das Band und vor dem Bild,
+   damit jeder Klick aufs Band (und knapp daneben) das Buch öffnet. */
+.book__band {
   position: absolute;
-  z-index: -1; /* Goes BEHIND the book image so it hangs out the bottom */
+  z-index: -1; /* hinter dem Buchbild, hängt unten heraus */
   left: 64%;
-  top: 90%; /* Adjust this if the ribbon hangs too low/high relative to your image */
+  top: 90%;
   width: calc(var(--book-w, 80px) * 0.16);
   min-width: 12px;
   height: calc(14% + 34px);
-  padding: 0;
-  border: 0;
   background: var(--pink);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 86%, 0 100%);
   transform-origin: top center;
-  cursor: pointer;
+  pointer-events: none;
   transition: height 0.2s, background-color 0.2s;
   animation: ribbon-sway 3.2s ease-in-out infinite;
 }
-
-/* grössere Klickfläche als das schmale Band */
-.book__ribbon::before {
-  content: "";
+.book__ribbon {
   position: absolute;
-  inset: -6px -14px -10px;
+  z-index: 1; /* vor dem Bild */
+  left: calc(64% - 16px);
+  top: 84%;
+  width: calc(var(--book-w, 80px) * 0.16 + 32px);
+  min-width: 44px;
+  height: calc(20% + 56px);
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  cursor: pointer;
 }
-.book__ribbon:hover,
-.book__ribbon:focus-visible {
+.book__ribbon:hover + .book__band,
+.book__ribbon:focus-visible + .book__band {
   height: calc(14% + 44px);
   background: var(--pink-strong);
 }
 .book__ribbon:focus-visible {
+  outline: 2px solid var(--pink);
   outline-offset: 2px;
 }
-.book__ribbon.is-wiggling {
+.book__band.is-wiggling {
   animation: ribbon-wiggle 0.6s ease-in-out;
 }
 @keyframes ribbon-sway {
@@ -2364,20 +2373,24 @@ html.no-swipe-back body {
   width: 100%;
   padding: 0.2em 2px;
   border: 0;
-  border-bottom: 1.5px solid #4d4d4d;
+  border-bottom: 1px solid var(--line, #4d4d4d);
   background: transparent;
   color: var(--ink);
   font: inherit;
 }
 /* liniertes Papier */
+/* liniertes Papier: Zeilenhöhe auf ganze Pixel gerundet, damit jede Linie genau 1px scharf ist */
 .book-field textarea {
+  --lh: 1.75em;
+  --lh: round(1.75em, 1px);
   resize: none;
-  line-height: 1.75em;
+  line-height: var(--lh);
   background: repeating-linear-gradient(
     to bottom,
-    transparent 0 calc(1.75em - 1.5px),
-    #5c5c5c calc(1.75em - 1.5px) 1.75em
+    transparent 0 calc(var(--lh) - 1px),
+    var(--line, #4d4d4d) calc(var(--lh) - 1px) var(--lh)
   );
+  background-attachment: local; /* Linien wandern beim Scrollen mit dem Text */
   border-bottom: 0;
 }
 .book-field input::placeholder,
@@ -2385,13 +2398,11 @@ html.no-swipe-back body {
   color: #6b6b6b;
   opacity: 1;
 }
+/* Fokus: die vorhandenen Linien werden pink (keine zweite Linie) */
 .book-field input:focus,
 .book-field textarea:focus {
   outline: none;
-  border-color: var(--pink);
-}
-.book-field textarea:focus {
-  box-shadow: inset 0 -2px 0 var(--pink);
+  --line: var(--pink-strong);
 }
 .book-write .btn {
   align-self: flex-start;
@@ -3134,7 +3145,7 @@ h2,
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
-  .book__ribbon,
+  .book__band,
   .post__sticker.is-in {
     animation: none;
   }

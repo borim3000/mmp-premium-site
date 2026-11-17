@@ -1378,7 +1378,10 @@ function buildWritePage() {
   const page = makePage("write");
   page.append(writeTemplate.content.cloneNode(true));
   const form = page.querySelector("[data-book-form]");
-  form.elements.message.addEventListener("input", startTimer);
+  // Die zwei Minuten starten erst mit dem ersten echten Buchstaben (nicht beim Antippen des Felds)
+  form.elements.message.addEventListener("input", (event) => {
+    if (event.isTrusted && form.elements.message.value.length > 0) startTimer();
+  });
   // Zeichen zählen (Limite = maxlength in index.html, gleich wie TEXT_MAX in labubuech.php)
   const count = form.querySelector("[data-book-count]");
   const showCount = () => {
@@ -1389,6 +1392,7 @@ function buildWritePage() {
   };
   form.elements.message.addEventListener("input", showCount);
   form.addEventListener("reset", () => requestAnimationFrame(showCount));
+  form.showCount = showCount; // für buildPages (angefangenen Text wiederherstellen)
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!form.elements.message.value.trim()) {
@@ -1464,7 +1468,7 @@ function buildPages() {
   if (form && draft) {
     form.elements.name.value = draft.name;
     form.elements.message.value = draft.message;
-    form.elements.message.dispatchEvent(new Event("input")); // Zähler aktualisieren
+    form.showCount(); // nur den Zähler aktualisieren, die Zeit startet dadurch nicht
   }
   showTime();
 }
@@ -1627,7 +1631,7 @@ document
 
 // Klick auf den Buchdeckel: das Lesezeichen wackelt als Hinweis
 document.querySelectorAll("[data-book]").forEach((book) => {
-  const ribbon = book.querySelector(".book__ribbon");
+  const ribbon = book.querySelector(".book__band"); // sichtbares Lesezeichen
   const cover = book.querySelector(".book__cover, .book__image"); // Deckel oder Bild vom Buch
   if (!cover || !ribbon) return;
   cover.addEventListener("click", () => {
