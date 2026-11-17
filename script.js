@@ -811,6 +811,70 @@ if (hasGsap && !reduceMotion) {
     scrollTrigger: { ...outroScroll },
   });
 
+  // Finale (Multimedia Award 2026): Der Umschlag öffnet sich beim Scrollen.
+  // Laptop: gepinnt, danach erscheinen rechts Datum, Countdown und Daumen.
+  // Handy: nicht gepinnt, der Umschlag öffnet sich, während er durchs Bild scrollt.
+  const finale = document.querySelector("[data-finale]");
+  if (finale) {
+    const q = (sel) => finale.querySelector(sel);
+    const flap = q("[data-envelope-flap]");
+    const card = q("[data-envelope-card]");
+    const envelopeParts = finale.querySelectorAll(
+      ".envelope__back, .envelope__front, .envelope__flap"
+    );
+    finale.classList.remove("is-static");
+
+    // Gemeinsamer Ablauf: Umschlag ist zu (mit Siegel), Satz erscheint, Klappe auf, Karte heraus
+    const openEnvelope = (tl) => {
+      tl.from(q("[data-finale-line]"), { opacity: 0, y: 24, duration: 0.5 }, 0)
+        .to(flap, { rotationX: 180, duration: 0.8, ease: "power1.inOut" }, 0.6)
+        .to(q(".envelope__seal"), { opacity: 0, duration: 0.3 }, 0.6)
+        .set(flap, { zIndex: 0 }, 1.0) // Klappe hinter die Karte, sobald sie offen ist
+        .to(card, { yPercent: -64, duration: 0.9, ease: "power2.out" }, 1.4);
+      return tl;
+    };
+
+    mm.add("(min-width: 900px)", () => {
+      const tl = gsap.timeline({
+        defaults: { ease: "power1.out" },
+        scrollTrigger: {
+          trigger: q(".finale__pin"),
+          pin: true,
+          anticipatePin: 1,
+          start: "top top",
+          end: () => `+=${window.innerHeight * 2.2}`,
+          scrub: 0.5,
+          invalidateOnRefresh: true,
+          refreshPriority: order(finale),
+        },
+      });
+      openEnvelope(tl)
+        // Umschlag fällt weg, die Karte bleibt gross stehen
+        .to(envelopeParts, { yPercent: 40, opacity: 0, duration: 0.7 }, 2.4)
+        .to(card, { yPercent: -30, scale: 1.06, duration: 0.7 }, 2.4)
+        .from(
+          q("[data-finale-info]").children,
+          { opacity: 0, x: 40, duration: 0.6, stagger: 0.08 },
+          2.5
+        )
+        .to({}, { duration: 0.5 }); // kurz stehen bleiben
+    });
+
+    mm.add("(max-width: 899px)", () => {
+      openEnvelope(
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: q("[data-envelope]"),
+            start: "top 85%",
+            end: "bottom 35%",
+            scrub: 0.5,
+            refreshPriority: order(finale),
+          },
+        })
+      );
+    });
+  }
+
   // Nach Bildern und Schriften neu messen: Die Höhen ändern sich, sonst stimmen die Haltepunkte nicht
   window.addEventListener("load", () => ScrollTrigger.refresh());
   if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
@@ -864,6 +928,127 @@ if (!reduceMotion && "IntersectionObserver" in window) {
   stickers.forEach((sticker) => {
     sticker.closest(".gallery").classList.add("has-stickers");
     stickerObserver.observe(sticker.closest(".post")); // die ganze Karte zählt, nicht nur die Ecke
+  });
+}
+
+/* ---------- Finale: Countdown bis zur Verleihung ----------
+   Datum steht in data-countdown. Am Tag selbst und danach erscheint statt der
+   Zahlen ein Satz (data-countdown-done). Nach der Verleihung den Satz in index.html anpassen. */
+
+const countdown = document.querySelector("[data-countdown]");
+if (countdown) {
+  const target = new Date(countdown.dataset.countdown).getTime();
+  const done = document.querySelector("[data-countdown-done]");
+  const units = {
+    days: 86400000,
+    hours: 3600000,
+    minutes: 60000,
+    seconds: 1000,
+  };
+  const fields = {};
+  Object.keys(units).forEach(
+    (key) => (fields[key] = countdown.querySelector(`[data-unit="${key}"]`))
+  );
+  const tick = () => {
+    let rest = target - Date.now();
+    if (rest <= 0) {
+      countdown.hidden = true;
+      done.hidden = false;
+      // 6 Stunden nach Beginn: Satz für "danach" (data-after)
+      if (rest < -6 * units.hours && done.dataset.after) {
+        done.textContent = done.dataset.after;
+        clearInterval(timer);
+      }
+      return;
+    }
+    Object.entries(units).forEach(([key, ms]) => {
+      const value = Math.floor(rest / ms);
+      rest -= value * ms;
+      fields[key].textContent = String(value).padStart(2, "0");
+    });
+  };
+  const timer = setInterval(tick, 1000);
+  tick();
+}
+
+/* ---------- Finale: Daumen drücken ----------
+   Zählt pro Browser einmal (php/daumen.php, Tabelle siehe php/daumen.sql).
+   Ohne PHP (z. B. lokal) funktioniert der Knopf trotzdem, nur ohne Zahl.
+   Schaltet das Achievement "Daumen gedrückt" frei. */
+
+const daumen = document.querySelector("[data-daumen]");
+if (daumen) {
+  const API = "php/daumen.php";
+  const btn = daumen.querySelector("[data-daumen-btn]");
+  const label = daumen.querySelector("[data-daumen-label]");
+  const countText = daumen.querySelector("[data-daumen-count]");
+  const LOCAL_KEY = "mmp_daumen";
+
+  const showCount = (count) => {
+    if (typeof count !== "number") return;
+    countText.textContent =
+      count === 1
+        ? "1 Person drückt uns die Daumen"
+        : `${count} Personen drücken uns die Daumen`;
+  };
+  const showPressed = () => {
+    btn.classList.add("is-pressed");
+    label.textContent = "Danke fürs Duume drücke!";
+  };
+  let pressed = false;
+  try {
+    pressed = localStorage.getItem(LOCAL_KEY) === "1";
+  } catch {}
+  if (pressed) showPressed();
+
+  fetch(API, { credentials: "same-origin" })
+    .then((res) => (res.ok ? res.json() : Promise.reject()))
+    .then((data) => {
+      showCount(data.count);
+      if (data.pressed) {
+        pressed = true;
+        showPressed();
+      }
+    })
+    .catch(() => {}); // kein PHP: Knopf geht trotzdem, nur ohne Zahl
+
+  // Ein paar Daumen fliegen vom Knopf weg
+  const fly = () => {
+    if (reduceMotion || typeof gsap === "undefined") return;
+    const box = btn.getBoundingClientRect();
+    for (let i = 0; i < 9; i++) {
+      const el = document.createElement("span");
+      el.className = "daumen__fly";
+      el.textContent = "🤞";
+      el.setAttribute("aria-hidden", "true");
+      el.style.left = `${box.left + box.width / 2 - 14}px`;
+      el.style.top = `${box.top}px`;
+      document.body.append(el);
+      gsap.to(el, {
+        x: gsap.utils.random(-160, 160),
+        y: gsap.utils.random(-260, -120),
+        rotation: gsap.utils.random(-60, 60),
+        opacity: 0,
+        duration: gsap.utils.random(0.9, 1.4),
+        ease: "power2.out",
+        onComplete: () => el.remove(),
+      });
+    }
+  };
+
+  btn.addEventListener("click", () => {
+    fly();
+    unlock("daumen");
+    if (pressed) return; // pro Browser nur einmal zählen
+    pressed = true;
+    showPressed();
+    try {
+      localStorage.setItem(LOCAL_KEY, "1");
+    } catch {}
+    fetch(API, { method: "POST", credentials: "same-origin" })
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => showCount(data.count))
+      .catch(() => {});
   });
 }
 
@@ -1359,7 +1544,9 @@ document
 // Klick auf den Buchdeckel: das Lesezeichen wackelt als Hinweis
 document.querySelectorAll("[data-book]").forEach((book) => {
   const ribbon = book.querySelector(".book__ribbon");
-  book.querySelector(".book__cover").addEventListener("click", () => {
+  const cover = book.querySelector(".book__cover, .book__image"); // Deckel oder Bild vom Buch
+  if (!cover || !ribbon) return;
+  cover.addEventListener("click", () => {
     ribbon.classList.remove("is-wiggling");
     void ribbon.offsetWidth;
     ribbon.classList.add("is-wiggling");

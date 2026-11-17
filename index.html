@@ -42,7 +42,7 @@
               d="M12 2.5l2.9 6.2 6.8.7-5.1 4.6 1.4 6.7L12 17.3l-6 3.4 1.4-6.7-5.1-4.6 6.8-.7z"
             />
           </svg>
-          <span data-achievement-count>0/8</span>
+          <span data-achievement-count>0/9</span>
         </button>
       </div>
       <div class="scroll-progress" aria-hidden="true">
@@ -836,7 +836,8 @@
       </section>
 
       <!-- ============ 03 MULTIMEDIA AWARDS 2025 ============ -->
-      <!-- Nicht gepinnt: Pokal, Text und Bilder fliegen beim Hineinscrollen ein. -->
+      <!-- Nicht gepinnt: Pokal, Text und Reel fliegen beim Hineinscrollen ein.
+         Der Link unten führt zum Finale (Multimedia Award 2026, ganz unten). -->
       <section
         class="chapter chapter--awards chapter--white"
         id="awards"
@@ -856,39 +857,43 @@
                     d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 14.9V18h3v3H8v-3h3v-3.1A5 5 0 0 1 8.4 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1 1.7V7zm10 0v2.7A2 2 0 0 0 18 8V7h-1z"
                   />
                 </svg>
-                Platzhalter: Gewinner oder Nominiert
+                Dabei als Gäste
               </p>
-              <p class="awards__category">Kategorie folgt</p>
+              <p class="awards__category">Ohne Projekt, aber mit Kamera</p>
               <p>
-                Zwei, drei Sätze: Mit welchem Projekt wart ihr dabei und was ist
-                passiert?
+                2025 hatten wir noch kein Projekt zum Einreichen. Also sind wir
+                trotzdem hin und haben ein Video gedreht, von den Spatzen für die
+                Spatzen: Recap und Voxpop in einem.
               </p>
-              <a class="project__link" href="#">Mehr zu den Awards</a>
+              <blockquote class="awards__quote">
+                «Dresscode isch zwar rot gsi, aber mir hei üs trotzdem blau
+                gmacht»
+              </blockquote>
+              <a class="awards__next" href="#award-2026"
+                >Nächstes Jahr: auf der anderen Seite der Bühne</a
+              >
             </div>
-            <div
-              class="media media--wide awards__main"
+            <a
+              class="media media--reel loop awards__reel"
+              href="https://www.instagram.com/p/DSUg_j4iO-A/"
+              target="_blank"
+              rel="noopener"
+              data-loop
               data-reveal
-              data-youtube="VIDEO_ID"
-              data-title="Multimedia Awards 2025"
-              data-label="Video 16:9, YouTube"
-            ></div>
-            <div class="awards__photos">
-              <div
-                class="media media--photo"
-                data-reveal
-                data-label="Foto"
-              ></div>
-              <div
-                class="media media--square"
-                data-reveal
-                data-label="Foto"
-              ></div>
-              <div
-                class="media media--photo"
-                data-reveal
-                data-label="Foto"
-              ></div>
-            </div>
+              aria-label="Multimedia Awards 2025, Recap und Voxpop (3:41): ganzes Reel auf Instagram ansehen (neuer Tab)"
+            >
+              <video
+                src="video/awards/awards25-loop.mp4"
+                poster="video/awards/awards25.jpg"
+                muted
+                loop
+                playsinline
+                preload="none"
+                aria-hidden="true"
+              ></video>
+              <span class="loop__badge">Recap + Voxpop · 3:41</span>
+              <span class="loop__cta">Ganzes Reel auf Instagram</span>
+            </a>
           </div>
         </div>
       </section>
@@ -1279,6 +1284,14 @@
             <span class="chapter__num" aria-hidden="true">05</span>
             <h2 id="digezz-title">Digezz</h2>
             <p class="chapter__sub">Cuschinar Difficil</p>
+            <a class="nominee-badge" href="#award-2026">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 14.9V18h3v3H8v-3h3v-3.1A5 5 0 0 1 8.4 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1 1.7V7zm10 0v2.7A2 2 0 0 0 18 8V7h-1z"
+                />
+              </svg>
+              Nominiert · Multimedia Award 2026
+            </a>
             <a
               class="chapter__link"
               href="https://www.youtube.com/playlist?list=PLBDZt1fObJvuMvbIPOS-Mj3StlovrY8gO"
@@ -1297,6 +1310,10 @@
               <li class="post post--text">
                 <p class="post__num">Juni 2026, mit Adriel Monostori</p>
                 <h3>Bündner Küche in sechs Folgen</h3>
+                <p class="post__nominee">
+                  Nominiert für den Multimedia Award 2026, Kategorie Film, Video
+                  &amp; Animation
+                </p>
                 <p>
                   Wir studieren an der FH Graubünden, kennen das Bündnerland
                   aber kaum. Also kochen wir uns durch die Bündner Küche, mit
@@ -1483,6 +1500,93 @@
           <div class="gallery__progress">
             <div class="progress"><span data-gallery-progress></span></div>
             <output data-gallery-count>1 / 6</output>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ FINALE: MULTIMEDIA AWARD 2026 ============ -->
+      <!-- Gepinnt: Ein Umschlag öffnet sich beim Scrollen und zeigt die Nominierung,
+           daneben Datum, Countdown und der Daumen-Knopf (php/daumen.php).
+           Nach der Verleihung: bei data-result "gewonnen" eintragen und die Texte
+           in .envelope__badge und .finale__status anpassen. -->
+      <section
+        class="finale is-static"
+        id="award-2026"
+        data-finale
+        aria-labelledby="finale-title"
+      >
+        <div class="finale__pin">
+          <div class="finale__stage">
+            <p class="finale__kicker">Multimedia Award 2026</p>
+            <p class="finale__line" data-finale-line>
+              And the nominee is <span aria-hidden="true">…</span>
+            </p>
+            <div class="envelope" data-envelope>
+              <div class="envelope__back" aria-hidden="true"></div>
+              <div class="envelope__card" data-envelope-card>
+                <p class="envelope__badge">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 14.9V18h3v3H8v-3h3v-3.1A5 5 0 0 1 8.4 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1 1.7V7zm10 0v2.7A2 2 0 0 0 18 8V7h-1z"
+                    />
+                  </svg>
+                  Nominiert
+                </p>
+                <h2 class="envelope__title" id="finale-title">
+                  Cuschinar Difficil
+                </h2>
+                <p class="envelope__category">Film, Video &amp; Animation</p>
+                <p class="envelope__note">
+                  Aus 54 Projekten von der Jury ausgewählt
+                </p>
+              </div>
+              <div class="envelope__front" aria-hidden="true"></div>
+              <div class="envelope__flap" data-envelope-flap aria-hidden="true">
+                <img
+                  class="envelope__seal"
+                  src="img/vogel.png"
+                  alt=""
+                  width="140"
+                  height="170"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="finale__info" data-finale-info>
+            <p class="finale__save">Save the Date</p>
+            <p class="finale__date">
+              <time datetime="2026-12-17T18:00+01:00">17.12.2026</time>
+            </p>
+            <p class="finale__place">18.00 Uhr · THE HALL, Dübendorf</p>
+
+            <div
+              class="countdown"
+              data-countdown="2026-12-17T18:00:00+01:00"
+              role="timer"
+              aria-label="Zeit bis zur Verleihung"
+            >
+              <p><span data-unit="days">00</span><small>Tage</small></p>
+              <p><span data-unit="hours">00</span><small>Std.</small></p>
+              <p><span data-unit="minutes">00</span><small>Min.</small></p>
+              <p><span data-unit="seconds">00</span><small>Sek.</small></p>
+            </div>
+            <p
+              class="finale__status"
+              data-countdown-done
+              data-after="Die Verleihung ist vorbei. Das Resultat folgt hier."
+              hidden
+            >
+              Heute ist es so weit. Drückt die Daumen!
+            </p>
+
+            <div class="daumen" data-daumen>
+              <button class="daumen__btn" type="button" data-daumen-btn>
+                <span class="daumen__emoji" aria-hidden="true">🤞</span>
+                <span data-daumen-label>Drück eus de Duume</span>
+              </button>
+              <p class="daumen__count" data-daumen-count aria-live="polite"></p>
+            </div>
           </div>
         </div>
       </section>

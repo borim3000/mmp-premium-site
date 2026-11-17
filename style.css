@@ -1532,7 +1532,8 @@ html.no-swipe-back body {
 }
 .awards {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+  grid-template-columns: minmax(0, 560px) auto;
+  justify-content: space-between;
   gap: 40px clamp(32px, 5vw, 72px);
   align-items: center;
 }
@@ -1560,14 +1561,324 @@ html.no-swipe-back body {
 .awards__category {
   font: italic 400 1.75rem/1.2 var(--font-display);
 }
-.awards__photos {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: flex-end;
-  gap: 24px;
+.awards__quote {
+  margin: 0;
+  padding-left: 16px;
+  border-left: 3px solid var(--pink);
+  font: italic 400 1.25rem / 1.3 var(--font-display);
 }
-.awards__photos .media {
-  height: clamp(180px, 26vw, 320px);
+/* Verweis aufs Finale ganz unten */
+.awards__next {
+  color: var(--pink-strong);
+  font-weight: 700;
+  text-underline-offset: 4px;
+}
+.awards__next::after {
+  content: " ↓";
+}
+.awards__next:hover {
+  color: var(--pink);
+}
+.awards__reel {
+  width: clamp(240px, 24vw, 340px);
+  aspect-ratio: 9 / 16;
+}
+
+/* Cuschinar Difficil: Nominierung (Badge im Kopf und Zeile auf der Textkarte) */
+.nominee-badge {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px 7px 10px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  text-decoration: none;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.nominee-badge svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--gold);
+}
+.nominee-badge:hover,
+.nominee-badge:focus-visible {
+  background: var(--gold);
+  transform: translateY(-2px);
+}
+.nominee-badge:hover svg,
+.nominee-badge:focus-visible svg {
+  fill: var(--ink);
+}
+.post__nominee {
+  color: #8a6a12; /* dunkles Gold, gut lesbar auf Weiss */
+  font-weight: 700;
+  font-size: 0.8125rem;
+}
+
+/* ---------- Finale: Multimedia Award 2026 ---------- */
+
+.finale {
+  --env-w: min(520px, 84vw, calc((100svh - var(--header-h) - 210px) * 0.95));
+  position: relative;
+  background:
+    radial-gradient(
+      ellipse at 30% 60%,
+      rgba(219, 171, 50, 0.16),
+      transparent 60%
+    ),
+    var(--ink);
+  color: var(--white);
+}
+.finale__pin {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: 40px clamp(32px, 5vw, 80px);
+  min-height: 100svh;
+  padding: calc(var(--header-h) + 32px) var(--gutter) 48px;
+}
+.finale__stage {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+.finale__kicker,
+.finale__save {
+  color: var(--gold);
+  font: 800 0.8125rem / 1 var(--font-accent);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.finale__line {
+  margin-top: 14px;
+  font: italic 400 clamp(1.75rem, 3vw, 2.75rem) / 1.1 var(--font-display);
+}
+
+/* Umschlag: Rückseite, Karte, Vordertasche, Klappe (in dieser Reihenfolge übereinander) */
+.envelope {
+  position: relative;
+  width: var(--env-w);
+  aspect-ratio: 8 / 5;
+  margin-top: calc(var(--env-w) * 0.36); /* Platz für die Karte, die herauskommt */
+  perspective: 1400px;
+}
+.envelope__back,
+.envelope__front,
+.envelope__flap {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+.envelope__back {
+  inset: 0;
+  z-index: 1;
+  border-radius: 10px;
+  background: var(--pink-strong);
+}
+.envelope__card {
+  position: absolute;
+  z-index: 2;
+  left: 5%;
+  right: 5%;
+  top: 6%;
+  height: 88%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 18px;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  background: #fbf6ea;
+  color: var(--ink);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+.envelope__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px 5px 8px;
+  border-radius: 999px;
+  background: var(--gold);
+  font: 800 0.6875rem / 1 var(--font-accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.envelope__badge svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--ink);
+}
+.envelope__title {
+  margin: 0;
+  font: 400 calc(var(--env-w) * 0.085) / 1 var(--font-display);
+  letter-spacing: -0.01em;
+}
+.envelope__category {
+  color: var(--pink-strong);
+  font: italic 400 calc(var(--env-w) * 0.042) / 1.2 var(--font-display);
+}
+.envelope__note {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+}
+.envelope__front {
+  inset: 0;
+  z-index: 3;
+  border-radius: 10px;
+  background: var(--pink);
+  /* Tasche reicht bis in die oberen Ecken und trifft die Spitze der Klappe */
+  clip-path: polygon(0 0, 50% 64%, 100% 0, 100% 100%, 0 100%);
+}
+.envelope__flap {
+  top: 0;
+  z-index: 4;
+  height: 64%;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+}
+.envelope__flap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px 10px 0 0;
+  background: #ff3d98;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.envelope__seal {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: calc(var(--env-w) * 0.16);
+  height: auto;
+  translate: -50% 45%;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35));
+}
+
+/* Ohne Animation (weniger Bewegung, ohne JavaScript): Umschlag offen, Karte draussen */
+.finale.is-static .envelope__flap {
+  z-index: 0;
+  transform: rotateX(180deg);
+}
+.finale.is-static .envelope__seal {
+  opacity: 0;
+}
+.finale.is-static .envelope__card {
+  transform: translateY(-64%);
+}
+
+/* Rechts: Datum, Countdown, Daumen */
+.finale__info {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+.finale__date {
+  color: var(--gold);
+  font: 400 clamp(3rem, 6.4vw, 6rem) / 1 var(--font-display);
+}
+.finale__place {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.countdown {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.countdown p {
+  display: grid;
+  justify-items: center;
+  min-width: 74px;
+  padding: 12px 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+.countdown span {
+  font: 400 2.25rem / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.countdown small {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.finale__status {
+  color: var(--gold);
+  font: italic 400 1.5rem / 1.2 var(--font-display);
+}
+
+.daumen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 18px;
+}
+.daumen__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px 13px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pink-strong);
+  color: var(--white);
+  font: 800 0.875rem / 1 var(--font-accent);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow:
+    0 6px 0 #a3004f,
+    0 14px 30px rgba(255, 0, 123, 0.3);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.2s;
+}
+.daumen__emoji {
+  font-size: 1.375rem;
+  line-height: 1;
+}
+.daumen__btn:hover {
+  background: var(--pink);
+  transform: translateY(-2px);
+}
+.daumen__btn:active {
+  transform: translateY(5px);
+  box-shadow:
+    0 1px 0 #a3004f,
+    0 4px 12px rgba(255, 0, 123, 0.3);
+}
+.daumen__btn:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: 5px;
+}
+.daumen__btn.is-pressed {
+  background: var(--gold);
+  color: var(--ink);
+  box-shadow:
+    0 6px 0 #9c7a1f,
+    0 14px 30px rgba(219, 171, 50, 0.3);
+}
+.daumen__count {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9375rem;
+}
+/* fliegende Daumen beim Drücken */
+.daumen__fly {
+  position: fixed;
+  z-index: 60;
+  pointer-events: none;
+  font-size: 1.75rem;
 }
 
 /* ---------- Stay tuned ---------- */
@@ -1770,13 +2081,10 @@ html.no-swipe-back body {
 
 .open-book {
   position: relative;
-  /* padding: Schiebt den Textbereich nach innen. 
-     Werte anpassen, bis der Text exakt auf deinen Buchseiten liegt! (oben/unten, links/rechts) */
-  padding: 40px 30px; 
-  
-  /* Dein aufgeschlagenes Buch-Bild (Doppelseite) */
-  background: url("img/labubuech_1_open.webp") center / 100% 100% no-repeat;
-  filter: drop-shadow(0 24px 60px rgba(0, 0, 0, 0.35));
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--book-blue);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
 .open-book__pages {
   display: grid;
@@ -1791,15 +2099,30 @@ html.no-swipe-back body {
   flex-direction: column;
   gap: 12px;
   min-height: 0;
-  /* Padding der einzelnen Seite (oben, rechts/links, unten) */
-  padding: 30px 40px 60px;
+  padding: 48px 40px 76px;
   overflow-y: auto;
-  /* WICHTIG: Transparent, damit dein Buch-Bild durchscheint */
-  background: transparent;
+  background: var(--book-paper);
   font: 400 1.1875rem/1.5 var(--font-display);
 }
 .book-page[hidden] {
   display: none;
+}
+/* linke und rechte Seite mit Schatten zum Buchrücken */
+.book-page:nth-child(odd) {
+  border-radius: 6px 0 0 6px;
+  background-image: linear-gradient(
+    to left,
+    rgba(33, 33, 33, 0.14),
+    rgba(33, 33, 33, 0) 9%
+  );
+}
+.book-page:nth-child(even) {
+  border-radius: 0 6px 6px 0;
+  background-image: linear-gradient(
+    to right,
+    rgba(33, 33, 33, 0.14),
+    rgba(33, 33, 33, 0) 9%
+  );
 }
 .book-page__num {
   position: absolute;
@@ -1848,7 +2171,7 @@ html.no-swipe-back body {
   }
 }
 
-/* Pfeile unten links und rechts */
+/* Pfeile unten links und rechts, wie im Minecraft-Buch */
 .open-book__arrow {
   position: absolute;
   bottom: 30px;
@@ -2596,13 +2919,26 @@ h2,
   .awards {
     grid-template-columns: 1fr;
   }
-  .awards__photos {
-    overflow-x: auto;
-    gap: 14px;
+  .awards__reel {
+    justify-self: center;
+    width: min(100%, 300px);
   }
-  .awards__photos .media {
-    height: 200px;
-    flex: none;
+
+  .finale {
+    --env-w: 84vw;
+  }
+  .finale__pin {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: 96px var(--gutter) 88px;
+    row-gap: 56px;
+  }
+  .countdown p {
+    min-width: 0;
+    flex: 1;
+  }
+  .countdown span {
+    font-size: 1.75rem;
   }
 
   .labubuech {
@@ -2636,12 +2972,10 @@ h2,
   }
 }
 
-/* Buch-Pop-up auf schmalen Bildschirmen: eine Seite statt Doppelseite */
+/* Buch-Pop-up auf schmalen Bildschirmen: eine Seite statt Doppelseite (gleiche Grenze wie in script.js) */
 @media (max-width: 759px) {
   .open-book {
-    /* Dein hochformatiges Bild (nur eine Seite) für Handys */
-    background: url("img/labubuech_1_open_mobile.png") center / 100% 100% no-repeat;
-    padding: 20px;
+    padding: 10px;
   }
   .open-book__pages {
     grid-template-columns: 1fr;
@@ -2649,10 +2983,9 @@ h2,
   }
   .book-page,
   .book-page:nth-child(n) {
-    /* Padding anpassen, damit der Text auf die mobile Einzelseite passt */
-    padding: 40px 24px 72px;
+    padding: 44px 24px 72px;
     border-radius: 6px;
-    background: transparent;
+    background-image: none;
   }
   .open-book__arrow--prev {
     left: 20px;

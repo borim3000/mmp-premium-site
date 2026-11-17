@@ -2,7 +2,7 @@
 
 > Platzhalter: Diese README wird im Lauf des Projekts ausgefüllt. Alles in _kursiv_ ersetzen.
 
-Ein Scrollytelling-Portfolio für den Content von [MMP Premium](https://www.instagram.com/mmp_premium): ISE MAA, L.I.F.T, Berlin, Multimedia Awards 2025, Rotterdam und unsere Digezz-Projekte, mit versteckten Easter Eggs, Achievements und dem Labubuech.
+Ein Scrollytelling-Portfolio für den Content von [MMP Premium](https://www.instagram.com/mmp_premium): ISE MAA, L.I.F.T, Berlin, Multimedia Awards 2025, Rotterdam, unsere Digezz-Projekte und die Nominierung für den Multimedia Award 2026, mit versteckten Easter Eggs, Achievements und dem Labubuech.
 
 **Team:** Naim de Amri, Robin Uliten
 **Modul:** Interaktive Medien 5, FH Graubünden, HS26
@@ -22,9 +22,10 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | Featured                   | ISE MAA, unser neues Format in 3 Folgen auf YouTube                            | Pinker Vorhang geht auf, dann gepinnt: Folgen legen sich als Kartenstapel übereinander, Folgen-Navigation links |
 | 01 L.I.F.T                 | Hopecore-Edit als eigenes MP4                                                  | Eigener Player in Pink (Play, Zeitleiste, Ton, Vollbild); stoppt beim Wegscrollen                               |
 | 02 Berlin                  | Blockwoche, Recaps, Umfrage, Carousels, BTS, Spatzenlingo und das Projektvideo | Gepinnt, Galerie fährt seitwärts; Reels als Schlaufe (Klick öffnet Instagram), Carousels zum Blättern           |
-| 03 Multimedia Awards 2025  | _Inhalt_                                                                       | Pokal, Text und Bilder fliegen beim Hineinscrollen ein                                                          |
+| 03 Multimedia Awards 2025  | Dabei als Gäste: Recap + Voxpop als Reel (video/awards/)                       | Pokal, Text und Reel fliegen beim Hineinscrollen ein; Link führt zum Finale                                      |
 | 04 Rotterdam               | Trailer, 2 Recaps und 3 Carousels (Beachdays, Kochen für 20 Personen)        | Gepinnt, Galerie fährt seitwärts; Reels als Schlaufe (Klick öffnet Instagram), Carousels zum Blättern; pinker Spatz → Flappy Spatz |
 | 05 Digezz                  | Cuschinar Difficil, 6 Folgen auf YouTube, mit Illustration pro Gericht         | Gepinnt, Folgen fahren seitwärts, Illustrationen springen auf die Karten, Video stoppt beim Wegscrollen         |
+| Finale: Multimedia Award 2026 | Nominiert mit Cuschinar Difficil, Film, Video & Animation; 17.12.2026, THE HALL Dübendorf | Gepinnt: Umschlag öffnet sich, Karte kommt heraus; Countdown; Knopf «Drück eus de Duume» mit Zähler (php/daumen.php) |
 | Stay tuned                 | Ausblick                                                                       | Satz fährt beim Scrollen durchs Bild                                                                            |
 | Labubuech                  | Gästebuch als Buch-Pop-up: mit Pfeilen blättern, 2 Minuten pro Tag schreiben   | Lesezeichen öffnet das Buch, Seiten klappen beim Blättern um                                                    |
 | Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite                                       | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord                                   |
@@ -57,6 +58,7 @@ img/            Bilder
 video/          Videos und Poster-Bilder
 sound/          Sounds
 php/            Labubuech: labubuech.php, config.example.php, labubuech.sql
+                Daumen-Zähler (Finale): daumen.php, daumen.sql
 ```
 
 ## Lokal starten
@@ -79,6 +81,17 @@ Der Server prüft die Regeln, nicht der Browser:
 
 Einen Eintrag ausblenden: in phpMyAdmin bei diesem Eintrag `hidden` auf `1` setzen.
 
+### Daumen-Zähler im Finale
+
+Nutzt die gleiche `php/config.php` und das gleiche Besucher-Cookie wie das Labubuech.
+
+1. Tabelle anlegen: `php/daumen.sql` in phpMyAdmin unter «SQL» einfügen.
+2. Fertig. Heisst die Tabelle anders, in `config.php` zusätzlich `'table_daumen' => 'name'` eintragen.
+
+Jeder Browser zählt einmal. Ohne PHP (z. B. mit Live Server) funktioniert der Knopf trotzdem, nur ohne Zahl.
+
+Nach der Verleihung: in `index.html` beim Finale den Text bei `data-after` und das Badge «Nominiert» auf der Karte anpassen (z. B. «Gewonnen»).
+
 Zum Testen nochmals schreiben: im Browser die Cookies der Seite löschen, dann gilt man als neuer Besucher.
 
 ## Easter Eggs (Liste für die Dozierenden)
@@ -98,6 +111,7 @@ Ein Klick auf den Zähler oben rechts (Stern) öffnet die Übersicht aller Achie
 | Labubuech      | Hero links und am Ende     | Am pinken Lesezeichen ziehen (Klick auf den Deckel lässt es wackeln)     | –            |
 | Flappy Spatz   | Pinker Spatz bei Rotterdam | Innerhalb von 1,5 Sekunden fünfmal anklicken, führt zum Spiel            | Flappy Spatz |
 | Vielflieger    | flappy.html                | 10 Punkte schaffen                                                       | Vielflieger  |
+| Daumen        | Finale (Award 2026)        | Knopf «Drück eus de Duume» drücken                                       | Daumen gedrückt |
 | _weitere_      |                            |                                                                          |              |
 
 ## Learnings

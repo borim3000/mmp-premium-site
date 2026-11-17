@@ -44,6 +44,11 @@ const ACHIEVEMENTS = {
     done: "Einen Inside Joke entdeckt.",
     hint: "Nicht jedes unterstrichene Wort ist harmlos.",
   },
+  daumen: {
+    name: "Daumen gedrückt",
+    done: "Für Cuschinar Difficil die Daumen gedrückt.",
+    hint: "Ganz am Schluss kannst du uns noch helfen.",
+  }, // wird beim Finale (Multimedia Award 2026) freigeschaltet
   ende: {
     name: "Ganz unten",
     done: "Bis ans Ende gescrollt.",
