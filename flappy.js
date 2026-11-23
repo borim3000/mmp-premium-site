@@ -4,7 +4,8 @@
    Gezeichnet wird alles in ein <canvas> (requestAnimationFrame).
 
    Achievements (shared.js): "flappy" beim Öffnen der Seite,
-   "flappy10" ab FLAPPY_GOAL Punkten. Der Rekord wird nur im Browser gespeichert.
+   "flappy10" ab FLAPPY_GOAL Punkten. Der eigene Rekord steht im Browser,
+   die Bestenliste kommt von php/flappy.php (siehe "Bestenliste" weiter unten).
    ========================================================= */
 
 const FLAPPY_GOAL = 10; // Punkte für das Achievement "Vielflieger"
@@ -147,7 +148,10 @@ function flap() {
     return;
   }
   if (state === "ready" || state === "paused") {
-    if (state === "ready") addPillar(W + 140);
+    if (state === "ready") {
+      addPillar(W + 140);
+      leaderboard.startRun(); // der Server merkt sich, wann die Runde begonnen hat
+    }
     state = "play";
   }
   bird.vy = PHYSICS.flap;
@@ -170,6 +174,7 @@ function crash() {
     }
   }
   statusText.textContent = `Abgestürzt. ${score} Punkte. Rekord ${best}.`;
+  leaderboard.finish(score);
 }
 
 /* ---------- Bewegung (feste Schritte, damit es auf jedem Bildschirm gleich schnell läuft) ---------- */
@@ -377,7 +382,10 @@ function drawOverlay() {
     text("Rekord", W / 2 + 58, y + 86, `600 13px ${BODY}`, "#5c5c5c");
     text(String(score), W / 2 - 58, y + 122, `500 40px ${DISPLAY}`, PINK);
     text(String(best), W / 2 + 58, y + 122, `500 40px ${DISPLAY}`, "#212121");
-    if (newBest)
+    // Unterste Zeile: was mit der Bestenliste passiert, sonst "Neuer Rekord!"
+    if (leaderboard.line && leaderboard.lineScore === score)
+      text(leaderboard.line, W / 2, y + 166, `600 14px ${BODY}`, PINK);
+    else if (newBest)
       text("Neuer Rekord!", W / 2, y + 166, `600 14px ${BODY}`, "#dbab32");
     if (time - overAt > 0.6)
       pill("Nochmal: Tippen oder Leertaste", y + cardH + 44);
@@ -456,6 +464,234 @@ canvas.addEventListener("pointerdown", (event) => {
 document.addEventListener("visibilitychange", () => {
   if (document.hidden && state === "play") state = "paused";
 });
+
+/* ---------- Bestenliste (php/flappy.php) ----------
+   Jede Runde meldet beim Start dem Server "jetzt geht es los". Nach dem Absturz wird ein neuer
+   persönlicher Rekord mit dieser Runde gespeichert. Der Server prüft, ob die Zeit für die Punkte reicht.
+   Der Name wird einmal eingegeben und im Browser gemerkt, danach geht jeder neue Rekord automatisch rein.
+   Ohne PHP (z. B. Live Server) läuft das Spiel normal, die Liste zeigt nur einen Hinweis. */
+
+const leaderboard = (() => {
+  const API = "php/flappy.php";
+  const NAME_KEY = "mmp_flappy_name";
+  const list = document.querySelector("[data-board-list]");
+  const note = document.querySelector("[data-board-note]");
+  const meLine = document.querySelector("[data-board-me]");
+  const form = document.querySelector("[data-board-form]");
+  const label = document.querySelector("[data-board-label]");
+  const hint = document.querySelector("[data-board-hint]");
+  const submit = document.querySelector("[data-board-submit]");
+  const input = form.elements.name;
+
+  let online = false;
+  let me = null; // { name, score, rank } vom Server, null = noch nie eingetragen
+  let run = null; // Promise mit der Kennung der laufenden Runde
+  let pending = null; // { run, score }: Rekord, der noch einen Namen braucht
+  let renaming = false;
+  let saving = false;
+  let localName = "";
+  try {
+    localName = localStorage.getItem(NAME_KEY) || "";
+  } catch {
+    /* privates Fenster */
+  }
+  const api = {
+    line: "", // Text für die Absturz-Karte im Spiel
+    lineScore: -1, // gehört zu dieser Punktzahl
+  };
+
+  async function call(method, data) {
+    let response;
+    try {
+      response = await fetch(API, {
+        method,
+        body: data ? new URLSearchParams(data) : undefined,
+        headers: { Accept: "application/json" },
+      });
+    } catch {
+      throw new Error("Keine Verbindung.");
+    }
+    const json = await response.json().catch(() => null); // ohne PHP kommt kein JSON
+    if (!json) throw Object.assign(new Error("offline"), { offline: true });
+    if (!response.ok) throw new Error(json.error || "Gerade nicht erreichbar.");
+    return json;
+  }
+
+  const myName = () => (me && me.name) || localName;
+
+  function render(data) {
+    if (data) {
+      online = true;
+      me = data.me;
+      list.replaceChildren(
+        ...data.top.map((row, i) => {
+          const li = document.createElement("li");
+          const name = document.createElement("span");
+          name.className = "flappy-board__name";
+          name.textContent = row.name;
+          if (me && me.rank === i + 1) {
+            li.className = "is-me";
+            const you = document.createElement("span");
+            you.className = "flappy-board__you";
+            you.textContent = "du";
+            name.append(you);
+          }
+          const points = document.createElement("span");
+          points.className = "flappy-board__score";
+          points.textContent = row.score;
+          li.append(name, points);
+          return li;
+        })
+      );
+      note.hidden = data.top.length > 0;
+      note.textContent = "Noch niemand drin. Der erste Punkt reicht für Platz 1!";
+    }
+    if (!online) return;
+
+    // eigene Zeile unter der Liste ("Du spielst als …")
+    const name = myName();
+    if (name) {
+      meLine.replaceChildren();
+      const b = document.createElement("b");
+      b.textContent = name;
+      meLine.append("Du spielst als ", b);
+      if (me && me.rank && me.rank > 10) meLine.append(` · Platz ${me.rank} mit ${me.score} Punkten`);
+      meLine.append(" · ");
+      const change = document.createElement("button");
+      change.type = "button";
+      change.className = "flappy-board__link";
+      change.textContent = "Name ändern";
+      change.addEventListener("click", () => {
+        renaming = true;
+        showForm();
+        input.focus();
+        input.select();
+      });
+      meLine.append(change);
+    }
+    showForm();
+  }
+
+  // Formular: wenn noch kein Name da ist, ein Rekord wartet oder der Name geändert wird
+  function showForm() {
+    form.hidden = !(!myName() || renaming);
+    form.classList.toggle("is-record", !!pending);
+    if (pending) {
+      label.textContent = `Neuer Rekord: ${pending.score} ${pending.score === 1 ? "Punkt" : "Punkte"}. Dein Name?`;
+      submit.textContent = "Eintragen";
+      hint.textContent = "Danach kommt jeder neue Rekord automatisch hier rein.";
+    } else if (renaming) {
+      label.textContent = "Neuer Name";
+      submit.textContent = "Speichern";
+      hint.textContent = "Gilt für deinen Eintrag in der Liste.";
+    } else {
+      label.textContent = "Dein Name für die Bestenliste";
+      submit.textContent = "Speichern";
+      hint.textContent = "Danach kommt jeder neue Rekord automatisch hier rein.";
+    }
+    if (!input.value && myName()) input.value = myName();
+    meLine.hidden = !myName() || !form.hidden;
+  }
+
+  function setLine(text, forScore) {
+    api.line = text;
+    api.lineScore = forScore;
+  }
+
+  async function save() {
+    if (!pending || saving) return;
+    const { score } = pending;
+    saving = true;
+    setLine("Wird eingetragen …", score);
+    try {
+      const id = await pending.run;
+      if (!id) throw new Error("Die Runde wurde nicht gestartet. Spiel einfach nochmal.");
+      const data = await call("POST", { action: "save", run: id, score, name: myName() });
+      pending = null;
+      render(data);
+      const rank = data.me && data.me.rank;
+      setLine(rank ? `Bestenliste: Platz ${rank}` : "In der Bestenliste", score);
+      toast("Bestenliste", rank ? `Platz ${rank} mit ${score} ${score === 1 ? "Punkt" : "Punkten"}` : "Eingetragen");
+    } catch (error) {
+      pending = null;
+      setLine("", -1);
+      showForm();
+      if (!error.offline) toast("Bestenliste", error.message);
+    } finally {
+      saving = false;
+    }
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const name = input.value.replace(/\s+/g, " ").trim();
+    if (!name) {
+      input.focus();
+      return;
+    }
+    localName = name;
+    try {
+      localStorage.setItem(NAME_KEY, name);
+    } catch {
+      /* privates Fenster: Name gilt nur bis zum Neuladen */
+    }
+    input.blur(); // Leertaste flattert wieder
+    const wasRenaming = renaming;
+    renaming = false;
+    if (pending) {
+      form.hidden = true;
+      await save();
+    } else if (wasRenaming && me) {
+      submit.disabled = true;
+      try {
+        render(await call("POST", { action: "name", name }));
+      } catch (error) {
+        toast("Bestenliste", error.message);
+      } finally {
+        submit.disabled = false;
+      }
+    }
+    render();
+  });
+
+  api.startRun = () => {
+    run = call("POST", { action: "start" })
+      .then((data) => data.run)
+      .catch(() => null);
+  };
+
+  api.finish = (points) => {
+    setLine("", -1);
+    if (!online || points < 1 || !run) return;
+    const record = points > ((me && me.score) || 0) && points > ((pending && pending.score) || 0);
+    if (!record) return;
+    pending = { run, score: points };
+    run = null;
+    if (myName()) save();
+    else {
+      // Zeigen, wo das Namensfeld ist: darunter (Handy), links oder rechts neben dem Spiel
+      const box = form.getBoundingClientRect();
+      const game = stage.getBoundingClientRect();
+      const line =
+        box.top >= game.bottom
+          ? "Name unten eintragen ↓"
+          : box.left >= game.right
+            ? "Name eintragen →"
+            : "← Name eintragen";
+      setLine(line, points);
+      showForm();
+    }
+  };
+
+  // Laden beim Öffnen der Seite
+  call("GET")
+    .then(render)
+    .catch(() => {
+      note.textContent = "Die Bestenliste ist gerade nicht erreichbar. Spielen geht trotzdem.";
+    });
+
+  return api;
+})();
 
 /* ---------- Start ---------- */
 

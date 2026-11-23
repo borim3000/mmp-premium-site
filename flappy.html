@@ -88,6 +88,34 @@
         ></canvas>
         <p class="visually-hidden" data-flappy-status aria-live="polite"></p>
       </div>
+
+      <!-- Bestenliste: Daten von php/flappy.php, aufgebaut in flappy.js. Ohne PHP steht hier nur ein Hinweis. -->
+      <section class="flappy-board" aria-labelledby="flappy-board-title">
+        <div class="flappy-board__head">
+          <h2 id="flappy-board-title">Bestenliste</h2>
+          <span>Top 10</span>
+        </div>
+        <ol class="flappy-board__list" data-board-list></ol>
+        <p class="flappy-board__note" data-board-note>Lädt …</p>
+        <p class="flappy-board__me" data-board-me hidden></p>
+        <form class="flappy-board__form" data-board-form hidden>
+          <label for="flappy-name" data-board-label>Dein Name für die Bestenliste</label>
+          <div class="flappy-board__row">
+            <input
+              id="flappy-name"
+              name="name"
+              maxlength="16"
+              autocomplete="nickname"
+              spellcheck="false"
+              required
+            />
+            <button class="btn btn--primary" type="submit" data-board-submit>
+              Speichern
+            </button>
+          </div>
+          <small data-board-hint>Danach kommt jeder neue Rekord automatisch hier rein.</small>
+        </form>
+      </section>
     </main>
 
     <!-- ============ FOOTER ============ -->

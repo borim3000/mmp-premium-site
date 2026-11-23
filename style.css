@@ -2816,13 +2816,18 @@ h2,
 .flappy {
   display: grid;
   grid-template-columns: minmax(0, 420px) auto;
+  grid-template-areas:
+    "intro stage"
+    "board stage";
   justify-content: center;
+  align-content: center;
   align-items: center;
   gap: clamp(32px, 6vw, 96px);
   min-height: 100svh;
   padding: calc(var(--header-h) + 32px) var(--gutter) 56px;
 }
 .flappy__intro {
+  grid-area: intro;
   display: grid;
   gap: 18px;
   justify-items: start;
@@ -2890,6 +2895,7 @@ h2,
   font: inherit;
 }
 .flappy__stage {
+  grid-area: stage;
   position: relative;
   /* Hochformat 9:16, so gross wie es der Bildschirm erlaubt */
   width: min(420px, calc((100svh - var(--header-h) - 96px) * 9 / 16));
@@ -2899,6 +2905,170 @@ h2,
   background: var(--pink-soft);
   box-shadow: 0 24px 60px rgba(33, 33, 33, 0.18);
 }
+/* Bestenliste: links unter dem Text, auf breiten Bildschirmen rechts neben dem Spiel */
+.flappy-board {
+  grid-area: board;
+  align-self: start;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 420px;
+  padding: 20px 22px 22px;
+  border-radius: 20px;
+  background: var(--white);
+}
+.flappy-board__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.flappy-board__head h2 {
+  font-size: 1.75rem;
+}
+.flappy-board__head span {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.flappy-board [hidden] {
+  display: none; /* sonst gewinnt display: grid vom Formular */
+}
+.flappy-board__list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: rank;
+}
+.flappy-board__list:empty {
+  display: none;
+}
+.flappy-board__list li {
+  display: grid;
+  grid-template-columns: 2.2em minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--paper);
+  counter-increment: rank;
+}
+.flappy-board__list li:last-child {
+  border-bottom: 0;
+}
+.flappy-board__list li::before {
+  content: counter(rank) ".";
+  color: var(--ink-soft);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+/* Podest: Gold, Silber, Bronze */
+.flappy-board__list li:nth-child(1)::before {
+  color: var(--gold);
+}
+.flappy-board__list li:nth-child(-n + 3) .flappy-board__name {
+  font-weight: 600;
+}
+.flappy-board__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.flappy-board__score {
+  font: 500 1.25rem/1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+/* eigene Zeile */
+.flappy-board__list li.is-me {
+  margin: 0 -10px;
+  padding-inline: 10px;
+  border-radius: 10px;
+  background: var(--pink-soft);
+}
+.flappy-board__list li.is-me .flappy-board__score {
+  color: var(--pink-strong);
+}
+.flappy-board__you {
+  margin-left: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--pink-strong);
+  color: var(--white);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  vertical-align: 2px;
+}
+.flappy-board__note,
+.flappy-board__me {
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+}
+.flappy-board__me b {
+  color: var(--ink);
+}
+.flappy-board__link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--pink-strong);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.flappy-board__form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding-top: 4px;
+}
+.flappy-board__form label {
+  font-weight: 600;
+}
+.flappy-board__form.is-record label {
+  color: var(--pink-strong);
+}
+.flappy-board__row {
+  display: flex;
+  gap: 8px;
+}
+.flappy-board__row input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 1.5px solid var(--grey);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 500 1rem/1.2 var(--font-body);
+}
+.flappy-board__row input:focus {
+  outline: none;
+  border-color: var(--pink-strong);
+  background: var(--white);
+}
+.flappy-board__row .btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.flappy-board__form small {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+}
+@media (min-width: 1280px) {
+  .flappy {
+    grid-template-columns: minmax(0, 380px) auto minmax(0, 320px);
+    grid-template-areas: "intro stage board";
+  }
+  .flappy-board {
+    align-self: center;
+  }
+}
+
 .flappy__canvas {
   display: block;
   width: 100%;
@@ -3116,6 +3286,10 @@ h2,
   /* Flappy Spatz: Spiel zuerst, Text darunter */
   .flappy {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "stage"
+      "intro"
+      "board";
     justify-items: center;
     gap: 28px;
     padding-top: calc(var(--header-h) + 20px);

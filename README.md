@@ -28,7 +28,7 @@ _Zwei bis drei Sätze: Was ist die Seite, für wen ist sie, was erlebt man beim 
 | Finale: Multimedia Award 2026 | Nominiert mit Cuschinar Difficil, Film, Video & Animation; 17.12.2026, THE HALL Dübendorf | Gepinnt: Umschlag öffnet sich, Karte kommt heraus; Countdown; Knopf «Drück eus de Duume» mit Zähler (php/daumen.php) |
 | Stay tuned                 | Ausblick                                                                       | Satz fährt beim Scrollen durchs Bild                                                                            |
 | Labubuech                  | Gästebuch als Buch-Pop-up: mit Pfeilen blättern, 2 Minuten pro Tag schreiben   | Lesezeichen öffnet das Buch, Seiten klappen beim Blättern um                                                    |
-| Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite                                       | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord                                   |
+| Flappy Spatz (flappy.html) | Minigame mit unserem Spatz, eigene Seite                                       | Canvas-Spiel: pinke Säulen, Berge ziehen als Parallaxe vorbei, lokaler Rekord, Bestenliste (Top 10) mit Datenbank |
 
 ## Technologien
 
@@ -59,6 +59,7 @@ video/          Videos und Poster-Bilder
 sound/          Sounds
 php/            Labubuech: labubuech.php, config.example.php, labubuech.sql
                 Daumen-Zähler (Finale): daumen.php, daumen.sql
+                Flappy-Bestenliste: flappy.php
 ```
 
 ## Lokal starten
@@ -93,6 +94,15 @@ Jeder Browser zählt einmal. Ohne PHP (z. B. mit Live Server) funktioniert der K
 Nach der Verleihung: in `index.html` beim Finale den Text bei `data-after` und das Badge «Nominiert» auf der Karte anpassen (z. B. «Gewonnen»).
 
 Zum Testen nochmals schreiben: im Browser die Cookies der Seite löschen, dann gilt man als neuer Besucher.
+
+### Bestenliste bei Flappy Spatz
+
+Nutzt die gleiche `php/config.php` und das gleiche Besucher-Cookie wie das Labubuech. Die Tabelle `flappy` legt `php/flappy.php` beim ersten Aufruf selbst an (anderer Name: `'table_flappy' => 'name'` in `config.php`).
+
+- Pro Browser eine Zeile mit dem besten Ergebnis. Der Name (höchstens 16 Zeichen) wird einmal eingegeben und im Browser gemerkt, danach kommt jeder neue Rekord automatisch in die Liste.
+- Gegen Schummeln: Jede Runde meldet beim Start dem Server, dass es losgeht. Gespeichert wird nur eine Runde, die der Server kennt, nur einmal, und nur wenn genug Zeit vergangen ist (erste Säule 2,5 s, jede weitere 0,8 s). Ganz verhindern lässt sich Schummeln bei einem Spiel im Browser nie.
+- Einen Eintrag ausblenden (z. B. ein unpassender Name): in phpMyAdmin bei diesem Eintrag `hidden` auf `1` setzen.
+- Ohne PHP (z. B. mit Live Server) läuft das Spiel normal, die Liste zeigt «gerade nicht erreichbar».
 
 ## Easter Eggs (Liste für die Dozierenden)
 
