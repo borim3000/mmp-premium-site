@@ -1598,9 +1598,7 @@ html.no-swipe-back body {
   font-weight: 700;
   font-size: 0.8125rem;
   text-decoration: none;
-  transition:
-    background 0.2s,
-    transform 0.2s;
+  transition: background 0.2s, transform 0.2s;
 }
 .nominee-badge svg {
   width: 20px;
@@ -1627,8 +1625,7 @@ html.no-swipe-back body {
 .finale {
   --env-w: min(520px, 84vw, calc((100svh - var(--header-h) - 210px) * 0.95));
   position: relative;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       ellipse at 30% 60%,
       rgba(219, 171, 50, 0.16),
       transparent 60%
@@ -1666,7 +1663,9 @@ html.no-swipe-back body {
   position: relative;
   width: var(--env-w);
   aspect-ratio: 8 / 5;
-  margin-top: calc(var(--env-w) * 0.36); /* Platz für die Karte, die herauskommt */
+  margin-top: calc(
+    var(--env-w) * 0.36
+  ); /* Platz für die Karte, die herauskommt */
   perspective: 1400px;
 }
 .envelope__back,
@@ -1837,13 +1836,8 @@ html.no-swipe-back body {
   font: 800 0.875rem / 1 var(--font-accent);
   letter-spacing: 0.06em;
   cursor: pointer;
-  box-shadow:
-    0 6px 0 #a3004f,
-    0 14px 30px rgba(255, 0, 123, 0.3);
-  transition:
-    transform 0.12s,
-    box-shadow 0.12s,
-    background 0.2s;
+  box-shadow: 0 6px 0 #a3004f, 0 14px 30px rgba(255, 0, 123, 0.3);
+  transition: transform 0.12s, box-shadow 0.12s, background 0.2s;
 }
 .daumen__emoji {
   font-size: 1.375rem;
@@ -1855,9 +1849,7 @@ html.no-swipe-back body {
 }
 .daumen__btn:active {
   transform: translateY(5px);
-  box-shadow:
-    0 1px 0 #a3004f,
-    0 4px 12px rgba(255, 0, 123, 0.3);
+  box-shadow: 0 1px 0 #a3004f, 0 4px 12px rgba(255, 0, 123, 0.3);
 }
 .daumen__btn:focus-visible {
   outline: 3px solid var(--white);
@@ -1866,9 +1858,7 @@ html.no-swipe-back body {
 .daumen__btn.is-pressed {
   background: var(--gold);
   color: var(--ink);
-  box-shadow:
-    0 6px 0 #9c7a1f,
-    0 14px 30px rgba(219, 171, 50, 0.3);
+  box-shadow: 0 6px 0 #9c7a1f, 0 14px 30px rgba(219, 171, 50, 0.3);
 }
 .daumen__count {
   color: rgba(255, 255, 255, 0.8);
@@ -2098,7 +2088,11 @@ html:has(dialog[open]) {
    Die Prozentwerte sind im Foto ausgemessen (labubuech_1_open.webp). */
 .open-book {
   position: relative;
-  font-size: clamp(0.75rem, 2.2cqi, 1.1875rem); /* wächst und schrumpft mit dem Buch */
+  font-size: clamp(
+    0.75rem,
+    2.2cqi,
+    1.1875rem
+  ); /* wächst und schrumpft mit dem Buch */
 }
 .open-book__photo {
   display: block;

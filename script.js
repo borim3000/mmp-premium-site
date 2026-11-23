@@ -349,6 +349,36 @@ if (hasGsap && "ResizeObserver" in window) {
 const sections = [...document.querySelectorAll("main > section")];
 const order = (el) => -sections.indexOf(el.closest("main > section"));
 
+// Anhalten ("pinnen") mit CSS sticky statt mit dem Pin von ScrollTrigger.
+// Den Sticky-Teil erledigt der Browser beim Scrollen selbst, ohne auf JavaScript zu warten.
+// Darum rutscht beim schnellen Scrollen nichts mehr weg und es bleibt nichts leer.
+// Ein Platzhalter ist so hoch wie das Element plus die Strecke, während der es stehen bleibt.
+function stickyPin(pin, length) {
+  const spacer = document.createElement("div");
+  spacer.className = "sticky-spacer";
+  pin.before(spacer);
+  spacer.append(pin);
+  pin.style.position = "sticky";
+  pin.style.top = "0px";
+  pin.style.willChange = "transform"; // eigene Ebene: der Browser hält sie beim Scrollen selbst fest
+  const size = () => {
+    spacer.style.height = `${pin.offsetHeight + Math.max(0, length())}px`;
+  };
+  size();
+  // Vor jedem Neuberechnen (Fenstergrösse, Schriften, Bilder) die Höhe anpassen
+  ScrollTrigger.addEventListener("refreshInit", size);
+  return {
+    spacer,
+    undo() {
+      ScrollTrigger.removeEventListener("refreshInit", size);
+      spacer.before(pin);
+      spacer.remove();
+      pin.style.position = "";
+      pin.style.top = "";
+    },
+  };
+}
+
 if (hasGsap && !reduceMotion) {
   // Hero: Berge scrollen langsamer (Parallax), Untertitel blendet aus
   gsap.to("[data-hero-media]", {
@@ -454,6 +484,7 @@ if (hasGsap && !reduceMotion) {
   // 02/03 Galerien: auf grossen Bildschirmen gepinnt und seitwärts
   const mm = gsap.matchMedia();
   mm.add("(min-width: 900px)", () => {
+    const cleanups = [];
     document.querySelectorAll("[data-gallery]").forEach((pin) => {
       const gallery = pin.querySelector(".gallery");
       const track = pin.querySelector(".gallery__track");
@@ -484,11 +515,10 @@ if (hasGsap && !reduceMotion) {
       const moveShare = distance() / Math.max(1, totalLength());
 
       pin.classList.add("is-pinned");
+      const sticky = stickyPin(pin, totalLength);
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: pin,
-          pin: true,
-          anticipatePin: 1,
+          trigger: sticky.spacer,
           start: "top top",
           end: () => `+=${totalLength()}`,
           scrub: 0.5,
@@ -581,20 +611,23 @@ if (hasGsap && !reduceMotion) {
         window.addEventListener("scroll", onScroll, { passive: true });
       }
 
-      return () => {
+      cleanups.push(() => {
+        sticky.undo();
         pin.classList.remove("is-pinned", "is-near");
         document.documentElement.classList.remove("no-swipe-back");
         if (sideways) {
           window.removeEventListener("wheel", onWheel);
           window.removeEventListener("scroll", onScroll);
         }
-      };
+      });
     });
+    return () => cleanups.forEach((undo) => undo()); // beim Wechsel aufs Handy-Layout
   });
 
   // Featured: Kartenstapel. Gepinnt; pro Folge schiebt sich die nächste Karte von unten
   // über die vorherige, die alten rutschen etwas nach hinten (kleiner, dunkler).
   mm.add("(min-width: 900px)", () => {
+    const cleanups = [];
     document.querySelectorAll("[data-episodes]").forEach((section) => {
       const pin = section.querySelector(".chapter__pin");
       const stack = section.querySelector(".episodes__stack");
@@ -626,12 +659,11 @@ if (hasGsap && !reduceMotion) {
         active = index;
       };
 
+      const sticky = stickyPin(pin, () => total * STEP * window.innerHeight);
       const tl = gsap.timeline({
         defaults: { ease: "power2.inOut", duration: 1 },
         scrollTrigger: {
-          trigger: pin,
-          pin: true,
-          anticipatePin: 1,
+          trigger: sticky.spacer,
           start: "top top",
           end: () => `+=${total * STEP * window.innerHeight}`,
           scrub: 0.25, // Karten folgen dem Scrollen fast ohne Verzögerung
@@ -687,22 +719,28 @@ if (hasGsap && !reduceMotion) {
       tl.to({}, { duration: HOLD });
 
       // Klick auf eine Folge: zu ihr scrollen
-      navs.forEach((nav, i) =>
-        nav.addEventListener("click", () => {
+      const navClicks = navs.map((nav, i) => {
+        const onClick = () => {
           const st = tl.scrollTrigger;
+          if (!st) return;
           const perUnit = (st.end - st.start) / total;
           window.scrollTo({
             top: st.start + (wait + i) * perUnit + 2,
             behavior: "smooth",
           });
-        })
-      );
+        };
+        nav.addEventListener("click", onClick);
+        return () => nav.removeEventListener("click", onClick);
+      });
 
-      return () => {
+      cleanups.push(() => {
+        sticky.undo();
+        navClicks.forEach((off) => off()); // sonst klickt man nach einem Fensterwechsel doppelt
         stack.classList.remove("is-stacked");
         cards.forEach((card) => card.classList.remove("is-front"));
-      };
+      });
     });
+    return () => cleanups.forEach((undo) => undo());
   });
 
   // Featured auf dem Handy: Folgen untereinander, jede fliegt beim Hereinscrollen ein
@@ -747,15 +785,11 @@ if (hasGsap && !reduceMotion) {
   mm.add("(max-width: 899px)", () => {
     if (!curtain || CURTAIN.length <= CURTAIN.early) return;
     const pin = curtain.closest(".chapter__pin");
-    ScrollTrigger.create({
-      trigger: pin,
-      pin: true,
-      anticipatePin: 1,
-      start: "top top",
-      end: () => `+=${(CURTAIN.length - CURTAIN.early) * window.innerHeight}`,
-      invalidateOnRefresh: true,
-      refreshPriority: order(pin),
-    });
+    const sticky = stickyPin(
+      pin,
+      () => (CURTAIN.length - CURTAIN.early) * window.innerHeight
+    );
+    return () => sticky.undo();
   });
 
   // 03 Awards: Text, Video und Fotos fliegen nacheinander ein, der Pokal dreht sich hinein
@@ -849,12 +883,14 @@ if (hasGsap && !reduceMotion) {
           if (+getComputedStyle(el).opacity < 0.99)
             gsap.set(el, { opacity: 1, x: 0, y: 0 });
         });
+      const sticky = stickyPin(
+        q(".finale__pin"),
+        () => window.innerHeight * 2.4
+      );
       const tl = gsap.timeline({
         defaults: { ease: "power1.out" },
         scrollTrigger: {
-          trigger: q(".finale__pin"),
-          pin: true,
-          anticipatePin: 1,
+          trigger: sticky.spacer,
           start: "top top",
           end: () => `+=${window.innerHeight * 2.4}`,
           scrub: 0.5,
@@ -879,6 +915,7 @@ if (hasGsap && !reduceMotion) {
         .to(envelopeParts, { yPercent: 40, opacity: 0, duration: 0.7 }, 2.4)
         .to(card, { yPercent: -30, scale: 1.06, duration: 0.7 }, 2.4)
         .to({}, { duration: HOLD }); // stehen bleiben
+      return () => sticky.undo();
     });
 
     mm.add("(max-width: 899px)", () => {
@@ -1318,7 +1355,9 @@ async function bookApi(method, data) {
     });
   } catch {
     // Kein Internet: statt "Failed to fetch" eine verständliche Meldung (der Text bleibt stehen)
-    throw new Error("Keine Verbindung. Dein Text bleibt stehen, versuch es gleich nochmal.");
+    throw new Error(
+      "Keine Verbindung. Dein Text bleibt stehen, versuch es gleich nochmal."
+    );
   }
   const json = await response.json().catch(() => ({}));
   if (!response.ok) {
@@ -1457,7 +1496,9 @@ function buildPages() {
       <li><strong>Für alle lesbar</strong><span>Dein Eintrag steht danach im Buch.</span></li>
     </ol>
     <p class="book-intro__hint">${
-      twoPages.matches ? "Deine Seite ist rechts" : "Zu deiner Seite: Pfeil nach rechts"
+      twoPages.matches
+        ? "Deine Seite ist rechts"
+        : "Zu deiner Seite: Pfeil nach rechts"
     } <span aria-hidden="true">→</span></p>`;
 
   const list = [...entryPages];
@@ -1485,7 +1526,9 @@ function buildPages() {
 // werden etwas kleiner geschrieben, bis sie ohne Scrollbalken auf die Seite passen.
 function fitEntries() {
   pages
-    .filter((page) => !page.hidden && page.classList.contains("book-page--entry"))
+    .filter(
+      (page) => !page.hidden && page.classList.contains("book-page--entry")
+    )
     .forEach((page) => {
       const quote = page.querySelector(".book-entry");
       let size = 1.12; // gleich wie .book-entry in style.css
