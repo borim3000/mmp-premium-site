@@ -532,7 +532,7 @@ if (hasGsap && !reduceMotion) {
 
       const onWheel = (event) => {
         const st = tl.scrollTrigger;
-        if (!st) return;
+        if (!st || document.querySelector("dialog[open]")) return; // Pop-up offen: Seite bleibt stehen
         const y = window.scrollY;
         const near = window.innerHeight * NEAR;
         if (y < st.start - near || y > st.end + near) return;
@@ -1299,7 +1299,7 @@ const dateFormat = new Intl.DateTimeFormat("de-CH", {
 }); // z. B. "17. November 2026 um 15:42"
 
 let entries = []; // Einträge aus der Datenbank
-let bookState = "open"; // "open" = schreiben möglich, "written" / "expired" = für heute zu, "offline" = Server nicht erreichbar
+let bookState = "open"; // "open" = schreiben möglich, "written" / "expired" = für heute zu, "offline" = Server nicht erreichbar, "loading" = lädt beim ersten Öffnen
 let deadline = null; // Zeitpunkt (ms), an dem die zwei Minuten vorbei sind; null = noch nicht angefangen
 let pages = []; // alle Seiten als Elemente
 let view = 0; // erste sichtbare Seite
@@ -1309,11 +1309,17 @@ let saving = false;
 
 // Anfrage an php/labubuech.php. Wirft einen Fehler mit status, wenn der Server ablehnt.
 async function bookApi(method, data) {
-  const response = await fetch(BOOK_API, {
-    method,
-    body: data ? new URLSearchParams(data) : undefined,
-    headers: { Accept: "application/json" },
-  });
+  let response;
+  try {
+    response = await fetch(BOOK_API, {
+      method,
+      body: data ? new URLSearchParams(data) : undefined,
+      headers: { Accept: "application/json" },
+    });
+  } catch {
+    // Kein Internet: statt "Failed to fetch" eine verständliche Meldung (der Text bleibt stehen)
+    throw new Error("Keine Verbindung. Dein Text bleibt stehen, versuch es gleich nochmal.");
+  }
   const json = await response.json().catch(() => ({}));
   if (!response.ok) {
     const error = new Error(json.error || "Das hat nicht geklappt.");
@@ -1359,6 +1365,8 @@ function notePage(title, text) {
 }
 
 function buildWritePage() {
+  if (bookState === "loading")
+    return notePage("Einen Moment …", "Das Labubuech wird geladen.");
   if (bookState === "offline")
     return notePage(
       "Gerade nicht erreichbar",
@@ -1618,10 +1626,19 @@ async function finishEntry(timeUp) {
 }
 
 async function openBook() {
+  // Sofort aufschlagen, damit bei langsamem Internet nicht "nichts passiert".
+  // Beim ersten Mal steht rechts "Einen Moment …", danach das Buch von vorhin, bis die neuen Einträge da sind.
+  if (!pages.length) {
+    bookState = "loading";
+    buildPages();
+  }
+  if (!bookDialog.open) {
+    showView(openView()); // aufschlagen bei Einleitung + Schreibseite
+    bookDialog.showModal();
+  }
   await loadBook();
   buildPages();
-  showView(openView()); // aufschlagen bei Einleitung + Schreibseite
-  if (!bookDialog.open) bookDialog.showModal();
+  showView(openView());
   if (bookState === "open" && deadline) startTicking(); // Zeit läuft schon seit vorhin
 }
 

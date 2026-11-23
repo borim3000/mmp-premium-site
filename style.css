@@ -2057,6 +2057,11 @@ html.no-swipe-back body {
 .book-dialog::backdrop {
   background: rgba(33, 33, 33, 0.7);
 }
+/* Solange ein Pop-up offen ist, bleibt die Seite dahinter stehen (Platz der Scrollbar bleibt, nichts springt) */
+html:has(dialog[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
 /* X oben rechts über dem Foto (dort ist der Hintergrund frei) */
 .book-dialog__close {
   position: absolute;
@@ -2124,6 +2129,7 @@ html.no-swipe-back body {
   scrollbar-width: thin;
   color: #1a1a1a;
   font: 500 1em/1.45 var(--font-display); /* etwas kräftiger: liest sich auf dem Foto-Papier besser */
+  overscroll-behavior: contain; /* am Seitenende scrollt nicht die Website weiter */
 }
 .book-page[hidden] {
   display: none;
@@ -2157,7 +2163,7 @@ html.no-swipe-back body {
 .book-intro__bird {
   position: absolute;
   top: 0;
-  right: 0.2em;
+  right: 0.45em; /* gedreht ragt die Ecke sonst über den Seitenrand */
   width: 3.2em;
   height: auto;
   rotate: 12deg;
@@ -2220,6 +2226,28 @@ html.no-swipe-back body {
   align-self: flex-end;
   color: var(--pink-strong);
   font: italic 600 0.95em/1.2 var(--font-display);
+}
+/* Wenig Höhe (Handy quer, kleines Fenster): Einleitung kompakter, damit kein Scrollbalken kommt.
+   Die Erklärung zur Zeit steht ja auch im Nachrichtenfeld. */
+@media (max-height: 560px) {
+  .book-intro__bird,
+  .book-intro__rules span,
+  .book-intro__hint {
+    display: none;
+  }
+  .book-page--intro {
+    gap: 0.4em;
+  }
+  .book-page--intro h3 {
+    font-size: 1.7em;
+  }
+  .book-intro__lead {
+    padding-bottom: 0.35em;
+    font-size: 0.95em;
+  }
+  .book-intro__rules {
+    gap: 0.35em;
+  }
 }
 
 /* Eintrag als Zitat: Text oben, unten "— Name, Datum um Zeit" */
@@ -2666,6 +2694,7 @@ html.no-swipe-back body {
   left: 16px;
   bottom: 16px;
   z-index: 60;
+  pointer-events: none; /* Meldungen liegen nur drüber, Klicks gehen durch (z. B. aufs Lesezeichen im Hero) */
   display: grid;
   gap: 10px;
   width: min(360px, calc(100vw - 32px));
